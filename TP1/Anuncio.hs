@@ -17,10 +17,10 @@ departamentosA :: Anuncio -> [Departamento] -- dado un anuncio retorna los depar
 departamentosA (Anu _ departamentos _) = departamentos
 
 agregarA :: Departamento -> Anuncio -> Anuncio -- permite asignar un departamento a un anuncio
-agregarA departamento (Anu nombre departamentos duracion) = Anu nombre (departamento ++ [departamentos]) duracion
+agregarA departamento (Anu nombre departamentos duracion) = Anu nombre (departamentos ++ [departamento]) duracion
 
 sacarA :: Departamento -> Anuncio -> Anuncio -- permite quitarle un departamento a un anuncio
-sacarA depto (Anu nombre departamentos duracion) = Anu nombre (filter (/= depto) departamentos) duracion
+
 
 aplicaA :: [Departamento] -> Anuncio -> Bool -- responde si un anuncion debe emitirse para alguno de los departamentos consultados
 aplicaA deptos (Anu _ departamentos _) = any (`elem` departamentos) deptos
