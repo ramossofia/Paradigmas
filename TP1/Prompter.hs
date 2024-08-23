@@ -22,10 +22,10 @@ anunciosP :: Prompter -> [Nombre] -- entrega la lista de nombres de anuncios con
 anunciosP (Pro fs _ _) = map nombreA (anunciosF fs)
 
 showP :: Prompter -> Anuncio -- muestra el anuncio actual
-showP (Pro fs _ index) = (anunciosF fs) !! index
+showP (Pro fs _ index) = (anunciosF fs) !! (index `mod` length (anunciosF fs))
 
 avanzarP :: Prompter -> Prompter -- pasa al siguiente anuncio
-avanzarP (Pro fs deps index) = Pro fs deps (index + 1)
+avanzarP (Pro fs deps index) = Pro fs deps ((index + 1) `mod` length (anunciosF fs))
 
 duracionP :: Prompter -> Duracion -- indica la duracion total de los anuncios configurados
-duracionP (Pro fs _ _) = sum (map duracionA (anunciosParaF fs))
+duracionP (Pro fs deps _) = sum (map duracionA (anunciosParaF deps fs))
