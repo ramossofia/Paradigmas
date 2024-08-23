@@ -28,4 +28,4 @@ avanzarP :: Prompter -> Prompter -- pasa al siguiente anuncio
 avanzarP (Pro fs deps index) = Pro fs deps ((index + 1) `mod` length (anunciosF fs))
 
 duracionP :: Prompter -> Duracion -- indica la duracion total de los anuncios configurados
-duracionP (Pro fs deps _) = sum (map duracionA (anunciosParaF deps fs))
+duracionP (Pro fs deps _) = foldr ((+) . duracionA) 0 (anunciosParaF deps fs)
