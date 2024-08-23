@@ -18,7 +18,7 @@ agregarAnuncioF :: Anuncio -> FileSystem -> FileSystem -- permite agregar un anu
 agregarAnuncioF anuncio (FS departamentos anuncios) = FS departamentos (anuncio : anuncios)
 
 sacarAnuncioF :: Anuncio -> FileSystem -> FileSystem -- permite eliminar un anuncio
-sacarAnuncioF anuncio (FS departamentos anuncios) = FS departamentos [a | a <- anuncios, a /= anuncio]
+sacarAnuncioF anuncio (FS departamentos anuncios) = FS departamentos (filter (/= anuncio) anuncios)
 
 agregarDepartamentoF :: Departamento -> FileSystem -> FileSystem -- permite agregar un departamento
 agregarDepartamentoF departamento (FS departamentos anuncios) = FS (departamento : departamentos) anuncios
