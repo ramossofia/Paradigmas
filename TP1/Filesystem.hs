@@ -17,14 +17,18 @@ anunciosF (FS _ anuncios) = anuncios
 agregarAnuncioF :: Anuncio -> FileSystem -> FileSystem -- permite agregar un anuncio
 agregarAnuncioF anuncio (FS departamentos anuncios) = FS departamentos (anuncio : anuncios)
 
-sacarAnuncioF :: Anuncio -> FileSystem -> FileSystem -- permite eliminar un anuncio
-sacarAnuncioF anuncio (FS departamentos anuncios) = FS departamentos (filter (/= anuncio) anuncios)
+sacarAnuncioF :: Anuncio -> FileSystem -> Maybe FileSystem
+sacarAnuncioF anuncio (FS departamentos anuncios)
+  | anuncio `elem` anuncios = Just (FS departamentos (filter (/= anuncio) anuncios))
+  | otherwise = Nothing
 
 agregarDepartamentoF :: Departamento -> FileSystem -> FileSystem -- permite agregar un departamento
 agregarDepartamentoF departamento (FS departamentos anuncios) = FS (departamento : departamentos) anuncios
 
-sacarDepartamentoF :: Departamento -> FileSystem -> FileSystem -- permite eliminar un departamento
-sacarDepartamentoF departamento (FS departamentos anuncios) = FS (filter (/= departamento) departamentos) anuncios
+sacarDepartamentoF :: Departamento -> FileSystem -> Maybe FileSystem
+sacarDepartamentoF departamento (FS departamentos anuncios)
+  | departamento `elem` departamentos = Just (FS (filter (/= departamento) departamentos) anuncios)
+  | otherwise = Nothing
 
 anunciosParaF :: [Departamento] -> FileSystem -> [Anuncio] -- entrega los anuncios a emitir para un conjunto de departamentos
 anunciosParaF departamentos (FS _ anuncios) = filter (aplicaA departamentos) anuncios
