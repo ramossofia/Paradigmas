@@ -6,11 +6,8 @@ import Tipos
 
 data Prompter = Pro FileSystem [Departamento] Int deriving (Eq, Show)
 
--- Funciones auxiliares:
-obtenerAnuncios :: Prompter -> [Anuncio] -- permite obtener la lista de anuncios desde el Filesystem
-obtenerAnuncios (Pro fs _ _) = anunciosF fs
-
-anunciosConfigurados :: Prompter -> [Anuncio] -- permite obtener la lista de anuncios configurados
+-- Función auxiliar: Permite obtener la lista de anuncios configurados
+anunciosConfigurados :: Prompter -> [Anuncio]
 anunciosConfigurados prompter = anunciosParaF (departamentosP prompter) (archivosR prompter)
 
 nuevoP :: FileSystem -> Prompter -- permite obtener un nuevo Prompter en base a un FileSystem
@@ -29,12 +26,12 @@ anunciosP :: Prompter -> [Nombre] -- entrega la lista de nombres de anuncios con
 anunciosP prompter = map nombreA (anunciosConfigurados prompter)
 
 showP :: Prompter -> Anuncio -- muestra el anuncio actual
-showP prompter = (anunciosConfigurados prompter) !! (index `mod` length anuncios)
+showP prompter
+  | null anuncios = error "No hay anuncios configurados"
+  | otherwise = anuncios !! (index `mod` length anuncios)
   where
     anuncios = anunciosConfigurados prompter
-    index = case anuncios of
-      [] -> 0
-      _ -> currentIndex prompter
+    index = currentIndex prompter
     currentIndex (Pro _ _ idx) = idx
 
 avanzarP :: Prompter -> Prompter -- pasa al siguiente anuncio
@@ -43,12 +40,11 @@ avanzarP prompter = Pro fs deps nextIndex
     fs = archivosR prompter
     deps = departamentosP prompter
     anuncios = anunciosConfigurados prompter
-    nextIndex = (currentIndex + 1) `mod` length anuncios
-    currentIndex = case anuncios of
-      [] -> 0
-      _ -> index
-    index = case prompter of
-      Pro _ _ idx -> idx
+    nextIndex
+      | null anuncios = 0
+      | otherwise = (index + 1) `mod` length anuncios
+    index = currentIndex prompter
+    currentIndex (Pro _ _ idx) = idx
 
 duracionP :: Prompter -> Duracion -- indica la duracion total de los anuncios configurados
 duracionP (Pro fs deps _) = foldr ((+) . duracionA) 0 (anunciosParaF deps fs)
