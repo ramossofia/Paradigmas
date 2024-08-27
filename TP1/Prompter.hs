@@ -6,9 +6,14 @@ import Tipos
 
 data Prompter = Pro FileSystem [Departamento] Int deriving (Eq, Show)
 
--- Función auxiliar: Permite obtener la lista de anuncios configurados
-anunciosConfigurados :: Prompter -> [Anuncio]
+anunciosConfigurados :: Prompter -> [Anuncio] -- función auxiliar: Permite obtener la lista de anuncios configurados
 anunciosConfigurados prompter = anunciosParaF (departamentosP prompter) (archivosR prompter)
+
+verificarIndice :: Int -> Int -> Int -- función auxiliar: Verifica que el índice sea válido
+verificarIndice idx len
+  | len == 0 = error "Error: No hay anuncios configurados."
+  | idx < 0 || idx >= len = error "Error: Índice fuera de rango."
+  | otherwise = idx
 
 nuevoP :: FileSystem -> Prompter -- permite obtener un nuevo Prompter en base a un FileSystem
 nuevoP fs = Pro fs [] 0
@@ -20,31 +25,41 @@ departamentosP :: Prompter -> [Departamento] -- dado un prompter retorna sus dep
 departamentosP (Pro _ deps _) = deps
 
 configurarP :: Prompter -> [Departamento] -> Prompter -- Prepara el prompter para emitir los anuncios en los departementos indicados
-configurarP (Pro fs _ index) deps = Pro fs deps index
+configurarP (Pro fs _ index) deps
+  | null depsValidos = error "Error: No se han configurado departamentos válidos."
+  | otherwise = Pro fs depsValidos index
+  where
+    depsValidos = filter (`elem` departamentosF fs) deps
 
 anunciosP :: Prompter -> [Nombre] -- entrega la lista de nombres de anuncios configurados
-anunciosP prompter = map nombreA (anunciosConfigurados prompter)
+anunciosP prompter
+  | null anuncios = error "Advertencia: No hay anuncios configurados para los departamentos actuales."
+  | otherwise = map nombreA anuncios
+  where
+    anuncios = anunciosConfigurados prompter
 
 showP :: Prompter -> Anuncio -- muestra el anuncio actual
 showP prompter
-  | null anuncios = error "No hay anuncios configurados"
-  | otherwise = anuncios !! (index `mod` length anuncios)
+  | null anuncios = "No hay anuncios configurados"
+  | otherwise = nombreA (anuncios !! (index `mod` length anuncios))
   where
     anuncios = anunciosConfigurados prompter
-    index = currentIndex prompter
-    currentIndex (Pro _ _ idx) = idx
+    index = verificarIndice (currentIndex prompter) (length anuncios)
+
 
 avanzarP :: Prompter -> Prompter -- pasa al siguiente anuncio
-avanzarP prompter = Pro fs deps nextIndex
+avanzarP prompter
+  | null anuncios = error "Error: No hay anuncios configurados para avanzar."
+  | otherwise = Pro fs deps nextIndex
   where
     fs = archivosR prompter
     deps = departamentosP prompter
     anuncios = anunciosConfigurados prompter
-    nextIndex
-      | null anuncios = 0
-      | otherwise = (index + 1) `mod` length anuncios
-    index = currentIndex prompter
-    currentIndex (Pro _ _ idx) = idx
+    nextIndex = (currentIndex prompter + 1) `mod` length anuncios
 
 duracionP :: Prompter -> Duracion -- indica la duracion total de los anuncios configurados
-duracionP (Pro fs deps _) = foldr ((+) . duracionA) 0 (anunciosParaF deps fs)
+duracionP prompter
+  | null anuncios = 0
+  | otherwise = sum (map duracionA anuncios)
+  where
+    anuncios = anunciosConfigurados prompter
