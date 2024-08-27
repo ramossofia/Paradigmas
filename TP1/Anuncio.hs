@@ -1,43 +1,40 @@
 module Anuncio (Anuncio, nuevoA, nombreA, duracionA, departamentosA, agregarA, sacarA, aplicaA) where
 
 import Tipos
- 
+
 data Anuncio = Anu Nombre [Departamento] Duracion deriving (Eq, Show, Ord)
 
---hacer auxiliar para chequear que ningun string escrito x terminal sea vacio.
-
 nuevoA :: Nombre -> Duracion -> Anuncio -- dado un nombre y una duracion en segundos retorna un nuevo Anuncio
-nuevoA nombre duracion = Anu nombre [] duracion
---casos de error: si se ingresa un nombre vacio que devuelva una excepcion y printee no se ha ingresado un nombre.
---si ya existe un anuncio con el nombre ingresado, que pida por terminal ingresar otro nombre.
-
+nuevoA nombre duracion
+    | duracion < 0 = error "La duración no puede ser negativa."
+    | otherwise = Anu (verificarVacio nombre "No se ha ingresado un nombre.") [] duracion
 
 nombreA :: Anuncio -> Nombre -- dado un anuncio retorna su nombre
-nombreA (Anu nombre _ _) = nombre
---casos de error: que dado ese nombre no se halle ningun anuncio
--- que se ingrese un nombre vacio.
-
+nombreA (Anu nombre _ _) = verificarVacio nombre "No se encontró el anuncio."
 
 duracionA :: Anuncio -> Duracion -- dado un anuncio retorna su duracion
-duracionA (Anu _ _ duracion) = duracion
---casos de error: no se halle el anuncio printee el error por terminal y tire excepcion
--- se envie un anuncio sin duracion y que la funcion devuelva 0
+duracionA (Anu _ _ duracion)
+    | duracion <= 0 = error "El anuncio no tiene duración válida."
+    | otherwise = duracion
+
+verificarVacioDep :: [Departamento] -> String -> [Departamento] -- funcion auxiliar para verificar que la lista de departamentos no este vacia
+verificarVacioDep [] mensajeError = error mensajeError
+verificarVacioDep departamentos _ = departamentos
 
 departamentosA :: Anuncio -> [Departamento] -- dado un anuncio retorna los departamentos que le fueron asociados
-departamentosA (Anu _ departamentos _) = departamentos
---si el anuncio no tiene departamentos, que printee no hay departamentos asociados con el anuncio.
-
+departamentosA (Anu _ departamentos _) = verificarVacioDep departamentos "No hay departamentos asociados con el anuncio."
 
 agregarA :: Departamento -> Anuncio -> Anuncio -- permite asignar un departamento a un anuncio
-agregarA departamento (Anu nombre departamentos duracion) = Anu nombre (departamentos ++ [departamento]) duracion
---si ya existe un departamento con el nombre ingresado, printear que ya existe.
-
+agregarA departamento (Anu nombre departamentos duracion)
+    | departamento `elem` departamentos = error "El departamento ya está asociado con el anuncio."
+    | otherwise = Anu nombre (departamentos ++ [verificarVacio departamento "No se ha ingresado un nombre de departamento."]) duracion
 
 sacarA :: Departamento -> Anuncio -> Anuncio -- permite quitarle un departamento a un anuncio
-sacarA departamento (Anu nombre departamentos duracion) = Anu nombre (filter (/= departamento) departamentos) duracion
---si no existe el anuncio ingresado, que printee que no existe.
+sacarA departamento (Anu nombre departamentos duracion)
+    | null departamentos = error "El anuncio no tiene departamentos asociados."
+    | not (departamento `elem` departamentos) = error "El departamento no existe en el anuncio."
+    | otherwise = Anu nombre (filter (/= departamento) departamentos) duracion
 
-aplicaA :: [Departamento] -> Anuncio -> Bool
-aplicaA deptos (Anu _ departamentos _) = any (`elem` deptos) departamentos
-
-
+aplicaA :: [Departamento] -> Anuncio -> Bool -- responde si un anuncio debe emitirse para alguno de los departamentos consultados
+aplicaA [] _ = error "La lista de departamentos proporcionada está vacía."
+aplicaA deptos (Anu _ departamentos _) = any (`elem` departamentos) deptos
