@@ -1,4 +1,4 @@
-module FileSystem (FileSystem, nuevoF, departamentosF, anunciosF, agregarAnuncioF, sacarAnuncioF, agregarDepartamentoF, sacarDepartamentoF, anunciosParaF) where
+module FileSystem (FileSystem, buscarAnuncio ,nuevoF, departamentosF, anunciosF, agregarAnuncioF, sacarAnuncioF, agregarDepartamentoF, sacarDepartamentoF, anunciosParaF) where
 
 import Anuncio
 import Tipos
@@ -34,9 +34,13 @@ sacarDepartamentoF departamento (FS departamentos anuncios)
     | departamento `notElem` departamentos = error "El departamento no se encuentra en el sistema."
     | otherwise = FS (filter (/= departamento) departamentos) anuncios
 
-anunciosParaF :: [Departamento] -> FileSystem -> [Anuncio] -- entrega los anuncios a emitir para un conjunto de departamentos
-anunciosParaF departamentos (FS _ anuncios)
-    | null departamentosValidos = []
-    | otherwise = filter (\a -> aplicaA departamentos a) anuncios
-  where
-    departamentosValidos = filter (`elem` departamentosF (FS departamentos anuncios)) departamentos
+anunciosParaF :: [Departamento] -> FileSystem -> [Anuncio]
+anunciosParaF [] _ = error "No se proporcionaron departamentos."
+anunciosParaF departamentos (FS _ anuncios) = filter (aplicaA departamentos) anuncios
+
+    
+buscarAnuncio :: Nombre -> FileSystem -> Anuncio --auxiliar
+buscarAnuncio nombre fs =
+  case filter ((== nombre) . nombreA) (anunciosF fs) of
+    [anuncio] -> anuncio
+    _         -> error "Advertencia: Anuncio no encontrado en el FileSystem"
