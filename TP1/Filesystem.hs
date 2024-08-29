@@ -34,7 +34,7 @@ sacarDepartamentoF departamento (FS departamentos anuncios)
     | departamento `notElem` departamentos = error "El departamento no se encuentra en el sistema."
     | otherwise = FS (filter (/= departamento) departamentos) anuncios
 
-anunciosParaF :: [Departamento] -> FileSystem -> [Anuncio]
+anunciosParaF :: [Departamento] -> FileSystem -> [Anuncio] -- entrega los anuncios a emitir para un conjunto de departamentos
 anunciosParaF [] _ = error "No se proporcionaron departamentos."
 anunciosParaF departamentos (FS _ anuncios) = filter (aplicaA departamentos) anuncios
 
