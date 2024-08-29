@@ -35,6 +35,6 @@ sacarA departamento (Anu nombre departamentos duracion)
     | not (departamento `elem` departamentos) = error "El departamento no existe en el anuncio."
     | otherwise = Anu nombre (filter (/= departamento) departamentos) duracion
 
-aplicaA :: [Departamento] -> Anuncio -> Bool -- responde si un anuncio debe emitirse para alguno de los departamentos consultados
+aplicaA :: [Departamento] -> Anuncio -> Bool
 aplicaA [] _ = error "La lista de departamentos proporcionada está vacía."
 aplicaA deptos (Anu _ departamentos _) = any (`elem` departamentos) deptos
