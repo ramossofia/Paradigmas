@@ -37,6 +37,7 @@ anunciosP (Pro fs deps _)
   | otherwise = map nombreA anuncios
   where
     anuncios = anunciosParaF deps fs
+
 showP :: Prompter -> Anuncio -- muestra el anuncio actual
 showP (Pro fs deps index)
   | null anuncios = error "Error: No hay anuncios configurados."
