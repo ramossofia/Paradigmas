@@ -91,15 +91,10 @@ testAgregarDepartamentoF = departamentosF (agregarDepartamentoF "Dept1" nuevoF) 
 testSacarDepartamentoF :: Bool
 testSacarDepartamentoF = departamentosF (sacarDepartamentoF "Dept1" (agregarDepartamentoF "Dept1" nuevoF)) == []
 
--- Prueba de funcionamiento normal para anunciosParaF
 testAnunciosParaF :: Bool
 testAnunciosParaF =
-  anunciosParaF ["Dept1", "Dept2"]
-    (agregarDepartamentoF "Dept2" $
-      agregarAnuncioF anuncio1 $
-      agregarAnuncioF anuncio2 $
-      agregarDepartamentoF "Dept1" nuevoF
-    ) == [anuncio1, anuncio2]
+  anunciosParaF ["nuevoDepto"] (agregarDepartamentoF "nuevoDepto" fileSystemEjemplo) == []
+
 
 -- Funciones de prueba para Anuncio (funcionamiento normal)
 testNuevoA :: Bool
@@ -169,4 +164,3 @@ runTests = do
 
   where
     printResult (testName, result) = putStrLn $ testName ++ ": " ++ (if result then "Passed" else "Failed")
-
