@@ -1,9 +1,9 @@
 module Tests where
 
 import Anuncio
-import FileSystem (FileSystem, nuevoF, agregarAnuncioF, sacarAnuncioF, agregarDepartamentoF, sacarDepartamentoF, anunciosF, departamentosF, anunciosParaF, buscarAnuncio)
-import Prompter (Prompter, nuevoP, archivosR, departamentosP, configurarP, anunciosP, showP, avanzarP, duracionP)
 import Control.Exception
+import FileSystem (FileSystem, agregarAnuncioF, agregarDepartamentoF, anunciosF, anunciosParaF, departamentosF, nuevoF, sacarAnuncioF, sacarDepartamentoF)
+import Prompter (Prompter, anunciosP, archivosR, avanzarP, configurarP, departamentosP, duracionP, nuevoP, showP)
 import System.IO.Unsafe
 import Tipos
 
@@ -95,7 +95,6 @@ testAnunciosParaF :: Bool
 testAnunciosParaF =
   anunciosParaF ["nuevoDepto"] (agregarDepartamentoF "nuevoDepto" fileSystemEjemplo) == []
 
-
 -- Funciones de prueba para Anuncio (funcionamiento normal)
 testNuevoA :: Bool
 testNuevoA =
@@ -128,39 +127,40 @@ runTests = do
   putStrLn "\n#####################################"
   putStrLn "\nEjecutando pruebas de excepciones..."
 
-  let exceptionResults = [ ("testNuevoAConDuracionNegativa", testNuevoAConDuracionNegativa)
-                         , ("testNombreAConNombreVacio", testNombreAConNombreVacio)
-                         , ("testDuracionAConDuracionInvalida", testDuracionAConDuracionInvalida)
-                         , ("testDepartamentosASinDepartamentos", testDepartamentosASinDepartamentos)
-                         , ("testAgregarAConDepartamentoRepetido", testAgregarAConDepartamentoRepetido)
-                         , ("testSacarADeAnuncioSinDepartamentos", testSacarADeAnuncioSinDepartamentos)
-                         , ("testAplicaAConDepartamentosVacios", testAplicaAConDepartamentosVacios)
-                         , ("testAgregarAnuncioFRepetido", testAgregarAnuncioFRepetido)
-                         , ("testSacarAnuncioFNoExistente", testSacarAnuncioFNoExistente)
-                         , ("testAgregarDepartamentoFRepetido", testAgregarDepartamentoFRepetido)
-                         , ("testSacarDepartamentoFNoExistente", testSacarDepartamentoFNoExistente)
-                         , ("testAnunciosParaFConDepartamentosVacios", testAnunciosParaFConDepartamentosVacios)
-                         , ("testShowP", testShowP)
-                         , ("testAvanzarP", testAvanzarP)
-                         ]
+  let exceptionResults =
+        [ ("testNuevoAConDuracionNegativa", testNuevoAConDuracionNegativa),
+          ("testNombreAConNombreVacio", testNombreAConNombreVacio),
+          ("testDuracionAConDuracionInvalida", testDuracionAConDuracionInvalida),
+          ("testDepartamentosASinDepartamentos", testDepartamentosASinDepartamentos),
+          ("testAgregarAConDepartamentoRepetido", testAgregarAConDepartamentoRepetido),
+          ("testSacarADeAnuncioSinDepartamentos", testSacarADeAnuncioSinDepartamentos),
+          ("testAplicaAConDepartamentosVacios", testAplicaAConDepartamentosVacios),
+          ("testAgregarAnuncioFRepetido", testAgregarAnuncioFRepetido),
+          ("testSacarAnuncioFNoExistente", testSacarAnuncioFNoExistente),
+          ("testAgregarDepartamentoFRepetido", testAgregarDepartamentoFRepetido),
+          ("testSacarDepartamentoFNoExistente", testSacarDepartamentoFNoExistente),
+          ("testAnunciosParaFConDepartamentosVacios", testAnunciosParaFConDepartamentosVacios),
+          ("testShowP", testShowP),
+          ("testAvanzarP", testAvanzarP)
+        ]
   mapM_ printResult exceptionResults
 
   putStrLn "\n##############################################"
   putStrLn "\nEjecutando pruebas de funcionamiento normal..."
-  let normalResults = [ ("testNuevoF", testNuevoF)
-                      , ("testAgregarAnuncioF", testAgregarAnuncioF)
-                      , ("testSacarAnuncioF", testSacarAnuncioF)
-                      , ("testAgregarDepartamentoF", testAgregarDepartamentoF)
-                      , ("testSacarDepartamentoF", testSacarDepartamentoF)
-                      , ("testAnunciosParaF", testAnunciosParaF)
-                      , ("testNuevoA", testNuevoA)
-                      , ("testAgregarA", testAgregarA)
-                      , ("testAplicaA", testAplicaA)
-                      , ("testConfigurarP", testConfigurarP)
-                      , ("testAnunciosP", testAnunciosP)
-                      , ("testDuracionP", testDuracionP)
-                      ]
+  let normalResults =
+        [ ("testNuevoF", testNuevoF),
+          ("testAgregarAnuncioF", testAgregarAnuncioF),
+          ("testSacarAnuncioF", testSacarAnuncioF),
+          ("testAgregarDepartamentoF", testAgregarDepartamentoF),
+          ("testSacarDepartamentoF", testSacarDepartamentoF),
+          ("testAnunciosParaF", testAnunciosParaF),
+          ("testNuevoA", testNuevoA),
+          ("testAgregarA", testAgregarA),
+          ("testAplicaA", testAplicaA),
+          ("testConfigurarP", testConfigurarP),
+          ("testAnunciosP", testAnunciosP),
+          ("testDuracionP", testDuracionP)
+        ]
   mapM_ printResult normalResults
-
   where
     printResult (testName, result) = putStrLn $ testName ++ ": " ++ (if result then "Passed" else "Failed")
