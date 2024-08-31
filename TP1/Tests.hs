@@ -23,22 +23,16 @@ testNuevoAConDuracionNegativa :: Bool
 testNuevoAConDuracionNegativa = testF (nuevoA "Test" (-5))
 
 testNombreAConNombreVacio :: Bool
-testNombreAConNombreVacio =
-  let anuncio = nuevoA "" 60
-  in testF (nombreA anuncio)
+testNombreAConNombreVacio = testF (nombreA (nuevoA "" 60))
 
 testDuracionAConDuracionInvalida :: Bool
-testDuracionAConDuracionInvalida =
-  let anuncio = nuevoA "Test" 0
-  in testF (duracionA anuncio)
+testDuracionAConDuracionInvalida = testF (duracionA (nuevoA "Test" 0))
 
 testDepartamentosASinDepartamentos :: Bool
 testDepartamentosASinDepartamentos = testF (departamentosA (nuevoA "Test" 60))
 
 testAgregarAConDepartamentoRepetido :: Bool
-testAgregarAConDepartamentoRepetido =
-  let anuncio = agregarA "Dept1" (nuevoA "Test" 60)
-  in testF (agregarA "Dept1" anuncio)
+testAgregarAConDepartamentoRepetido = testF (agregarA "Dept1" (agregarA "Dept1" (nuevoA "Test" 60)))
 
 testSacarADeAnuncioSinDepartamentos :: Bool
 testSacarADeAnuncioSinDepartamentos = testF (sacarA "Dept1" (nuevoA "Test" 60))
@@ -48,17 +42,13 @@ testAplicaAConDepartamentosVacios = testF (aplicaA [] (nuevoA "Test" 60))
 
 -- Pruebas para el módulo FileSystem (Excepciones)
 testAgregarAnuncioFRepetido :: Bool
-testAgregarAnuncioFRepetido =
-  let fs = agregarAnuncioF (nuevoA "Test" 60) nuevoF
-  in testF (agregarAnuncioF (nuevoA "Test" 60) fs)
+testAgregarAnuncioFRepetido = testF (agregarAnuncioF (nuevoA "Test" 60) (agregarAnuncioF (nuevoA "Test" 60) nuevoF))
 
 testSacarAnuncioFNoExistente :: Bool
 testSacarAnuncioFNoExistente = testF (sacarAnuncioF (nuevoA "Test" 60) nuevoF)
 
 testAgregarDepartamentoFRepetido :: Bool
-testAgregarDepartamentoFRepetido =
-  let fs = agregarDepartamentoF "Dept1" nuevoF
-  in testF (agregarDepartamentoF "Dept1" fs)
+testAgregarDepartamentoFRepetido = testF (agregarDepartamentoF "Dept1" (agregarDepartamentoF "Dept1" nuevoF))
 
 testSacarDepartamentoFNoExistente :: Bool
 testSacarDepartamentoFNoExistente = testF (sacarDepartamentoF "Dept1" nuevoF)
@@ -68,12 +58,10 @@ testAnunciosParaFConDepartamentosVacios = testF (anunciosParaF [] nuevoF)
 
 -- Funciones de prueba para Prompter (Excepciones)
 testShowP :: Bool
-testShowP =
-  testF (showP (configurarP (nuevoP fileSystemEjemplo) []))
+testShowP = testF (showP (configurarP (nuevoP fileSystemEjemplo) []))
 
 testAvanzarP :: Bool
-testAvanzarP =
-  testF (nombreA (showP (avanzarP (configurarP (nuevoP fileSystemEjemplo) ["Dept1"]))) == "Anuncio2")
+testAvanzarP = testF (nombreA (showP (avanzarP (configurarP (nuevoP fileSystemEjemplo) ["Dept1"]))) == "Anuncio2")
 
 -- Pruebas de funcionamiento normal (sin excepciones)
 
@@ -103,14 +91,20 @@ testAgregarDepartamentoF = departamentosF (agregarDepartamentoF "Dept1" nuevoF) 
 testSacarDepartamentoF :: Bool
 testSacarDepartamentoF = departamentosF (sacarDepartamentoF "Dept1" (agregarDepartamentoF "Dept1" nuevoF)) == []
 
+-- Prueba de funcionamiento normal para anunciosParaF
 testAnunciosParaF :: Bool
-testAnunciosParaF = anunciosParaF ["Dept1"] fileSystemEjemplo == [anuncio1, anuncio2]
+testAnunciosParaF =
+  anunciosParaF ["Dept1", "Dept2"]
+    (agregarDepartamentoF "Dept2" $
+      agregarAnuncioF anuncio1 $
+      agregarAnuncioF anuncio2 $
+      agregarDepartamentoF "Dept1" nuevoF
+    ) == [anuncio1, anuncio2]
 
 -- Funciones de prueba para Anuncio (funcionamiento normal)
 testNuevoA :: Bool
 testNuevoA =
-  let anuncio = nuevoA "AnuncioTest" 60
-  in nombreA anuncio == "AnuncioTest" && duracionA anuncio == 60
+  nombreA (nuevoA "AnuncioTest" 60) == "AnuncioTest" && duracionA (nuevoA "AnuncioTest" 60) == 60
 
 testAgregarA :: Bool
 testAgregarA =
@@ -123,24 +117,15 @@ testAplicaA =
 -- Funciones de prueba para Prompter (funcionamiento normal)
 testConfigurarP :: Bool
 testConfigurarP =
-  let fsConDept1Dept2 = agregarDepartamentoF "Dept1" $ agregarDepartamentoF "Dept2" nuevoF
-      prompterConAnuncios = configurarP (nuevoP fsConDept1Dept2) ["Dept1", "Dept2"]
-  in departamentosP prompterConAnuncios == ["Dept1", "Dept2"]
+  departamentosP (configurarP (nuevoP (agregarDepartamentoF "Dept1" (agregarDepartamentoF "Dept2" nuevoF))) ["Dept1", "Dept2"]) == ["Dept1", "Dept2"]
 
 testAnunciosP :: Bool
 testAnunciosP =
-  let fsConDept1 = agregarDepartamentoF "Dept1" $ nuevoF
-      fsConAnunciosYDeptos = agregarAnuncioF anuncio1 $ agregarAnuncioF anuncio2 fsConDept1
-      prompterConAnuncios = configurarP (nuevoP fsConAnunciosYDeptos) ["Dept1"]
-  in anunciosP prompterConAnuncios == ["Anuncio1", "Anuncio2"]
+  anunciosP (configurarP (nuevoP (agregarAnuncioF anuncio1 (agregarAnuncioF anuncio2 (agregarDepartamentoF "Dept1" nuevoF)))) ["Dept1"]) == ["Anuncio1", "Anuncio2"]
 
 testDuracionP :: Bool
 testDuracionP =
-  let fsConDept1 = agregarDepartamentoF "Dept1" nuevoF
-      fsConAnunciosYDeptos = agregarAnuncioF anuncio1 $ agregarAnuncioF anuncio2 fsConDept1
-      prompterConfigurado = configurarP (nuevoP fsConAnunciosYDeptos) ["Dept1"]
-      anuncios = anunciosParaF ["Dept1"] fsConAnunciosYDeptos
-  in sum (map duracionA anuncios) == 75
+  sum (map duracionA (anunciosParaF ["Dept1"] (agregarAnuncioF anuncio1 (agregarAnuncioF anuncio2 (agregarDepartamentoF "Dept1" nuevoF))))) == 75
 
 -- Función para ejecutar todas las pruebas e imprimir los resultados
 runTests :: IO ()
@@ -184,3 +169,4 @@ runTests = do
 
   where
     printResult (testName, result) = putStrLn $ testName ++ ": " ++ (if result then "Passed" else "Failed")
+
