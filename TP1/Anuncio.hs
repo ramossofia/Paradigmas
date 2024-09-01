@@ -4,6 +4,10 @@ import Tipos
 
 data Anuncio = Anu Nombre [Departamento] Duracion deriving (Eq, Show, Ord)
 
+verificarVacio :: String -> String -> String -- funcion auxiliar para verificar que un campo no este vacio
+verificarVacio "" _ = error "El campo no puede estar vacio"
+verificarVacio valor _ = valor
+
 nuevoA :: Nombre -> Duracion -> Anuncio -- dado un nombre y una duracion en segundos retorna un nuevo Anuncio
 nuevoA nombre duracion
   | duracion < 0 = error "La duración no puede ser negativa."
