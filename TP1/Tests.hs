@@ -115,11 +115,11 @@ testConfigurarP =
 
 testAnunciosP :: Bool
 testAnunciosP =
-  anunciosP (configurarP (nuevoP (agregarAnuncioF anuncio1 (agregarAnuncioF anuncio2 (agregarDepartamentoF "Dept1" nuevoF)))) ["Dept1"]) == ["Anuncio1", "Anuncio2"]
+  anunciosP (configurarP (nuevoP (agregarAnuncioF (agregarA "Dept1" anuncio1) (agregarAnuncioF (agregarA "Dept1" anuncio2) (agregarDepartamentoF "Dept1" nuevoF)))) ["Dept1"]) == ["Anuncio1", "Anuncio2"]
 
 testDuracionP :: Bool
 testDuracionP =
-  sum (map duracionA (anunciosParaF ["Dept1"] (agregarAnuncioF anuncio1 (agregarAnuncioF anuncio2 (agregarDepartamentoF "Dept1" nuevoF))))) == 75
+  sum (map duracionA (anunciosParaF ["Dept1"] (agregarAnuncioF (agregarA "Dept1" anuncio1) (agregarAnuncioF (agregarA "Dept1" anuncio2) (agregarDepartamentoF "Dept1" nuevoF))))) == 75
 
 -- Función para ejecutar todas las pruebas e imprimir los resultados
 runTests :: IO ()
