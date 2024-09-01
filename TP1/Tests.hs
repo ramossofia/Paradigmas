@@ -7,7 +7,6 @@ import Prompter (Prompter, anunciosP, archivosR, avanzarP, configurarP, departam
 import System.IO.Unsafe
 import Tipos
 
-
 testF :: (Show a) => a -> Bool
 testF action = unsafePerformIO $ do
   result <- tryJust isException (evaluate action)
@@ -17,7 +16,6 @@ testF action = unsafePerformIO $ do
   where
     isException :: SomeException -> Maybe ()
     isException _ = Just ()
-
 
 -- tests para excepciones:
 testNuevoAConDuracionNegativa :: Bool
@@ -62,8 +60,7 @@ testShowP = testF (showP (configurarP (nuevoP fileSystemEjemplo) []))
 testAvanzarP :: Bool
 testAvanzarP = testF (nombreA (showP (avanzarP (configurarP (nuevoP fileSystemEjemplo) ["Dept1"]))) == "Anuncio2")
 
-
---tests de funcionamiento con input esperado:
+-- tests de funcionamiento con input esperado:
 anuncio1 :: Anuncio
 anuncio1 = nuevoA "Anuncio1" 30
 
@@ -92,6 +89,10 @@ testAnunciosParaF :: Bool
 testAnunciosParaF =
   anunciosParaF ["nuevoDepto"] (agregarDepartamentoF "nuevoDepto" fileSystemEjemplo) == []
 
+testAnunciosF :: Bool
+testAnunciosF =
+  anunciosF (agregarAnuncioF anuncio1 (agregarAnuncioF anuncio2 nuevoF)) == [anuncio1, anuncio2]
+
 testNuevoA :: Bool
 testNuevoA =
   nombreA (nuevoA "AnuncioTest" 60) == "AnuncioTest" && duracionA (nuevoA "AnuncioTest" 60) == 60
@@ -104,6 +105,29 @@ testAplicaA :: Bool
 testAplicaA =
   aplicaA ["Dept1"] (agregarA "Dept1" (nuevoA "AnuncioTest" 60))
 
+testNombreA :: Bool
+testNombreA =
+  nombreA (nuevoA "AnuncioTest" 60) == "AnuncioTest"
+
+testDuracionA :: Bool
+testDuracionA =
+  duracionA (nuevoA "AnuncioTest" 60) == 60
+
+testDepartamentosP :: Bool
+testDepartamentosP =
+  departamentosP (configurarP (nuevoP fileSystemConDeptos) ["Dept1", "Dept2"]) == ["Dept1", "Dept2"]
+  where
+    anuncio1 = nuevoA "Anuncio1" 30
+    anuncio2 = nuevoA "Anuncio2" 45
+    fileSystemConDeptos = agregarAnuncioF anuncio1 . agregarAnuncioF anuncio2 . agregarDepartamentoF "Dept1" . agregarDepartamentoF "Dept2" $ nuevoF
+
+testArchivosR :: Bool
+testArchivosR =
+  archivosR (nuevoP fileSystemEjemplo) == fileSystemEjemplo
+
+testNuevoP :: Bool
+testNuevoP =
+  departamentosP (nuevoP fileSystemEjemplo) == []
 
 testConfigurarP :: Bool
 testConfigurarP =
@@ -116,7 +140,6 @@ testAnunciosP =
 testDuracionP :: Bool
 testDuracionP =
   sum (map duracionA (anunciosParaF ["Dept1"] (agregarAnuncioF (agregarA "Dept1" anuncio1) (agregarAnuncioF (agregarA "Dept1" anuncio2) (agregarDepartamentoF "Dept1" nuevoF))))) == 75
-
 
 runTests :: IO ()
 runTests = do
@@ -150,13 +173,22 @@ runTests = do
           ("testAgregarDepartamentoF", testAgregarDepartamentoF),
           ("testSacarDepartamentoF", testSacarDepartamentoF),
           ("testAnunciosParaF", testAnunciosParaF),
+          ("testsAnunciosF", testAnunciosF),
           ("testNuevoA", testNuevoA),
           ("testAgregarA", testAgregarA),
           ("testAplicaA", testAplicaA),
+          ("testNombreA", testNombreA),
+          ("testDuracionA", testDuracionA),
           ("testConfigurarP", testConfigurarP),
           ("testAnunciosP", testAnunciosP),
-          ("testDuracionP", testDuracionP)
+          ("testDuracionP", testDuracionP),
+          ("testAvanzarP", testAvanzarP),
+          ("testShowP", testShowP),
+          ("testDepartamentosP", testDepartamentosP),
+          ("testArchivosR", testArchivosR),
+          ("testNuevoP", testNuevoP)
         ]
+
   mapM_ printResult normalResults
   where
     printResult (testName, result) = putStrLn $ testName ++ ": " ++ (if result then "Passed" else "Failed")
