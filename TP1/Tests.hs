@@ -7,7 +7,7 @@ import Prompter (Prompter, anunciosP, archivosR, avanzarP, configurarP, departam
 import System.IO.Unsafe
 import Tipos
 
--- Función para probar excepciones
+
 testF :: (Show a) => a -> Bool
 testF action = unsafePerformIO $ do
   result <- tryJust isException (evaluate action)
@@ -18,7 +18,8 @@ testF action = unsafePerformIO $ do
     isException :: SomeException -> Maybe ()
     isException _ = Just ()
 
--- Pruebas para el módulo Anuncio (Excepciones)
+
+-- tests para excepciones:
 testNuevoAConDuracionNegativa :: Bool
 testNuevoAConDuracionNegativa = testF (nuevoA "Test" (-5))
 
@@ -40,7 +41,6 @@ testSacarADeAnuncioSinDepartamentos = testF (sacarA "Dept1" (nuevoA "Test" 60))
 testAplicaAConDepartamentosVacios :: Bool
 testAplicaAConDepartamentosVacios = testF (aplicaA [] (nuevoA "Test" 60))
 
--- Pruebas para el módulo FileSystem (Excepciones)
 testAgregarAnuncioFRepetido :: Bool
 testAgregarAnuncioFRepetido = testF (agregarAnuncioF (nuevoA "Test" 60) (agregarAnuncioF (nuevoA "Test" 60) nuevoF))
 
@@ -56,16 +56,14 @@ testSacarDepartamentoFNoExistente = testF (sacarDepartamentoF "Dept1" nuevoF)
 testAnunciosParaFConDepartamentosVacios :: Bool
 testAnunciosParaFConDepartamentosVacios = testF (anunciosParaF [] nuevoF)
 
--- Funciones de prueba para Prompter (Excepciones)
 testShowP :: Bool
 testShowP = testF (showP (configurarP (nuevoP fileSystemEjemplo) []))
 
 testAvanzarP :: Bool
 testAvanzarP = testF (nombreA (showP (avanzarP (configurarP (nuevoP fileSystemEjemplo) ["Dept1"]))) == "Anuncio2")
 
--- Pruebas de funcionamiento normal (sin excepciones)
 
--- Ejemplo de datos para pruebas
+--tests de funcionamiento con input esperado:
 anuncio1 :: Anuncio
 anuncio1 = nuevoA "Anuncio1" 30
 
@@ -75,7 +73,6 @@ anuncio2 = nuevoA "Anuncio2" 45
 fileSystemEjemplo :: FileSystem
 fileSystemEjemplo = agregarAnuncioF anuncio1 . agregarAnuncioF anuncio2 $ nuevoF
 
--- Funciones de prueba para FileSystem (funcionamiento normal)
 testNuevoF :: Bool
 testNuevoF = departamentosF nuevoF == [] && anunciosF nuevoF == []
 
@@ -95,7 +92,6 @@ testAnunciosParaF :: Bool
 testAnunciosParaF =
   anunciosParaF ["nuevoDepto"] (agregarDepartamentoF "nuevoDepto" fileSystemEjemplo) == []
 
--- Funciones de prueba para Anuncio (funcionamiento normal)
 testNuevoA :: Bool
 testNuevoA =
   nombreA (nuevoA "AnuncioTest" 60) == "AnuncioTest" && duracionA (nuevoA "AnuncioTest" 60) == 60
@@ -108,7 +104,7 @@ testAplicaA :: Bool
 testAplicaA =
   aplicaA ["Dept1"] (agregarA "Dept1" (nuevoA "AnuncioTest" 60))
 
--- Funciones de prueba para Prompter (funcionamiento normal)
+
 testConfigurarP :: Bool
 testConfigurarP =
   departamentosP (configurarP (nuevoP (agregarDepartamentoF "Dept1" (agregarDepartamentoF "Dept2" nuevoF))) ["Dept1", "Dept2"]) == ["Dept1", "Dept2"]
@@ -121,7 +117,7 @@ testDuracionP :: Bool
 testDuracionP =
   sum (map duracionA (anunciosParaF ["Dept1"] (agregarAnuncioF (agregarA "Dept1" anuncio1) (agregarAnuncioF (agregarA "Dept1" anuncio2) (agregarDepartamentoF "Dept1" nuevoF))))) == 75
 
--- Función para ejecutar todas las pruebas e imprimir los resultados
+
 runTests :: IO ()
 runTests = do
   putStrLn "\n#####################################"
