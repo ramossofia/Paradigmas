@@ -13,32 +13,32 @@ public class NodoConHijoIzquierdo extends Nodo {
 
     @Override
     public Nodo atLeft(Nodo left) {
-        return new NodoConHijos(carga, left, null);
+        return new NodoConHijos(carga, left, null);  // Convert to NodoConHijos
     }
 
     @Override
     public Nodo atRight(Nodo right) {
-        return new NodoConHijos(carga, this.left, right);
+        return new NodoConHijos(carga, this.left, right);  // Convert to NodoConHijos
     }
 
     @Override
     public Nodo left() {
-        return left;
+        return left;  // Polymorphism ensures this is handled correctly
     }
 
     @Override
     public Nodo right() {
-        throw new UnsupportedOperationException("Nada a la diestra!");
+        throw new UnsupportedOperationException("Nada a la diestra!");  // Polymorphic control
     }
 
     @Override
     public void dfs(LinkedList<Object> result) {
         result.add(carga);
-        left.dfs(result);
+        left.dfs(result);  // Delegate to left child
     }
 
     @Override
     public void addChildrenToQueue(Queue<Nodo> queue) {
-        queue.add(left);
+        queue.add(left);  // Only left child to add
     }
 }
