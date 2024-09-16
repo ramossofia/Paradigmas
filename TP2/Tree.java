@@ -46,12 +46,12 @@ public class Tree {
 
     // Get the left subtree
     public Tree left() {
-        return new Tree(root.left().getCarga());  // Use polymorphism to get the left node
+        return new Tree(root.left().getCarga());  // Polymorphic call, will work according to the node type
     }
 
     // Get the right subtree
     public Tree right() {
-        return new Tree(root.right().getCarga());  // Use polymorphism to get the right node
+        return new Tree(root.right().getCarga());  // Polymorphic call, will work according to the node type
     }
 
     // Get the root node's carga
