@@ -25,32 +25,24 @@ public class NodoConHijos extends Nodo {
 
     @Override
     public Nodo left() {
-        return left;
+        return left;  // Polymorphism ensures this will be called correctly
     }
 
     @Override
     public Nodo right() {
-        return right;
+        return right;  // Polymorphism ensures this will be called correctly
     }
 
     @Override
     public void dfs(LinkedList<Object> result) {
         result.add(carga);
-        if (left != null) {
-            left.dfs(result);
-        }
-        if (right != null) {
-            right.dfs(result);
-        }
+        left.dfs(result);  // Delegate to left child
+        right.dfs(result);  // Delegate to right child
     }
 
     @Override
     public void addChildrenToQueue(Queue<Nodo> queue) {
-        if (left != null) {
-            queue.add(left);
-        }
-        if (right != null) {
-            queue.add(right);
-        }
+        queue.add(left);
+        queue.add(right);
     }
 }
