@@ -6,7 +6,6 @@ import java.util.Queue;
 public class TreeVacio {
 
     public TreeVacio() {
-        // Represents an empty tree
     }
 
     public Object getCarga() {
@@ -14,15 +13,12 @@ public class TreeVacio {
     }
 
     public void dfs(LinkedList<Object> result) {
-        // Do nothing, as this tree is empty
     }
 
     public void bfs(Queue<Nodo> queue) {
-        // Do nothing, as this tree is empty
     }
 
     public void addChildrenToQueue(Queue<Nodo> queue) {
-        // Do nothing, as there are no children in an empty tree
     }
 
     public TreeVacio atLeft(TreeVacio left) {
