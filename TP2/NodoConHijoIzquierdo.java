@@ -1,3 +1,4 @@
+
 package tree;
 
 import java.util.LinkedList;
@@ -13,32 +14,32 @@ public class NodoConHijoIzquierdo extends Nodo {
 
     @Override
     public Nodo atLeft(Nodo left) {
-        return new NodoConHijos(carga, left, null);  // Convert to NodoConHijos
+        return new NodoConHijos(carga, left, null);
     }
 
     @Override
     public Nodo atRight(Nodo right) {
-        return new NodoConHijos(carga, this.left, right);  // Convert to NodoConHijos
+        return new NodoConHijos(carga, this.left, right);
     }
 
     @Override
     public Nodo left() {
-        return left;  // Polymorphism ensures this is handled correctly
+        return left;
     }
 
     @Override
     public Nodo right() {
-        throw new UnsupportedOperationException("Nada a la diestra!");  // Polymorphic control
+        throw new UnsupportedOperationException("Nada a la diestra!");
     }
 
     @Override
     public void dfs(LinkedList<Object> result) {
         result.add(carga);
-        left.dfs(result);  // Delegate to left child
+        left.dfs(result);
     }
 
     @Override
     public void addChildrenToQueue(Queue<Nodo> queue) {
-        queue.add(left);  // Only left child to add
+        queue.add(left);
     }
 }
