@@ -25,19 +25,19 @@ public class NodoConHijos extends Nodo {
 
     @Override
     public Nodo left() {
-        return left;  // Polymorphism ensures this will be called correctly
+        return left;
     }
 
     @Override
     public Nodo right() {
-        return right;  // Polymorphism ensures this will be called correctly
+        return right;
     }
 
     @Override
     public void dfs(LinkedList<Object> result) {
         result.add(carga);
-        left.dfs(result);  // Delegate to left child
-        right.dfs(result);  // Delegate to right child
+        left.dfs(result);
+        right.dfs(result);
     }
 
     @Override
