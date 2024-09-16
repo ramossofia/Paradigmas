@@ -11,22 +11,22 @@ public class NodoSinHijos extends Nodo {
 
     @Override
     public Nodo atLeft(Nodo left) {
-        return new NodoConHijoIzquierdo(carga, left);  // Cambia a NodoConHijoIzquierdo
+        return new NodoConHijoIzquierdo(carga, left);
     }
 
     @Override
     public Nodo atRight(Nodo right) {
-        return new NodoConHijoDerecho(carga, right);  // Cambia a NodoConHijoDerecho
+        return new NodoConHijoDerecho(carga, right);
     }
 
     @Override
     public Nodo left() {
-        throw new UnsupportedOperationException("Nada a la siniestra!");  // Manejado sin ifs
+        throw new UnsupportedOperationException("Nada a la siniestra!");
     }
 
     @Override
     public Nodo right() {
-        throw new UnsupportedOperationException("Nada a la diestra!");  // Manejado sin ifs
+        throw new UnsupportedOperationException("Nada a la diestra!");
     }
 
     @Override
@@ -36,6 +36,5 @@ public class NodoSinHijos extends Nodo {
 
     @Override
     public void addChildrenToQueue(Queue<Nodo> queue) {
-        // No children to add, handled via polymorphism
     }
 }
