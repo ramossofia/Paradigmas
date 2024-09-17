@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public abstract class Nodo {
+
     protected Object carga;
 
     public Nodo(Object carga) {
@@ -11,6 +12,7 @@ public abstract class Nodo {
     }
 
     public Object getCarga() {
+
         return carga;
     }
 
