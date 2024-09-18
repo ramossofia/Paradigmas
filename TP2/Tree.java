@@ -4,10 +4,10 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Tree {
-    private Nodo root;
+    private Arista root;
 
     public Tree(Object carga) {
-        this.root = new NodoSinHijos(carga);
+        this.root = new AristaExistente(carga);
     }
 
     public LinkedList<Object> dfs() {
@@ -18,11 +18,11 @@ public class Tree {
 
     public LinkedList<Object> bfs() {
         LinkedList<Object> result = new LinkedList<>();
-        Queue<Nodo> queue = new LinkedList<>();
+        Queue<Arista> queue = new LinkedList<>();
         queue.add(root);
 
         while (!queue.isEmpty()) {
-            Nodo current = queue.poll();
+            Arista current = queue.poll();
             result.add(current.getCarga());
             current.addChildrenToQueue(queue);
         }
@@ -41,11 +41,13 @@ public class Tree {
     }
 
     public Tree left() {
-        return new Tree(root.left().getCarga());
+        Arista leftChild = root.left();
+        return new Tree(leftChild.getCarga());
     }
 
     public Tree right() {
-        return new Tree(root.right().getCarga());
+        Arista rightChild = root.right();
+        return new Tree(rightChild.getCarga());
     }
 
     public Object carga() {
