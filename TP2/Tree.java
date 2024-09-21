@@ -8,7 +8,7 @@ public class Tree {
     private Leaf root;
 
     public Tree(Object carga) {
-        this.root = new LeafWithSubTree(carga);
+        this.root = new BranchLeaf(carga);
     }
 
     public ArrayList<Object> dfs() {
