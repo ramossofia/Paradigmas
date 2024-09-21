@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class LeafWithSubTree extends Leaf {
+public class BranchLeaf extends Leaf {
     private Object carga;
     private List<Leaf> children;
 
-    public LeafWithSubTree(Object carga) {
+    public BranchLeaf(Object carga) {
         this.carga = carga;
         this.children = new ArrayList<>();
         this.children.add(new NullLeaf("Nada a la siniestra!"));
