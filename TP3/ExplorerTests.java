@@ -116,7 +116,7 @@ public class ExplorerTests {
     @Test public void test16ProcesarComandoParaAbrirEscotillaInferior() {
         Explorer explorer = new Explorer(0, 0, new Norte());
         ProcesadorComandos procesador = new ProcesadorComandos();
-        procesador.procesar("i", explorer);
+        procesador.procesar("o", explorer);
         assertTrue(explorer.isEscotillaInferiorAbierta());
     }
 
@@ -158,7 +158,7 @@ public class ExplorerTests {
         assertFalse(explorer.isEscotillaInferiorAbierta());
     }
 
-    // Método assertThrowsLike único y corregido
+
     private static void assertThrowsLike(String msg, Executable executable) {
         Exception exception = assertThrows(Exception.class, executable);
         assertEquals(msg, exception.getMessage());
