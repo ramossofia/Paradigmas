@@ -1,15 +1,31 @@
 package Explorer;
 
 public class Explorer {
-    private int x, y;
+    private int x;
+    private int y;
     private Direccion direccion;
-    private boolean escotillaSuperiorAbierta = false;
-    private boolean escotillaInferiorAbierta = false;
+    private boolean escotillaSuperiorAbierta;
+    private boolean escotillaInferiorAbierta;
 
     public Explorer(int x, int y, Direccion direccion) {
         this.x = x;
         this.y = y;
         this.direccion = direccion;
+        this.escotillaSuperiorAbierta = false;
+        this.escotillaInferiorAbierta = false;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void actualizarPosicion(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public void moverAdelante() {
@@ -28,53 +44,29 @@ public class Explorer {
         direccion = direccion.rotarDerecha();
     }
 
-    // Abre la escotilla superior, pero lanza una excepción si la inferior está abierta
-    public void abrirEscotillaSuperior() {
-        if (escotillaSuperiorAbierta) throw new IllegalStateException("La escotilla superior ya está abierta");
-        if (escotillaInferiorAbierta) throw new IllegalStateException("No se puede abrir la escotilla superior con la inferior abierta");
-        escotillaSuperiorAbierta = true;
-    }
-
-    // Abre la escotilla inferior, pero lanza una excepción si la superior está abierta
-    public void abrirEscotillaInferior() {
-        if (escotillaInferiorAbierta) throw new IllegalStateException("La escotilla inferior ya está abierta");
-        if (escotillaSuperiorAbierta) throw new IllegalStateException("No se puede abrir la escotilla inferior con la superior abierta");
+    public void abrirEscotillaInferior() throws Exception {
+        if (escotillaSuperiorAbierta) {
+            throw new Exception("No se puede abrir la escotilla inferior si la superior está abierta");
+        }
         escotillaInferiorAbierta = true;
+        System.out.println("Escotilla inferior abierta.");
     }
 
-    // Cierra ambas escotillas
-    public void cerrarEscotillas() {
-        if (!escotillaSuperiorAbierta && !escotillaInferiorAbierta)
-            throw new IllegalStateException("No hay escotillas abiertas para cerrar");
+    public void abrirEscotillaSuperior() throws Exception {
+        if (escotillaInferiorAbierta) {
+            throw new Exception("No se puede abrir la escotilla superior si la inferior está abierta");
+        }
+        escotillaSuperiorAbierta = true;
+        System.out.println("Escotilla superior abierta.");
+    }
+
+    public void cerrarEscotillas() throws Exception {
+        if (!escotillaSuperiorAbierta && !escotillaInferiorAbierta) {
+            throw new Exception("No se puede cerrar si no hay escotillas abiertas");
+        }
         escotillaSuperiorAbierta = false;
         escotillaInferiorAbierta = false;
-    }
-
-    // Aspira aire a través de la escotilla superior
-    public void aspirar() {
-        if (!escotillaSuperiorAbierta)
-            throw new IllegalStateException("No se puede aspirar sin abrir la escotilla superior");
-        // Lógica para aspirar aire
-    }
-
-    // Recoge una muestra a través de la escotilla inferior
-    public void recogerMuestra() {
-        if (!escotillaInferiorAbierta)
-            throw new IllegalStateException("No se puede recoger muestra sin abrir la escotilla inferior");
-        // Lógica para recoger muestra
-    }
-
-    public void actualizarPosicion(int nuevoX, int nuevoY) {
-        this.x = nuevoX;
-        this.y = nuevoY;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
+        System.out.println("Escotillas cerradas.");
     }
 
     public boolean isEscotillaSuperiorAbierta() {
@@ -86,6 +78,20 @@ public class Explorer {
     }
 
     public String getDireccion() {
-        return direccion.toString();  // Asume que Direccion tiene un método toString adecuado
+        return direccion.getNombre();
+    }
+
+    public void aspirar() throws Exception {
+        if (!escotillaSuperiorAbierta) {
+            throw new Exception("No se puede aspirar sin abrir la escotilla superior");
+        }
+        System.out.println("Aspirando...");
+    }
+
+    public void recogerMuestra() throws Exception {
+        if (!escotillaInferiorAbierta) {
+            throw new Exception("No se puede recoger muestra sin abrir la escotilla inferior");
+        }
+        System.out.println("Recogiendo muestra...");
     }
 }
