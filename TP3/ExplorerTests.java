@@ -64,28 +64,44 @@ public class ExplorerTests {
     // Tests de operación de escotillas
     @Test public void test06AbrirEscotillaSuperiorExitosamente() {
         Explorer explorer = new Explorer(0, 0, new Norte());
-        explorer.abrirEscotillaSuperior();
+        try {
+            explorer.abrirEscotillaSuperior();
+        } catch (Exception e) {
+            fail("Exception should not be thrown");
+        }
         assertTrue(explorer.isEscotillaSuperiorAbierta());
     }
 
     @Test public void test07NoSePuedeAbrirEscotillaSuperiorSiInferiorEstaAbierta() {
         Explorer explorer = new Explorer(0, 0, new Norte());
-        explorer.abrirEscotillaInferior();
+        try {
+            explorer.abrirEscotillaInferior();
+        } catch (Exception e) {
+            fail("Exception should not be thrown");
+        }
         assertThrowsLike("No se puede abrir escotilla superior con la inferior abierta",
                 () -> explorer.abrirEscotillaSuperior());
     }
 
     @Test public void test15NoSePuedeAbrirEscotillaInferiorSiSuperiorEstaAbierta() {
         Explorer explorer = new Explorer(0, 0, new Norte());
-        explorer.abrirEscotillaSuperior();
+        try {
+            explorer.abrirEscotillaSuperior();
+        } catch (Exception e) {
+            fail("Exception should not be thrown");
+        }
         assertThrowsLike("No se puede abrir escotilla inferior con la superior abierta",
                 () -> explorer.abrirEscotillaInferior());
     }
 
     @Test public void test08CerrarEscotillasExitosamente() {
         Explorer explorer = new Explorer(0, 0, new Norte());
-        explorer.abrirEscotillaSuperior();
-        explorer.cerrarEscotillas();
+        try {
+            explorer.abrirEscotillaSuperior();
+            explorer.cerrarEscotillas();
+        } catch (Exception e) {
+            fail("Exception should not be thrown");
+        }
         assertFalse(explorer.isEscotillaSuperiorAbierta());
         assertFalse(explorer.isEscotillaInferiorAbierta());
     }
@@ -115,7 +131,11 @@ public class ExplorerTests {
 
     @Test public void test19ProcesarComandoParaCerrarEscotillas() {
         Explorer explorer = new Explorer(0, 0, new Norte());
-        explorer.abrirEscotillaSuperior();
+        try {
+            explorer.abrirEscotillaSuperior();
+        } catch (Exception e) {
+            fail("Exception should not be thrown");
+        }
         ProcesadorComandos procesador = new ProcesadorComandos();
         procesador.procesar("c", explorer);  // Cerrar escotillas
         assertFalse(explorer.isEscotillaSuperiorAbierta());
