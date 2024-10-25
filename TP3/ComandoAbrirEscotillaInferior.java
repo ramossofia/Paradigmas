@@ -5,7 +5,7 @@ public class ComandoAbrirEscotillaInferior extends Comando {
     public void ejecutar(Explorer explorer) {
         try {
             explorer.abrirEscotillaInferior();
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
