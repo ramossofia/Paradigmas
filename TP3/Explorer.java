@@ -48,6 +48,20 @@ public class Explorer {
         escotillaInferiorAbierta = false;
     }
 
+    // Aspira aire a través de la escotilla superior
+    public void aspirar() {
+        if (!escotillaSuperiorAbierta)
+            throw new IllegalStateException("No se puede aspirar sin abrir la escotilla superior");
+        // Lógica para aspirar aire
+    }
+
+    // Recoge una muestra a través de la escotilla inferior
+    public void recogerMuestra() {
+        if (!escotillaInferiorAbierta)
+            throw new IllegalStateException("No se puede recoger muestra sin abrir la escotilla inferior");
+        // Lógica para recoger muestra
+    }
+
     public void actualizarPosicion(int nuevoX, int nuevoY) {
         this.x = nuevoX;
         this.y = nuevoY;
