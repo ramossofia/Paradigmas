@@ -20,4 +20,9 @@ public class Sur extends Direccion {
     public Direccion rotarDerecha() {
         return new Oeste();
     }
+
+    @Override
+    public String getNombre() {
+        return "S";
+    }
 }
