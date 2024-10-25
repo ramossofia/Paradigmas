@@ -20,4 +20,9 @@ public class Este extends Direccion {
     public Direccion rotarDerecha() {
         return new Sur();
     }
+
+    @Override
+    public String getNombre() {
+        return "E";
+    }
 }
