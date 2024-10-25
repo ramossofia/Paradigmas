@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ExplorerTests {
 
+    // Tests básicos de inicialización y configuración inicial
     @Test public void test01NuevoExplorerConPosicionInicial() {
         Explorer explorer = new Explorer(0, 0, new Norte());
         assertEquals(0, explorer.getX());
@@ -12,6 +13,7 @@ public class ExplorerTests {
         assertEquals("N", explorer.getDireccion());
     }
 
+    // Tests de movimiento básico
     @Test public void test02MoverAdelanteConDireccionNorte() {
         Explorer explorer = new Explorer(0, 0, new Norte());
         explorer.moverAdelante();
@@ -26,6 +28,7 @@ public class ExplorerTests {
         assertEquals(2, explorer.getY());
     }
 
+    // Tests de rotación
     @Test public void test04RotarIzquierdaDesdeNorte() {
         Explorer explorer = new Explorer(0, 0, new Norte());
         explorer.rotarIzquierda();
@@ -36,56 +39,6 @@ public class ExplorerTests {
         Explorer explorer = new Explorer(0, 0, new Norte());
         explorer.rotarDerecha();
         assertEquals("E", explorer.getDireccion());
-    }
-
-    @Test public void test06AbrirEscotillaSuperiorExitosamente() {
-        Explorer explorer = new Explorer(0, 0, new Norte());
-        explorer.abrirEscotillaSuperior();
-        assertTrue(explorer.isEscotillaSuperiorAbierta());
-    }
-
-    @Test public void test07NoSePuedeAbrirEscotillaSuperiorSiInferiorEstaAbierta() {
-        Explorer explorer = new Explorer(0, 0, new Norte());
-        explorer.abrirEscotillaInferior();
-        assertThrowsLike("No se puede abrir escotilla superior con la inferior abierta",
-                () -> explorer.abrirEscotillaSuperior());
-    }
-
-    @Test public void test08CerrarEscotillasExitosamente() {
-        Explorer explorer = new Explorer(0, 0, new Norte());
-        explorer.abrirEscotillaSuperior();
-        explorer.cerrarEscotillas();
-        assertFalse(explorer.isEscotillaSuperiorAbierta());
-        assertFalse(explorer.isEscotillaInferiorAbierta());
-    }
-
-    @Test public void test09NoSePuedeCerrarSiNoHayEscotillasAbiertas() {
-        Explorer explorer = new Explorer(0, 0, new Norte());
-        assertThrowsLike("No hay escotillas abiertas para cerrar",
-                () -> explorer.cerrarEscotillas());
-    }
-
-    @Test public void test10ProcesarComandosMoverAdelanteYRotarIzquierda() {
-        Explorer explorer = new Explorer(0, 0, new Norte());
-        ProcesadorComandos procesador = new ProcesadorComandos();
-        procesador.procesar("fl", explorer);
-        assertEquals(0, explorer.getX());
-        assertEquals(1, explorer.getY());
-        assertEquals("O", explorer.getDireccion());
-    }
-
-    @Test public void test11ComandoInvalidoLanzaExcepcion() {
-        Explorer explorer = new Explorer(0, 0, new Norte());
-        ProcesadorComandos procesador = new ProcesadorComandos();
-        assertThrowsLike("Comando no válido: x",
-                () -> procesador.procesar("x", explorer));
-    }
-
-    @Test public void test12ComandoDesconocidoLanzaExcepcion() {
-        Explorer explorer = new Explorer(0, 0, new Norte());
-        ProcesadorComandos procesador = new ProcesadorComandos();
-        assertThrowsLike("Comando no válido: x",
-                () -> procesador.procesar("x", explorer));
     }
 
     @Test public void test13RotarCompletaDerecha() {
@@ -106,6 +59,20 @@ public class ExplorerTests {
         assertEquals("N", explorer.getDireccion());
     }
 
+    // Tests de operación de escotillas
+    @Test public void test06AbrirEscotillaSuperiorExitosamente() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        explorer.abrirEscotillaSuperior();
+        assertTrue(explorer.isEscotillaSuperiorAbierta());
+    }
+
+    @Test public void test07NoSePuedeAbrirEscotillaSuperiorSiInferiorEstaAbierta() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        explorer.abrirEscotillaInferior();
+        assertThrowsLike("No se puede abrir escotilla superior con la inferior abierta",
+                () -> explorer.abrirEscotillaSuperior());
+    }
+
     @Test public void test15NoSePuedeAbrirEscotillaInferiorSiSuperiorEstaAbierta() {
         Explorer explorer = new Explorer(0, 0, new Norte());
         explorer.abrirEscotillaSuperior();
@@ -113,29 +80,35 @@ public class ExplorerTests {
                 () -> explorer.abrirEscotillaInferior());
     }
 
+    @Test public void test08CerrarEscotillasExitosamente() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        explorer.abrirEscotillaSuperior();
+        explorer.cerrarEscotillas();
+        assertFalse(explorer.isEscotillaSuperiorAbierta());
+        assertFalse(explorer.isEscotillaInferiorAbierta());
+    }
+
+    @Test public void test09NoSePuedeCerrarSiNoHayEscotillasAbiertas() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        assertThrowsLike("No hay escotillas abiertas para cerrar",
+                () -> explorer.cerrarEscotillas());
+    }
+
+    // Tests de procesamiento de comandos individuales
+    @Test public void test10ProcesarComandosMoverAdelanteYRotarIzquierda() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        ProcesadorComandos procesador = new ProcesadorComandos();
+        procesador.procesar("fl", explorer);
+        assertEquals(0, explorer.getX());
+        assertEquals(1, explorer.getY());
+        assertEquals("O", explorer.getDireccion());
+    }
+
     @Test public void test16ProcesarComandoParaAbrirEscotillaInferior() {
         Explorer explorer = new Explorer(0, 0, new Norte());
         ProcesadorComandos procesador = new ProcesadorComandos();
         procesador.procesar("o", explorer);
         assertTrue(explorer.isEscotillaInferiorAbierta());
-    }
-
-    @Test public void test17RotarDerechaYAvanzar() {
-        Explorer explorer = new Explorer(0, 0, new Norte());
-        ProcesadorComandos procesador = new ProcesadorComandos();
-        procesador.procesar("rf", explorer);  // Rotar derecha y avanzar
-        assertEquals(1, explorer.getX());
-        assertEquals(0, explorer.getY());
-        assertEquals("E", explorer.getDireccion());
-    }
-
-    @Test public void test18RotarIzquierdaYAvanzar() {
-        Explorer explorer = new Explorer(0, 0, new Norte());
-        ProcesadorComandos procesador = new ProcesadorComandos();
-        procesador.procesar("lf", explorer);  // Rotar izquierda y avanzar
-        assertEquals(-1, explorer.getX());
-        assertEquals(0, explorer.getY());
-        assertEquals("O", explorer.getDireccion());
     }
 
     @Test public void test19ProcesarComandoParaCerrarEscotillas() {
@@ -147,10 +120,43 @@ public class ExplorerTests {
         assertFalse(explorer.isEscotillaInferiorAbierta());
     }
 
+    @Test public void test11ComandoInvalidoLanzaExcepcion() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        ProcesadorComandos procesador = new ProcesadorComandos();
+        assertThrowsLike("Comando no válido: x",
+                () -> procesador.procesar("x", explorer));
+    }
+
+    @Test public void test12ComandoDesconocidoLanzaExcepcion() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        ProcesadorComandos procesador = new ProcesadorComandos();
+        assertThrowsLike("Comando no válido: x",
+                () -> procesador.procesar("x", explorer));
+    }
+
+    // Tests de secuencias de comandos combinados
+    @Test public void test17RotarDerechaYAvanzar() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        ProcesadorComandos procesador = new ProcesadorComandos();
+        procesador.procesar("rf", explorer);
+        assertEquals(1, explorer.getX());
+        assertEquals(0, explorer.getY());
+        assertEquals("E", explorer.getDireccion());
+    }
+
+    @Test public void test18RotarIzquierdaYAvanzar() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        ProcesadorComandos procesador = new ProcesadorComandos();
+        procesador.procesar("lf", explorer);
+        assertEquals(-1, explorer.getX());
+        assertEquals(0, explorer.getY());
+        assertEquals("O", explorer.getDireccion());
+    }
+
     @Test public void test20ProcesarComandoComplejo() {
         Explorer explorer = new Explorer(0, 0, new Norte());
         ProcesadorComandos procesador = new ProcesadorComandos();
-        procesador.procesar("flrfc", explorer);  // Avanzar, rotar izquierda, avanzar, rotar derecha, cerrar escotillas
+        procesador.procesar("flrfc", explorer);
         assertEquals(0, explorer.getX());
         assertEquals(1, explorer.getY());
         assertEquals("E", explorer.getDireccion());
@@ -158,6 +164,18 @@ public class ExplorerTests {
         assertFalse(explorer.isEscotillaInferiorAbierta());
     }
 
+    // Tests adicionales para coberturas específicas
+    @Test public void test21NoSePuedeAspirarSiEscotillaSuperiorEstaCerrada() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        assertThrowsLike("No se puede aspirar sin abrir la escotilla superior",
+                () -> explorer.aspirar());
+    }
+
+    @Test public void test22NoSePuedeRecogerMuestraSiEscotillaInferiorEstaCerrada() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        assertThrowsLike("No se puede recoger muestra sin abrir la escotilla inferior",
+                () -> explorer.recogerMuestra());
+    }
 
     private static void assertThrowsLike(String msg, Executable executable) {
         Exception exception = assertThrows(Exception.class, executable);
