@@ -4,15 +4,11 @@ public class Explorer {
     private int x;
     private int y;
     private Direccion direccion;
-    private boolean escotillaSuperiorAbierta;
-    private boolean escotillaInferiorAbierta;
 
     public Explorer(int x, int y, Direccion direccion) {
         this.x = x;
         this.y = y;
         this.direccion = direccion;
-        this.escotillaSuperiorAbierta = false;
-        this.escotillaInferiorAbierta = false;
     }
 
     public int getX() {
@@ -45,33 +41,23 @@ public class Explorer {
     }
 
     public void abrirEscotillaInferior() throws Exception {
-        if (escotillaSuperiorAbierta) {
-            throw new Exception("No se puede abrir escotilla inferior con la superior abierta");
-        }
-        escotillaInferiorAbierta = true;
+        direccion.abrirEscotillaInferior(this);
     }
 
     public void abrirEscotillaSuperior() throws Exception {
-        if (escotillaInferiorAbierta) {
-            throw new Exception("No se puede abrir escotilla superior con la inferior abierta");
-        }
-        escotillaSuperiorAbierta = true;
+        direccion.abrirEscotillaSuperior(this);
     }
 
     public void cerrarEscotillas() throws Exception {
-        if (!escotillaSuperiorAbierta && !escotillaInferiorAbierta) {
-            throw new Exception("No hay escotillas abiertas para cerrar");
-        }
-        escotillaSuperiorAbierta = false;
-        escotillaInferiorAbierta = false;
+        direccion.cerrarEscotillas(this);
     }
 
     public boolean isEscotillaSuperiorAbierta() {
-        return escotillaSuperiorAbierta;
+        return direccion.isEscotillaSuperiorAbierta();
     }
 
     public boolean isEscotillaInferiorAbierta() {
-        return escotillaInferiorAbierta;
+        return direccion.isEscotillaInferiorAbierta();
     }
 
     public String getDireccion() {
@@ -79,14 +65,10 @@ public class Explorer {
     }
 
     public void aspirar() throws Exception {
-        if (!escotillaSuperiorAbierta) {
-            throw new Exception("No se puede aspirar sin abrir la escotilla superior");
-        }
+        direccion.aspirar(this);
     }
 
     public void recogerMuestra() throws Exception {
-        if (!escotillaInferiorAbierta) {
-            throw new Exception("No se puede recoger muestra sin abrir la escotilla inferior");
-        }
+        direccion.recogerMuestra(this);
     }
 }
