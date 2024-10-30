@@ -8,7 +8,7 @@ public class ComandoNoValido extends Comando {
     }
 
     @Override
-    public void ejecutar(Explorer explorer) throws Exception {
-        throw new Exception("Comando no válido: " + comando);
+    public void ejecutar(Explorer explorer)  {
+        throw new RuntimeException("Comando no válido: " + comando);
     }
 }
