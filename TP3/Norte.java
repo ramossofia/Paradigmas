@@ -7,6 +7,14 @@ public class Norte extends Direccion {
         this.estado = new EscotillasCerradas(this);
     }
 
+    public void setEstado(EstadoEscotilla estado) {
+        this.estado = estado;
+    }
+
+    public EstadoEscotilla getEstado() {
+        return estado;
+    }
+
     @Override
     public void moverAdelante(Explorer explorer) {
         explorer.actualizarPosicion(explorer.getX(), explorer.getY() + 1);
@@ -33,32 +41,28 @@ public class Norte extends Direccion {
     }
 
     @Override
-    public void abrirEscotillaSuperior(Explorer explorer) throws EscotillaException {
-        estado.abrirEscotillaSuperior();
-    }
-
-    @Override
-    public void abrirEscotillaInferior(Explorer explorer) throws EscotillaException {
+    public void abrirEscotillaInferior(Explorer explorer) {
         estado.abrirEscotillaInferior();
     }
 
     @Override
-    public void cerrarEscotillas(Explorer explorer) throws EscotillaException {
+    public void abrirEscotillaSuperior(Explorer explorer) {
+        estado.abrirEscotillaSuperior();
+    }
+
+    @Override
+    public void cerrarEscotillas(Explorer explorer) {
         estado.cerrarEscotillas();
     }
 
     @Override
-    public void aspirar(Explorer explorer) throws EscotillaException {
+    public void aspirar(Explorer explorer) {
         estado.aspirar();
     }
 
     @Override
-    public void recogerMuestra(Explorer explorer) throws EscotillaException {
+    public void recogerMuestra(Explorer explorer) {
         estado.recogerMuestra();
-    }
-
-    public void setEstado(EstadoEscotilla estado) {
-        this.estado = estado;
     }
 
     @Override
@@ -72,22 +76,27 @@ public class Norte extends Direccion {
     }
 
     @Override
-    protected void validarAbrirEscotillaSuperior() throws EscotillaException {
+    protected void validarAbrirEscotillaSuperior() {
+        // Validation logic for opening the superior hatch
     }
 
     @Override
-    protected void validarAbrirEscotillaInferior() throws EscotillaException {
+    protected void validarAbrirEscotillaInferior() {
+        // Validation logic for opening the inferior hatch
     }
 
     @Override
-    protected void validarCerrarEscotillas() throws EscotillaException {
+    protected void validarCerrarEscotillas() {
+        // Validation logic for closing the hatches
     }
 
     @Override
-    protected void validarAspirar() throws EscotillaException {
+    protected void validarAspirar() {
+        // Validation logic for aspirating
     }
 
     @Override
-    protected void validarRecogerMuestra() throws EscotillaException {
+    protected void validarRecogerMuestra() {
+        // Validation logic for collecting samples
     }
 }
