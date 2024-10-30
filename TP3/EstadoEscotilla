@@ -1,9 +1,9 @@
 package Explorer;
 
 public abstract class EstadoEscotilla {
-    public abstract void abrirEscotillaSuperior() throws EscotillaException;
-    public abstract void abrirEscotillaInferior() throws EscotillaException;
-    public abstract void cerrarEscotillas() throws EscotillaException;
-    public abstract void aspirar() throws EscotillaException;
-    public abstract void recogerMuestra() throws EscotillaException;
+    public abstract void abrirEscotillaSuperior();
+    public abstract void abrirEscotillaInferior();
+    public abstract void cerrarEscotillas();
+    public abstract void aspirar();
+    public abstract void recogerMuestra();
 }
