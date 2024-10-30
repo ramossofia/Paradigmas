@@ -30,31 +30,31 @@ public class Sur extends Direccion {
     }
 
     @Override
-    public void abrirEscotillaSuperior(Explorer explorer) throws EscotillaException {
+    public void abrirEscotillaSuperior(Explorer explorer) {
         validarAbrirEscotillaSuperior();
         escotillaSuperiorAbierta = true;
     }
 
     @Override
-    public void abrirEscotillaInferior(Explorer explorer) throws EscotillaException {
+    public void abrirEscotillaInferior(Explorer explorer) {
         validarAbrirEscotillaInferior();
         escotillaInferiorAbierta = true;
     }
 
     @Override
-    public void cerrarEscotillas(Explorer explorer) throws EscotillaException {
+    public void cerrarEscotillas(Explorer explorer) {
         validarCerrarEscotillas();
         escotillaSuperiorAbierta = false;
         escotillaInferiorAbierta = false;
     }
 
     @Override
-    public void aspirar(Explorer explorer) throws EscotillaException {
+    public void aspirar(Explorer explorer) {
         validarAspirar();
     }
 
     @Override
-    public void recogerMuestra(Explorer explorer) throws EscotillaException {
+    public void recogerMuestra(Explorer explorer) {
         validarRecogerMuestra();
     }
 
@@ -69,22 +69,22 @@ public class Sur extends Direccion {
     }
 
     @Override
-    protected void validarAbrirEscotillaSuperior() throws EscotillaException {
+    protected void validarAbrirEscotillaSuperior() {
     }
 
     @Override
-    protected void validarAbrirEscotillaInferior() throws EscotillaException {
+    protected void validarAbrirEscotillaInferior() {
     }
 
     @Override
-    protected void validarCerrarEscotillas() throws EscotillaException {
+    protected void validarCerrarEscotillas() {
     }
 
     @Override
-    protected void validarAspirar() throws EscotillaException {
+    protected void validarAspirar() {
     }
 
     @Override
-    protected void validarRecogerMuestra() throws EscotillaException {
+    protected void validarRecogerMuestra() {
     }
 }
