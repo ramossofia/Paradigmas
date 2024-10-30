@@ -1,44 +1,32 @@
-// ProcesadorComandos.java
 package Explorer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProcesadorComandos {
 
-    public void procesar(String comandosStr, Explorer explorer) {
-        for (char comando : comandosStr.toCharArray()) {
-            Comando accion = crearComando(comando);
-            if (accion instanceof ComandoCerrarEscotillas) {
-                if (explorer.isEscotillaSuperiorAbierta() || explorer.isEscotillaInferiorAbierta()) {
-                    accion.ejecutar(explorer);
-                } else {
-                    // Skip the command if no escotillas are open
-                    continue;
-                }
-            } else {
-                accion.ejecutar(explorer);
-            }
+    private static final Map<Character, Comando> COMANDOS = new HashMap<>();
+
+    // Static block to initialize commands
+    static {
+        // Define comandos válidos
+        COMANDOS.put('f', new ComandoMoverAdelante());
+        COMANDOS.put('b', new ComandoMoverAtras());
+        COMANDOS.put('l', new ComandoRotarIzquierda());
+        COMANDOS.put('r', new ComandoRotarDerecha());
+        COMANDOS.put('O', new ComandoAbrirEscotillaSuperior());
+        COMANDOS.put('o', new ComandoAbrirEscotillaInferior());
+        COMANDOS.put('c', new ComandoCerrarEscotillas());
+
+        // Define `ComandoNoValido` para caracteres no mapeados
+        for (char c = 0; c < 128; c++) {
+            COMANDOS.putIfAbsent(c, new ComandoNoValido(c));
         }
     }
 
-    private Comando crearComando(char comando) {
-        switch (comando) {
-            case 'f':
-                return new ComandoMoverAdelante();
-            case 'b':
-                return new ComandoMoverAtras();
-            case 'l':
-                return new ComandoRotarIzquierda();
-            case 'r':
-                return new ComandoRotarDerecha();
-            case 's':
-                return new ComandoAbrirEscotillaSuperior();
-            case 'i':
-                return new ComandoAbrirEscotillaInferior();
-            case 'c':
-                return new ComandoCerrarEscotillas();
-            case 'o':
-                return new ComandoAbrirEscotillaInferior();
-            default:
-                throw new IllegalArgumentException("Comando no válido: " + comando);
+    public void procesar(String comandosStr, Explorer explorer) throws Exception {
+        for (char comando : comandosStr.toCharArray()) {
+            COMANDOS.get(comando).ejecutar(explorer);
         }
     }
 }
