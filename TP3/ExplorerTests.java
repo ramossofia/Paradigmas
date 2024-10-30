@@ -172,7 +172,7 @@ public class ExplorerTests {
     @Test public void test20ProcesarComandoComplejo() throws Exception {
         Explorer explorer = new Explorer(0, 0, new Norte());
         ProcesadorComandos procesador = new ProcesadorComandos();
-        procesador.procesar("flrfc", explorer);
+        procesador.procesar("flrfr", explorer);
         assertEquals(0, explorer.getX());
         assertEquals(2, explorer.getY());
         assertEquals("E", explorer.getDireccion());
