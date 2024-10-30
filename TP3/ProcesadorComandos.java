@@ -19,7 +19,6 @@ public class ProcesadorComandos {
                 'c', new ComandoCerrarEscotillas()
         ));
 
-        // Define `ComandoNoValido` para caracteres no mapeados
         for (char c = 0; c < 128; c++) {
             COMANDOS.putIfAbsent(c, new ComandoNoValido(c));
         }
