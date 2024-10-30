@@ -1,8 +1,11 @@
 package Explorer;
 
 public class Norte extends Direccion {
-    private boolean escotillaSuperiorAbierta = false;
-    private boolean escotillaInferiorAbierta = false;
+    private EstadoEscotilla estado;
+
+    public Norte() {
+        this.estado = new EscotillasCerradas(this);
+    }
 
     @Override
     public void moverAdelante(Explorer explorer) {
@@ -30,70 +33,61 @@ public class Norte extends Direccion {
     }
 
     @Override
-    public void abrirEscotillaSuperior(Explorer explorer) throws Exception {
-        validarAbrirEscotillaSuperior();
-        escotillaSuperiorAbierta = true;
+    public void abrirEscotillaSuperior(Explorer explorer) throws EscotillaException {
+        estado.abrirEscotillaSuperior();
     }
 
     @Override
-    public void abrirEscotillaInferior(Explorer explorer) throws Exception {
-        validarAbrirEscotillaInferior();
-        escotillaInferiorAbierta = true;
+    public void abrirEscotillaInferior(Explorer explorer) throws EscotillaException {
+        estado.abrirEscotillaInferior();
     }
 
     @Override
-    public void cerrarEscotillas(Explorer explorer) throws Exception {
-        if (!escotillaSuperiorAbierta && !escotillaInferiorAbierta) {
-            throw new Exception("No hay escotillas abiertas para cerrar");
-        }
-        escotillaSuperiorAbierta = false;
-        escotillaInferiorAbierta = false;
+    public void cerrarEscotillas(Explorer explorer) throws EscotillaException {
+        estado.cerrarEscotillas();
     }
 
     @Override
-    public void aspirar(Explorer explorer) throws Exception {
-        if (!escotillaSuperiorAbierta) {
-            throw new Exception("No se puede aspirar sin abrir la escotilla superior");
-        }
+    public void aspirar(Explorer explorer) throws EscotillaException {
+        estado.aspirar();
     }
 
     @Override
-    public void recogerMuestra(Explorer explorer) throws Exception {
-        if (!escotillaInferiorAbierta) {
-            throw new Exception("No se puede recoger muestra sin abrir la escotilla inferior");
-        }
+    public void recogerMuestra(Explorer explorer) throws EscotillaException {
+        estado.recogerMuestra();
+    }
+
+    public void setEstado(EstadoEscotilla estado) {
+        this.estado = estado;
     }
 
     @Override
     public boolean isEscotillaSuperiorAbierta() {
-        return escotillaSuperiorAbierta;
+        return estado instanceof EscotillaSuperiorAbierta;
     }
 
     @Override
     public boolean isEscotillaInferiorAbierta() {
-        return escotillaInferiorAbierta;
+        return estado instanceof EscotillaInferiorAbierta;
     }
 
     @Override
-    protected void validarAbrirEscotillaSuperior() throws Exception {
-        if (escotillaInferiorAbierta) {
-            throw new Exception("No se puede abrir escotilla superior con la inferior abierta");
-        }
+    protected void validarAbrirEscotillaSuperior() throws EscotillaException {
     }
 
     @Override
-    protected void validarAbrirEscotillaInferior() throws Exception {
-        if (escotillaSuperiorAbierta) {
-            throw new Exception("No se puede abrir escotilla inferior con la superior abierta");
-        }
+    protected void validarAbrirEscotillaInferior() throws EscotillaException {
     }
 
     @Override
-    protected void validarCerrarEscotillas() {}
+    protected void validarCerrarEscotillas() throws EscotillaException {
+    }
 
     @Override
-    protected void validarAspirar() {}
+    protected void validarAspirar() throws EscotillaException {
+    }
 
     @Override
-    protected void validarRecogerMuestra() {}
+    protected void validarRecogerMuestra() throws EscotillaException {
+    }
 }
