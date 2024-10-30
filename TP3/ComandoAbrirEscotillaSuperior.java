@@ -5,8 +5,9 @@ public class ComandoAbrirEscotillaSuperior extends Comando {
     public void ejecutar(Explorer explorer) {
         try {
             explorer.abrirEscotillaSuperior();
-        } catch (IllegalStateException e) {
-            System.out.println("Error: " + e.getMessage());
+        } catch (Exception e) {
+            // Handle the exception, e.g., log it or rethrow as a runtime exception
+            System.err.println("Error opening the upper hatch: " + e.getMessage());
         }
     }
 }
