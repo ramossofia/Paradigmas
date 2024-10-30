@@ -1,0 +1,7 @@
+package Explorer;
+
+public class ComandoNulo extends Comando {
+    @Override
+    public void ejecutar(Explorer explorer) {
+    }
+}
