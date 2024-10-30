@@ -40,15 +40,15 @@ public class Explorer {
         direccion = direccion.rotarDerecha();
     }
 
-    public void abrirEscotillaInferior() throws EscotillaException {
+    public void abrirEscotillaInferior() throws Exception {
         direccion.abrirEscotillaInferior(this);
     }
 
-    public void abrirEscotillaSuperior() throws EscotillaException {
+    public void abrirEscotillaSuperior() throws Exception {
         direccion.abrirEscotillaSuperior(this);
     }
 
-    public void cerrarEscotillas() throws EscotillaException {
+    public void cerrarEscotillas() throws Exception {
         direccion.cerrarEscotillas(this);
     }
 
@@ -64,11 +64,11 @@ public class Explorer {
         return direccion.getNombre();
     }
 
-    public void aspirar() throws EscotillaException {
+    public void aspirar() throws Exception {
         direccion.aspirar(this);
     }
 
-    public void recogerMuestra() throws EscotillaException {
+    public void recogerMuestra() throws Exception {
         direccion.recogerMuestra(this);
     }
 }
