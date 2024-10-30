@@ -1,0 +1,7 @@
+package Explorer;
+
+public class EscotillaException extends Exception {
+    public EscotillaException(String message) {
+        super(message);
+    }
+}
