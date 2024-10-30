@@ -1,0 +1,14 @@
+package Explorer;
+
+public class ComandoNoValido extends Comando {
+    private final char comando;
+
+    public ComandoNoValido(char comando) {
+        this.comando = comando;
+    }
+
+    @Override
+    public void ejecutar(Explorer explorer) throws Exception {
+        throw new Exception("Comando no válido: " + comando);
+    }
+}
