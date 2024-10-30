@@ -1,0 +1,34 @@
+package Explorer;
+
+public class EscotillaInferiorAbierta extends EstadoEscotilla {
+    private final Norte norte;
+
+    public EscotillaInferiorAbierta(Norte norte) {
+        this.norte = norte;
+    }
+
+    @Override
+    public void abrirEscotillaSuperior() throws EscotillaException {
+        throw new EscotillaException("No se puede abrir escotilla superior con la inferior abierta");
+    }
+
+    @Override
+    public void abrirEscotillaInferior() throws EscotillaException {
+        throw new EscotillaException("La escotilla inferior ya está abierta");
+    }
+
+    @Override
+    public void cerrarEscotillas() {
+        norte.setEstado(new EscotillasCerradas(norte));
+    }
+
+    @Override
+    public void aspirar() throws EscotillaException {
+        throw new EscotillaException("No se puede aspirar sin abrir la escotilla superior");
+    }
+
+    @Override
+    public void recogerMuestra() {
+        // Implement recogerMuestra logic
+    }
+}
