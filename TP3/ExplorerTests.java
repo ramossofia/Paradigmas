@@ -108,7 +108,7 @@ public class ExplorerTests {
                 () -> explorer.cerrarEscotillas());
     }
 
-    @Test public void test10ProcesarComandosMoverAdelanteYRotarIzquierda() {
+    @Test public void test10ProcesarComandosMoverAdelanteYRotarIzquierda() throws Exception {
         Explorer explorer = new Explorer(0, 0, new Norte());
         ProcesadorComandos procesador = new ProcesadorComandos();
         procesador.procesar("fl", explorer);
@@ -117,14 +117,14 @@ public class ExplorerTests {
         assertEquals("O", explorer.getDireccion());
     }
 
-    @Test public void test16ProcesarComandoParaAbrirEscotillaInferior() {
+    @Test public void test16ProcesarComandoParaAbrirEscotillaInferior() throws Exception {
         Explorer explorer = new Explorer(0, 0, new Norte());
         ProcesadorComandos procesador = new ProcesadorComandos();
         procesador.procesar("o", explorer);
         assertTrue(explorer.isEscotillaInferiorAbierta());
     }
 
-    @Test public void test19ProcesarComandoParaCerrarEscotillas() {
+    @Test public void test19ProcesarComandoParaCerrarEscotillas() throws Exception {
         Explorer explorer = new Explorer(0, 0, new Norte());
         try {
             explorer.abrirEscotillaSuperior();
@@ -151,7 +151,7 @@ public class ExplorerTests {
                 () -> procesador.procesar("x", explorer));
     }
 
-    @Test public void test17RotarDerechaYAvanzar() {
+    @Test public void test17RotarDerechaYAvanzar() throws Exception {
         Explorer explorer = new Explorer(0, 0, new Norte());
         ProcesadorComandos procesador = new ProcesadorComandos();
         procesador.procesar("rf", explorer);
@@ -160,7 +160,7 @@ public class ExplorerTests {
         assertEquals("E", explorer.getDireccion());
     }
 
-    @Test public void test18RotarIzquierdaYAvanzar() {
+    @Test public void test18RotarIzquierdaYAvanzar() throws Exception {
         Explorer explorer = new Explorer(0, 0, new Norte());
         ProcesadorComandos procesador = new ProcesadorComandos();
         procesador.procesar("lf", explorer);
@@ -169,7 +169,7 @@ public class ExplorerTests {
         assertEquals("O", explorer.getDireccion());
     }
 
-    @Test public void test20ProcesarComandoComplejo() {
+    @Test public void test20ProcesarComandoComplejo() throws Exception {
         Explorer explorer = new Explorer(0, 0, new Norte());
         ProcesadorComandos procesador = new ProcesadorComandos();
         procesador.procesar("flrfc", explorer);
