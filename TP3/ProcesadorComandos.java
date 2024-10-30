@@ -5,18 +5,19 @@ import java.util.Map;
 
 public class ProcesadorComandos {
 
-    private static final Map<Character, Comando> COMANDOS = new HashMap<>();
+    private static final Map<Character, Comando> COMANDOS;
 
     // Static block to initialize commands
     static {
-        // Define comandos válidos
-        COMANDOS.put('f', new ComandoMoverAdelante());
-        COMANDOS.put('b', new ComandoMoverAtras());
-        COMANDOS.put('l', new ComandoRotarIzquierda());
-        COMANDOS.put('r', new ComandoRotarDerecha());
-        COMANDOS.put('O', new ComandoAbrirEscotillaSuperior());
-        COMANDOS.put('o', new ComandoAbrirEscotillaInferior());
-        COMANDOS.put('c', new ComandoCerrarEscotillas());
+        COMANDOS = new HashMap<>(Map.of(
+                'f', new ComandoMoverAdelante(),
+                'b', new ComandoMoverAtras(),
+                'l', new ComandoRotarIzquierda(),
+                'r', new ComandoRotarDerecha(),
+                'O', new ComandoAbrirEscotillaSuperior(),
+                'o', new ComandoAbrirEscotillaInferior(),
+                'c', new ComandoCerrarEscotillas()
+        ));
 
         // Define `ComandoNoValido` para caracteres no mapeados
         for (char c = 0; c < 128; c++) {
