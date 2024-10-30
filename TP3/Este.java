@@ -43,25 +43,19 @@ public class Este extends Direccion {
 
     @Override
     public void cerrarEscotillas(Explorer explorer) throws Exception {
-        if (!escotillaSuperiorAbierta && !escotillaInferiorAbierta) {
-            throw new Exception("No hay escotillas abiertas para cerrar");
-        }
+        validarCerrarEscotillas();
         escotillaSuperiorAbierta = false;
         escotillaInferiorAbierta = false;
     }
 
     @Override
     public void aspirar(Explorer explorer) throws Exception {
-        if (!escotillaSuperiorAbierta) {
-            throw new Exception("No se puede aspirar sin abrir la escotilla superior");
-        }
+        validarAspirar();
     }
 
     @Override
     public void recogerMuestra(Explorer explorer) throws Exception {
-        if (!escotillaInferiorAbierta) {
-            throw new Exception("No se puede recoger muestra sin abrir la escotilla inferior");
-        }
+        validarRecogerMuestra();
     }
 
     @Override
@@ -76,36 +70,26 @@ public class Este extends Direccion {
 
     @Override
     protected void validarAbrirEscotillaSuperior() throws Exception {
-        if (escotillaInferiorAbierta) {
-            throw new Exception("No se puede abrir escotilla superior con la inferior abierta");
-        }
+        // No validation needed
     }
 
     @Override
     protected void validarAbrirEscotillaInferior() throws Exception {
-        if (escotillaSuperiorAbierta) {
-            throw new Exception("No se puede abrir escotilla inferior con la superior abierta");
-        }
+        // No validation needed
     }
 
     @Override
     protected void validarCerrarEscotillas() throws Exception {
-        if (!escotillaSuperiorAbierta && !escotillaInferiorAbierta) {
-            throw new Exception("No hay escotillas abiertas para cerrar");
-        }
+        // No validation needed
     }
 
     @Override
     protected void validarAspirar() throws Exception {
-        if (!escotillaSuperiorAbierta) {
-            throw new Exception("No se puede aspirar sin abrir la escotilla superior");
-        }
-}
-
-@Override
-protected void validarRecogerMuestra() throws Exception {
-    if (!escotillaInferiorAbierta) {
-        throw new Exception("No se puede recoger muestra sin abrir la escotilla inferior");
+        // No validation needed
     }
-}
+
+    @Override
+    protected void validarRecogerMuestra() throws Exception {
+        // No validation needed
+    }
 }
