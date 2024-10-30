@@ -192,6 +192,49 @@ public class ExplorerTests {
                 () -> explorer.recogerMuestra());
     }
 
+
+    @Test public void test25ComandosConsecutivosInvalidosDetienenProcesamiento() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        ProcesadorComandos procesador = new ProcesadorComandos();
+        assertThrowsLike("Comando no válido: x",
+                () -> procesador.procesar("xxf", explorer));
+        assertEquals(0, explorer.getX());
+        assertEquals(0, explorer.getY());
+    }
+
+    @Test public void test27DireccionesActualizadasCorrectamenteDespuesDeMultiplesRotaciones() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        explorer.rotarDerecha();
+        explorer.rotarDerecha();
+        explorer.rotarIzquierda();
+        assertEquals("E", explorer.getDireccion());
+    }
+
+    @Test public void test28ExplorerNoSeMueveConComandosErroneosAntesDeUnoValido() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        ProcesadorComandos procesador = new ProcesadorComandos();
+        assertThrowsLike("Comando no válido: x",
+                () -> procesador.procesar("xfl", explorer));
+        assertEquals(0, explorer.getX());
+        assertEquals(0, explorer.getY());
+    }
+
+    @Test public void test29IntentarCerrarEscotillasCuandoAmbasEstanCerradas() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        assertThrowsLike("No hay escotillas abiertas para cerrar",
+                () -> explorer.cerrarEscotillas());
+    }
+
+    @Test public void test30EstadoNoCambiaConComandosNoReconocidos() {
+        Explorer explorer = new Explorer(0, 0, new Norte());
+        ProcesadorComandos procesador = new ProcesadorComandos();
+        assertThrowsLike("Comando no válido: x",
+                () -> procesador.procesar("x", explorer));
+        assertEquals(0, explorer.getX());
+        assertEquals(0, explorer.getY());
+        assertEquals("N", explorer.getDireccion());
+    }
+
     private static void assertThrowsLike(String msg, Executable executable) {
         Exception exception = assertThrows(Exception.class, executable);
         assertEquals(msg, exception.getMessage());
