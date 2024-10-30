@@ -8,27 +8,27 @@ public class EscotillasCerradas extends EstadoEscotilla {
     }
 
     @Override
-    public void abrirEscotillaSuperior() throws EscotillaException {
+    public void abrirEscotillaSuperior() {
         norte.setEstado(new EscotillaSuperiorAbierta(norte));
     }
 
     @Override
-    public void abrirEscotillaInferior() throws EscotillaException {
+    public void abrirEscotillaInferior() {
         norte.setEstado(new EscotillaInferiorAbierta(norte));
     }
 
     @Override
-    public void cerrarEscotillas() throws EscotillaException {
-        throw new EscotillaException("No hay escotillas abiertas para cerrar");
+    public void cerrarEscotillas() {
+        throw new RuntimeException("No hay escotillas abiertas para cerrar");
     }
 
     @Override
-    public void aspirar() throws EscotillaException {
-        throw new EscotillaException("No se puede aspirar sin abrir la escotilla superior");
+    public void aspirar() {
+        throw new RuntimeException("No se puede aspirar sin abrir la escotilla superior");
     }
 
     @Override
-    public void recogerMuestra() throws EscotillaException {
-        throw new EscotillaException("No se puede recoger muestra sin abrir la escotilla inferior");
+    public void recogerMuestra() {
+        throw new RuntimeException("No se puede recoger muestra sin abrir la escotilla inferior");
     }
 }
