@@ -69,37 +69,17 @@ public class Sur extends Direccion {
     }
 
     @Override
-    protected void validarAbrirEscotillaSuperior() throws Exception {
-        if (escotillaInferiorAbierta) {
-            throw new Exception("No se puede abrir escotilla superior con la inferior abierta");
-        }
-    }
+    protected void validarAbrirEscotillaSuperior() {}
 
     @Override
-    protected void validarAbrirEscotillaInferior() throws Exception {
-        if (escotillaSuperiorAbierta) {
-            throw new Exception("No se puede abrir escotilla inferior con la superior abierta");
-        }
-    }
+    protected void validarAbrirEscotillaInferior() {}
 
     @Override
-    protected void validarCerrarEscotillas() throws Exception {
-        if (!escotillaSuperiorAbierta && !escotillaInferiorAbierta) {
-            throw new Exception("No hay escotillas abiertas para cerrar");
-        }
-    }
+    protected void validarCerrarEscotillas() {}
 
     @Override
-    protected void validarAspirar() throws Exception {
-        if (!escotillaSuperiorAbierta) {
-            throw new Exception("No se puede aspirar sin abrir la escotilla superior");
-        }
-    }
+    protected void validarAspirar() {}
 
     @Override
-    protected void validarRecogerMuestra() throws Exception {
-        if (!escotillaInferiorAbierta) {
-            throw new Exception("No se puede recoger muestra sin abrir la escotilla inferior");
-        }
-    }
+    protected void validarRecogerMuestra() {}
 }
