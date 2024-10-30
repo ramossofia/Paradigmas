@@ -30,31 +30,31 @@ public class Sur extends Direccion {
     }
 
     @Override
-    public void abrirEscotillaSuperior(Explorer explorer) throws Exception {
+    public void abrirEscotillaSuperior(Explorer explorer) throws EscotillaException {
         validarAbrirEscotillaSuperior();
         escotillaSuperiorAbierta = true;
     }
 
     @Override
-    public void abrirEscotillaInferior(Explorer explorer) throws Exception {
+    public void abrirEscotillaInferior(Explorer explorer) throws EscotillaException {
         validarAbrirEscotillaInferior();
         escotillaInferiorAbierta = true;
     }
 
     @Override
-    public void cerrarEscotillas(Explorer explorer) throws Exception {
+    public void cerrarEscotillas(Explorer explorer) throws EscotillaException {
         validarCerrarEscotillas();
         escotillaSuperiorAbierta = false;
         escotillaInferiorAbierta = false;
     }
 
     @Override
-    public void aspirar(Explorer explorer) throws Exception {
+    public void aspirar(Explorer explorer) throws EscotillaException {
         validarAspirar();
     }
 
     @Override
-    public void recogerMuestra(Explorer explorer) throws Exception {
+    public void recogerMuestra(Explorer explorer) throws EscotillaException {
         validarRecogerMuestra();
     }
 
@@ -69,17 +69,22 @@ public class Sur extends Direccion {
     }
 
     @Override
-    protected void validarAbrirEscotillaSuperior() {}
+    protected void validarAbrirEscotillaSuperior() throws EscotillaException {
+    }
 
     @Override
-    protected void validarAbrirEscotillaInferior() {}
+    protected void validarAbrirEscotillaInferior() throws EscotillaException {
+    }
 
     @Override
-    protected void validarCerrarEscotillas() {}
+    protected void validarCerrarEscotillas() throws EscotillaException {
+    }
 
     @Override
-    protected void validarAspirar() {}
+    protected void validarAspirar() throws EscotillaException {
+    }
 
     @Override
-    protected void validarRecogerMuestra() {}
+    protected void validarRecogerMuestra() throws EscotillaException {
+    }
 }
