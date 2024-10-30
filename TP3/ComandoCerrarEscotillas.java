@@ -3,10 +3,6 @@ package Explorer;
 public class ComandoCerrarEscotillas extends Comando {
     @Override
     public void ejecutar(Explorer explorer) {
-        try {
-            explorer.cerrarEscotillas();
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        explorer.cerrarEscotillas();
     }
 }
