@@ -6,11 +6,11 @@ public abstract class Direccion {
     public abstract Direccion rotarIzquierda();
     public abstract Direccion rotarDerecha();
     public abstract String getNombre();
-    public abstract void abrirEscotillaInferior(Explorer explorer) throws Exception;
-    public abstract void abrirEscotillaSuperior(Explorer explorer) throws Exception;
-    public abstract void cerrarEscotillas(Explorer explorer) throws Exception;
-    public abstract void aspirar(Explorer explorer) throws Exception;
-    public abstract void recogerMuestra(Explorer explorer) throws Exception;
+    public abstract void abrirEscotillaInferior(Explorer explorer) throws EscotillaException ;
+    public abstract void abrirEscotillaSuperior(Explorer explorer) throws EscotillaException ;
+    public abstract void cerrarEscotillas(Explorer explorer) throws EscotillaException ;
+    public abstract void aspirar(Explorer explorer) throws EscotillaException ;
+    public abstract void recogerMuestra(Explorer explorer) throws EscotillaException ;
     public abstract boolean isEscotillaSuperiorAbierta();
     public abstract boolean isEscotillaInferiorAbierta();
     protected abstract void validarAbrirEscotillaSuperior() throws Exception;
