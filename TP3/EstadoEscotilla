@@ -1,6 +1,12 @@
 package Explorer;
 
 public abstract class EstadoEscotilla {
+    protected Explorer explorer;
+
+    public EstadoEscotilla(Explorer explorer) {
+        this.explorer = explorer;
+    }
+
     public abstract void abrirEscotillaSuperior();
     public abstract void abrirEscotillaInferior();
     public abstract void cerrarEscotillas();
