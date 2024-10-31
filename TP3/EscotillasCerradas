@@ -1,20 +1,19 @@
 package Explorer;
 
 public class EscotillasCerradas extends EstadoEscotilla {
-    private final Norte norte;
 
-    public EscotillasCerradas(Norte norte) {
-        this.norte = norte;
+    public EscotillasCerradas(Explorer explorer) {
+        super(explorer);
     }
 
     @Override
     public void abrirEscotillaSuperior() {
-        norte.setEstado(new EscotillaSuperiorAbierta(norte));
+        explorer.setEstadoEscotilla(new EscotillaSuperiorAbierta(explorer));
     }
 
     @Override
     public void abrirEscotillaInferior() {
-        norte.setEstado(new EscotillaInferiorAbierta(norte));
+        explorer.setEstadoEscotilla(new EscotillaInferiorAbierta(explorer));
     }
 
     @Override
