@@ -1,10 +1,9 @@
 package Explorer;
 
 public class EscotillaInferiorAbierta extends EstadoEscotilla {
-    private final Norte norte;
 
-    public EscotillaInferiorAbierta(Norte norte) {
-        this.norte = norte;
+    public EscotillaInferiorAbierta(Explorer explorer) {
+        super(explorer);
     }
 
     @Override
@@ -19,7 +18,7 @@ public class EscotillaInferiorAbierta extends EstadoEscotilla {
 
     @Override
     public void cerrarEscotillas() {
-        norte.setEstado(new EscotillasCerradas(norte));
+        explorer.setEstadoEscotilla(new EscotillasCerradas(explorer));
     }
 
     @Override
@@ -29,6 +28,6 @@ public class EscotillaInferiorAbierta extends EstadoEscotilla {
 
     @Override
     public void recogerMuestra() {
-        // No action needed
+        // Sample collection logic
     }
 }
