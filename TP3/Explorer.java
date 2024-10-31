@@ -4,11 +4,13 @@ public class Explorer {
     private int x;
     private int y;
     private Direccion direccion;
+    private EstadoEscotilla estadoEscotilla;
 
     public Explorer(int x, int y, Direccion direccion) {
         this.x = x;
         this.y = y;
         this.direccion = direccion;
+        this.estadoEscotilla = new EscotillasCerradas(this);
     }
 
     public int getX() {
@@ -19,9 +21,8 @@ public class Explorer {
         return y;
     }
 
-    public void actualizarPosicion(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public String getDireccion() {
+        return direccion.getNombre();
     }
 
     public void moverAdelante() {
@@ -40,35 +41,40 @@ public class Explorer {
         direccion = direccion.rotarDerecha();
     }
 
-    public void abrirEscotillaInferior() {
-        direccion.abrirEscotillaInferior(this);
+    public void actualizarPosicion(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public void abrirEscotillaSuperior()  {
-        direccion.abrirEscotillaSuperior(this);
+    public void abrirEscotillaSuperior() {
+        estadoEscotilla.abrirEscotillaSuperior();
+    }
+
+    public void abrirEscotillaInferior() {
+        estadoEscotilla.abrirEscotillaInferior();
     }
 
     public void cerrarEscotillas() {
-        direccion.cerrarEscotillas(this);
+        estadoEscotilla.cerrarEscotillas();
     }
 
-    public boolean isEscotillaSuperiorAbierta() {
-        return direccion.isEscotillaSuperiorAbierta();
-    }
-
-    public boolean isEscotillaInferiorAbierta() {
-        return direccion.isEscotillaInferiorAbierta();
-    }
-
-    public String getDireccion() {
-        return direccion.getNombre();
-    }
-
-    public void aspirar()  {
-        direccion.aspirar(this);
+    public void aspirar() {
+        estadoEscotilla.aspirar();
     }
 
     public void recogerMuestra() {
-        direccion.recogerMuestra(this);
+        estadoEscotilla.recogerMuestra();
+    }
+
+    public boolean isEscotillaSuperiorAbierta() {
+        return estadoEscotilla instanceof EscotillaSuperiorAbierta;
+    }
+
+    public boolean isEscotillaInferiorAbierta() {
+        return estadoEscotilla instanceof EscotillaInferiorAbierta;
+    }
+
+    public void setEstadoEscotilla(EstadoEscotilla estadoEscotilla) {
+        this.estadoEscotilla = estadoEscotilla;
     }
 }
