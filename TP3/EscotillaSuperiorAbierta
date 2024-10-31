@@ -1,10 +1,9 @@
 package Explorer;
 
 public class EscotillaSuperiorAbierta extends EstadoEscotilla {
-    private final Norte norte;
 
-    public EscotillaSuperiorAbierta(Norte norte) {
-        this.norte = norte;
+    public EscotillaSuperiorAbierta(Explorer explorer) {
+        super(explorer);
     }
 
     @Override
@@ -19,12 +18,12 @@ public class EscotillaSuperiorAbierta extends EstadoEscotilla {
 
     @Override
     public void cerrarEscotillas() {
-        norte.setEstado(new EscotillasCerradas(norte));
+        explorer.setEstadoEscotilla(new EscotillasCerradas(explorer));
     }
 
     @Override
     public void aspirar() {
-        // Implement aspirar logic
+        // Aspiration logic
     }
 
     @Override
