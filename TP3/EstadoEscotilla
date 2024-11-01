@@ -12,4 +12,6 @@ public abstract class EstadoEscotilla {
     public abstract void cerrarEscotillas();
     public abstract void aspirar();
     public abstract void recogerMuestra();
+    public abstract boolean isEscotillaSuperiorAbierta();
+    public abstract boolean isEscotillaInferiorAbierta();
 }
