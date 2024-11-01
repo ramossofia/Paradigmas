@@ -4,7 +4,7 @@ public abstract class EstadoEscotilla {
     protected Explorer explorer;
 
     public EstadoEscotilla(Explorer explorer) {
-        this.explorer = explorer;
+        canHandle(explorer);
     }
 
     public abstract void abrirEscotillaSuperior();
@@ -14,4 +14,9 @@ public abstract class EstadoEscotilla {
     public abstract void recogerMuestra();
     public abstract boolean isEscotillaSuperiorAbierta();
     public abstract boolean isEscotillaInferiorAbierta();
+
+    public boolean canHandle(Explorer explorer) {
+        this.explorer = explorer;
+        return true;
+    }
 }
