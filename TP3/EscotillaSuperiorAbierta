@@ -1,7 +1,6 @@
 package Explorer;
 
 public class EscotillaSuperiorAbierta extends EstadoEscotilla {
-
     public EscotillaSuperiorAbierta(Explorer explorer) {
         super(explorer);
     }
@@ -23,11 +22,20 @@ public class EscotillaSuperiorAbierta extends EstadoEscotilla {
 
     @Override
     public void aspirar() {
-        // Aspiration logic
     }
 
     @Override
     public void recogerMuestra() {
         throw new RuntimeException("No se puede recoger muestra sin abrir la escotilla inferior");
+    }
+
+    @Override
+    public boolean isEscotillaSuperiorAbierta() {
+        return true;
+    }
+
+    @Override
+    public boolean isEscotillaInferiorAbierta() {
+        return false;
     }
 }
