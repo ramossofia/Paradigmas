@@ -3,6 +3,8 @@ package Explorer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.util.stream.IntStream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ExplorerTests {
@@ -226,13 +228,11 @@ public class ExplorerTests {
     }
 
     private static void rotateMultipleTimes(Explorer explorer, String direction, int times) {
-        for (int i = 0; i < times; i++) {
-            if (direction.equals("D")) {
-                explorer.rotarDerecha();
-            } else if (direction.equals("I")) {
-                explorer.rotarIzquierda();
-            }
-        }
+        Runnable rotationAction = direction.equals("D") 
+            ? explorer::rotarDerecha 
+            : explorer::rotarIzquierda;
+            
+        IntStream.range(0, times).forEach(i -> rotationAction.run());
     }
 
     private static void assertComandoInvalido(String comando, Explorer explorer) {
