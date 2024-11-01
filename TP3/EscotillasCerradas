@@ -1,7 +1,6 @@
 package Explorer;
 
 public class EscotillasCerradas extends EstadoEscotilla {
-
     public EscotillasCerradas(Explorer explorer) {
         super(explorer);
     }
@@ -29,5 +28,15 @@ public class EscotillasCerradas extends EstadoEscotilla {
     @Override
     public void recogerMuestra() {
         throw new RuntimeException("No se puede recoger muestra sin abrir la escotilla inferior");
+    }
+
+    @Override
+    public boolean isEscotillaSuperiorAbierta() {
+        return false;
+    }
+
+    @Override
+    public boolean isEscotillaInferiorAbierta() {
+        return false;
     }
 }
