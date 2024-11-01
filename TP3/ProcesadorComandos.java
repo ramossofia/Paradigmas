@@ -1,26 +1,27 @@
 package Explorer;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class ProcesadorComandos {
 
-    private final Map<Character, Comando> comandosMap = Map.of(
-            'f', new ComandoMoverAdelante(),
-            'b', new ComandoMoverAtras(),
-            'l', new ComandoRotarIzquierda(),
-            'r', new ComandoRotarDerecha(),
-            'O', new ComandoAbrirEscotillaSuperior(),
-            'o', new ComandoAbrirEscotillaInferior(),
-            'c', new ComandoCerrarEscotillas()
+    private final List<Comando> comandosList = List.of(
+            new MoverAtras(),
+            new RotarIzquierda(),
+            new RotarDerecha(),
+            new AbrirEscotillaSuperior(),
+            new AbrirEscotillaInferior(),
+            new MoverAdelante(),
+            new CerrarEscotillas()
     );
 
     public void procesar(String comandosStr, Explorer explorer) {
         Stream.of(comandosStr.split(""))
                 .map(s -> s.charAt(0))
-                .forEach(comando -> Optional.ofNullable(comandosMap.get(comando))
-                        .orElse(new ComandoNoValido(comando))
+                .forEach(comando -> comandosList.stream()
+                        .filter(cmd -> cmd.canHandle(comando))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Comando no válido: " + comando))
                         .ejecutar(explorer));
     }
 }
