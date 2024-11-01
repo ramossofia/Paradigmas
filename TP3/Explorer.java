@@ -58,23 +58,23 @@ public class Explorer {
         estadoEscotilla.cerrarEscotillas();
     }
 
+    public boolean isEscotillaSuperiorAbierta() {
+        return estadoEscotilla.isEscotillaSuperiorAbierta();
+    }
+
+    public boolean isEscotillaInferiorAbierta() {
+        return estadoEscotilla.isEscotillaInferiorAbierta();
+    }
+
+    public void setEstadoEscotilla(EstadoEscotilla estadoEscotilla) {
+        this.estadoEscotilla = estadoEscotilla;
+    }
+
     public void aspirar() {
         estadoEscotilla.aspirar();
     }
 
     public void recogerMuestra() {
         estadoEscotilla.recogerMuestra();
-    }
-
-    public boolean isEscotillaSuperiorAbierta() {
-        return estadoEscotilla instanceof EscotillaSuperiorAbierta;
-    }
-
-    public boolean isEscotillaInferiorAbierta() {
-        return estadoEscotilla instanceof EscotillaInferiorAbierta;
-    }
-
-    public void setEstadoEscotilla(EstadoEscotilla estadoEscotilla) {
-        this.estadoEscotilla = estadoEscotilla;
     }
 }
