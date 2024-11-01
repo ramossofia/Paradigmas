@@ -228,10 +228,10 @@ public class ExplorerTests {
     }
 
     private static void rotateMultipleTimes(Explorer explorer, String direction, int times) {
-        Runnable rotationAction = direction.equals("D") 
-            ? explorer::rotarDerecha 
-            : explorer::rotarIzquierda;
-            
+        Runnable rotationAction = direction.equals("D")
+                ? explorer::rotarDerecha
+                : explorer::rotarIzquierda;
+
         IntStream.range(0, times).forEach(i -> rotationAction.run());
     }
 
