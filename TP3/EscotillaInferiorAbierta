@@ -1,7 +1,6 @@
 package Explorer;
 
 public class EscotillaInferiorAbierta extends EstadoEscotilla {
-
     public EscotillaInferiorAbierta(Explorer explorer) {
         super(explorer);
     }
@@ -28,6 +27,15 @@ public class EscotillaInferiorAbierta extends EstadoEscotilla {
 
     @Override
     public void recogerMuestra() {
-        // Sample collection logic
+    }
+
+    @Override
+    public boolean isEscotillaSuperiorAbierta() {
+        return false;
+    }
+
+    @Override
+    public boolean isEscotillaInferiorAbierta() {
+        return true;
     }
 }
