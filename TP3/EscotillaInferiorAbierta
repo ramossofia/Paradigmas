@@ -7,12 +7,12 @@ public class EscotillaInferiorAbierta extends EstadoEscotilla {
 
     @Override
     public void abrirEscotillaSuperior() {
-        throw new RuntimeException("No se puede abrir escotilla superior con la inferior abierta");
+        throw new RuntimeException(NO_SE_PUEDE_ABRIR_ESCOTILLA_SUPERIOR_CON_LA_INFERIOR_ABIERTA);
     }
 
     @Override
     public void abrirEscotillaInferior() {
-        throw new RuntimeException("La escotilla inferior ya está abierta");
+        throw new RuntimeException(LA_ESCOTILLA_INFERIOR_YA_ESTÁ_ABIERTA);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class EscotillaInferiorAbierta extends EstadoEscotilla {
 
     @Override
     public void aspirar() {
-        throw new RuntimeException("No se puede aspirar sin abrir la escotilla superior");
+        throw new RuntimeException(NO_SE_PUEDE_ASPIRAR_SIN_ABRIR_LA_ESCOTILLA_SUPERIOR);
     }
 
     @Override
