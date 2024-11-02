@@ -17,17 +17,17 @@ public class EscotillasCerradas extends EstadoEscotilla {
 
     @Override
     public void cerrarEscotillas() {
-        throw new RuntimeException("No hay escotillas abiertas para cerrar");
+        throw new RuntimeException(NO_HAY_ESCOTILLAS_ABIERTAS_PARA_CERRAR);
     }
 
     @Override
     public void aspirar() {
-        throw new RuntimeException("No se puede aspirar sin abrir la escotilla superior");
+        throw new RuntimeException(NO_SE_PUEDE_ASPIRAR_SIN_ABRIR_LA_ESCOTILLA_SUPERIOR);
     }
 
     @Override
     public void recogerMuestra() {
-        throw new RuntimeException("No se puede recoger muestra sin abrir la escotilla inferior");
+        throw new RuntimeException(NO_SE_PUEDE_RECOGER_MUESTRA_SIN_ABRIR_LA_ESCOTILLA_INFERIOR);
     }
 
     @Override
