@@ -3,6 +3,7 @@ package Explorer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -82,31 +83,27 @@ public class ExplorerTests {
     }
 
     @Test
-    public void test11ComandoInvalidoLanzaExcepcion() {
-        assertComandoInvalido("x", createExplorer());
+    public void test11ComandosInvalidosLanzanExcepcion() {
+        assertComandoInvalido("z", createExplorer(), 0, 0, "N");
+        assertComandoInvalido("x", createExplorer(), 0, 0, "N");
     }
 
     @Test
-    public void test12ComandoDesconocidoLanzaExcepcion() {
-        assertComandoInvalido("x", createExplorer());
-    }
-
-    @Test
-    public void test13RotarCompletaDerecha() {
+    public void test12RotarCompletaDerecha() {
         Explorer explorer = createExplorer();
         rotateMultipleTimes(explorer, "D", 4);
         assertEquals("N", explorer.getDireccion());
     }
 
     @Test
-    public void test14RotarCompletaIzquierda() {
+    public void test13RotarCompletaIzquierda() {
         Explorer explorer = createExplorer();
         rotateMultipleTimes(explorer, "I", 4);
         assertEquals("N", explorer.getDireccion());
     }
 
     @Test
-    public void test15NoSePuedeAbrirEscotillaInferiorSiSuperiorEstaAbierta() {
+    public void test14NoSePuedeAbrirEscotillaInferiorSiSuperiorEstaAbierta() {
         Explorer explorer = createExplorer();
         abrirEscotillaSuperior(explorer);
         assertThrowsLike("No se puede abrir escotilla inferior con la superior abierta",
@@ -114,28 +111,28 @@ public class ExplorerTests {
     }
 
     @Test
-    public void test16ProcesarComandoParaAbrirEscotillaInferior() {
+    public void test15ProcesarComandoParaAbrirEscotillaInferior() {
         Explorer explorer = createExplorer();
         procesarComandos(explorer, "o");
         assertTrue(explorer.isEscotillaInferiorAbierta());
     }
 
     @Test
-    public void test17RotarDerechaYAvanzar() {
+    public void test16RotarDerechaYAvanzar() {
         Explorer explorer = createExplorer();
         procesarComandos(explorer, "rf");
         assertPositionAndDirection(explorer, 1, 0, "E");
     }
 
     @Test
-    public void test18RotarIzquierdaYAvanzar() {
+    public void test17RotarIzquierdaYAvanzar() {
         Explorer explorer = createExplorer();
         procesarComandos(explorer, "lf");
         assertPositionAndDirection(explorer, -1, 0, "O");
     }
 
     @Test
-    public void test19ProcesarComandoParaCerrarEscotillas() {
+    public void test18ProcesarComandoParaCerrarEscotillas() {
         Explorer explorer = createExplorer();
         abrirEscotillaSuperior(explorer);
         procesarComandos(explorer, "c");
@@ -144,7 +141,7 @@ public class ExplorerTests {
     }
 
     @Test
-    public void test20ProcesarComandoComplejo() {
+    public void test19ProcesarComandoComplejo() {
         Explorer explorer = createExplorer();
         procesarComandos(explorer, "flrfr");
         assertPositionAndDirection(explorer, 0, 2, "E");
@@ -153,29 +150,27 @@ public class ExplorerTests {
     }
 
     @Test
-    public void test21NoSePuedeAspirarSiEscotillaSuperiorEstaCerrada() {
+    public void test20NoSePuedeAspirarSiEscotillaSuperiorEstaCerrada() {
         Explorer explorer = createExplorer();
         assertThrowsLike("No se puede aspirar sin abrir la escotilla superior",
                 () -> explorer.aspirar());
     }
 
     @Test
-    public void test22NoSePuedeRecogerMuestraSiEscotillaInferiorEstaCerrada() {
+    public void test21NoSePuedeRecogerMuestraSiEscotillaInferiorEstaCerrada() {
         Explorer explorer = createExplorer();
         assertThrowsLike("No se puede recoger muestra sin abrir la escotilla inferior",
                 () -> explorer.recogerMuestra());
     }
 
     @Test
-    public void test23ComandosConsecutivosInvalidosDetienenProcesamiento() {
+    public void test22ComandosConsecutivosInvalidosDetienenProcesamiento() {
         Explorer explorer = createExplorer();
-        assertThrowsLike("Comando no válido: x",
-                () -> procesarComandos(explorer, "xxf"));
-        assertPosition(explorer, 0, 0);
+        assertComandoInvalido("xxf", explorer, 0, 0, "N");
     }
 
     @Test
-    public void test24DireccionesActualizadasCorrectamenteDespuesDeMultiplesRotaciones() {
+    public void test23DireccionesActualizadasCorrectamenteDespuesDeMultiplesRotaciones() {
         Explorer explorer = createExplorer();
         rotateMultipleTimes(explorer, "D", 2);
         rotateMultipleTimes(explorer, "I", 1);
@@ -183,25 +178,22 @@ public class ExplorerTests {
     }
 
     @Test
-    public void test25ExplorerNoSeMueveConComandosErroneosAntesDeUnoValido() {
+    public void test24ExplorerNoSeMueveConComandosErroneosAntesDeUnoValido() {
         Explorer explorer = createExplorer();
-        assertThrowsLike("Comando no válido: x",
-                () -> procesarComandos(explorer, "xfl"));
-        assertPositionAndDirection(explorer, 0, 0, "N");
+        assertComandoInvalido("xfl", explorer, 0, 0, "N");
     }
 
     @Test
-    public void test26IntentarCerrarEscotillasCuandoAmbasEstanCerradas() {
+    public void test25IntentarCerrarEscotillasCuandoAmbasEstanCerradas() {
         Explorer explorer = createExplorer();
         assertThrowsLike("No hay escotillas abiertas para cerrar",
                 () -> explorer.cerrarEscotillas());
     }
 
     @Test
-    public void test27EstadoNoCambiaConComandosNoReconocidos() {
+    public void test26EstadoNoCambiaConComandosNoReconocidos() {
         Explorer explorer = createExplorer();
-        assertComandoInvalido("x", explorer);
-        assertPositionAndDirection(explorer, 0, 0, "N");
+        assertComandoInvalido("x", explorer, 0, 0, "N");
     }
 
     private static void assertThrowsLike(String msg, Executable executable) {
@@ -228,16 +220,21 @@ public class ExplorerTests {
     }
 
     private static void rotateMultipleTimes(Explorer explorer, String direction, int times) {
-        Runnable rotationAction = direction.equals("D")
-                ? explorer::rotarDerecha
-                : explorer::rotarIzquierda;
-
-        IntStream.range(0, times).forEach(i -> rotationAction.run());
+        Map<String, Runnable> actions = Map.of(
+            "D", explorer::rotarDerecha,
+            "I", explorer::rotarIzquierda
+        );
+        IntStream.range(0, times).forEach(i -> actions.get(direction).run());
     }
 
-    private static void assertComandoInvalido(String comando, Explorer explorer) {
-        assertThrowsLike("Comando no válido: " + comando,
+    private static void verificarComandoInvalido(String comando, Explorer explorer) {
+        assertThrowsLike("Comando no válido: " + comando.charAt(0),
                 () -> new ProcesadorComandos().procesar(comando, explorer));
+    }
+
+    private void assertComandoInvalido(String comandos, Explorer explorer, int expectedX, int expectedY, String expectedDirection) {
+        verificarComandoInvalido(comandos, explorer);
+        assertPositionAndDirection(explorer, expectedX, expectedY, expectedDirection);
     }
 
     private static void abrirEscotillaSuperior(Explorer explorer) {
