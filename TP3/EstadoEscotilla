@@ -2,6 +2,13 @@ package Explorer;
 
 public abstract class EstadoEscotilla {
     protected Explorer explorer;
+    public static final String NO_HAY_ESCOTILLAS_ABIERTAS_PARA_CERRAR = "No hay escotillas abiertas para cerrar";
+    public static final String NO_SE_PUEDE_RECOGER_MUESTRA_SIN_ABRIR_LA_ESCOTILLA_INFERIOR = "No se puede recoger muestra sin abrir la escotilla inferior";
+    public static final String NO_SE_PUEDE_ABRIR_ESCOTILLA_INFERIOR_CON_LA_SUPERIOR_ABIERTA = "No se puede abrir escotilla inferior con la superior abierta";
+    public static final String NO_SE_PUEDE_ABRIR_ESCOTILLA_SUPERIOR_CON_LA_INFERIOR_ABIERTA = "No se puede abrir escotilla superior con la inferior abierta";
+    public static final String LA_ESCOTILLA_SUPERIOR_YA_ESTÁ_ABIERTA = "La escotilla superior ya está abierta";
+    public static final String LA_ESCOTILLA_INFERIOR_YA_ESTÁ_ABIERTA = "La escotilla inferior ya está abierta";
+    public static final String NO_SE_PUEDE_ASPIRAR_SIN_ABRIR_LA_ESCOTILLA_SUPERIOR = "No se puede aspirar sin abrir la escotilla superior";
 
     public EstadoEscotilla(Explorer explorer) {
         canHandle(explorer);
