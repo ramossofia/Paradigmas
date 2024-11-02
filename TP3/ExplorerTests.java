@@ -6,6 +6,7 @@ import org.junit.jupiter.api.function.Executable;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import static Explorer.EstadoEscotilla.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ExplorerTests {
@@ -55,7 +56,7 @@ public class ExplorerTests {
     public void test07NoSePuedeAbrirEscotillaSuperiorSiInferiorEstaAbierta() {
         Explorer explorer = createExplorer();
         abrirEscotillaInferior(explorer);
-        assertThrowsLike("No se puede abrir escotilla superior con la inferior abierta",
+        assertThrowsLike(NO_SE_PUEDE_ABRIR_ESCOTILLA_SUPERIOR_CON_LA_INFERIOR_ABIERTA,
                 () -> explorer.abrirEscotillaSuperior());
     }
 
@@ -71,7 +72,7 @@ public class ExplorerTests {
     @Test
     public void test09NoSePuedeCerrarSiNoHayEscotillasAbiertas() {
         Explorer explorer = createExplorer();
-        assertThrowsLike("No hay escotillas abiertas para cerrar",
+        assertThrowsLike(NO_HAY_ESCOTILLAS_ABIERTAS_PARA_CERRAR,
                 () -> explorer.cerrarEscotillas());
     }
 
@@ -106,7 +107,7 @@ public class ExplorerTests {
     public void test14NoSePuedeAbrirEscotillaInferiorSiSuperiorEstaAbierta() {
         Explorer explorer = createExplorer();
         abrirEscotillaSuperior(explorer);
-        assertThrowsLike("No se puede abrir escotilla inferior con la superior abierta",
+        assertThrowsLike(NO_SE_PUEDE_ABRIR_ESCOTILLA_INFERIOR_CON_LA_SUPERIOR_ABIERTA,
                 () -> explorer.abrirEscotillaInferior());
     }
 
@@ -152,14 +153,14 @@ public class ExplorerTests {
     @Test
     public void test20NoSePuedeAspirarSiEscotillaSuperiorEstaCerrada() {
         Explorer explorer = createExplorer();
-        assertThrowsLike("No se puede aspirar sin abrir la escotilla superior",
+        assertThrowsLike(NO_SE_PUEDE_ASPIRAR_SIN_ABRIR_LA_ESCOTILLA_SUPERIOR,
                 () -> explorer.aspirar());
     }
 
     @Test
     public void test21NoSePuedeRecogerMuestraSiEscotillaInferiorEstaCerrada() {
         Explorer explorer = createExplorer();
-        assertThrowsLike("No se puede recoger muestra sin abrir la escotilla inferior",
+        assertThrowsLike(NO_SE_PUEDE_RECOGER_MUESTRA_SIN_ABRIR_LA_ESCOTILLA_INFERIOR,
                 () -> explorer.recogerMuestra());
     }
 
@@ -186,7 +187,7 @@ public class ExplorerTests {
     @Test
     public void test25IntentarCerrarEscotillasCuandoAmbasEstanCerradas() {
         Explorer explorer = createExplorer();
-        assertThrowsLike("No hay escotillas abiertas para cerrar",
+        assertThrowsLike(NO_HAY_ESCOTILLAS_ABIERTAS_PARA_CERRAR,
                 () -> explorer.cerrarEscotillas());
     }
 
