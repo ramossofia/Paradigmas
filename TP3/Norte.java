@@ -1,6 +1,6 @@
 package Explorer;
 
-public class Norte extends Direccion {
+public class Norte extends Cardinal {
 
     @Override
     public void moverAdelante(Explorer explorer) {
@@ -13,12 +13,12 @@ public class Norte extends Direccion {
     }
 
     @Override
-    public Direccion rotarIzquierda() {
+    public Cardinal rotarIzquierda() {
         return new Oeste();
     }
 
     @Override
-    public Direccion rotarDerecha() {
+    public Cardinal rotarDerecha() {
         return new Este();
     }
 
