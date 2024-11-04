@@ -196,8 +196,8 @@ public class ExplorerTests {
         assertEquals(msg, exception.getMessage());
     }
 
-    private static Explorer createExplorer(int x, int y, Direccion direccion) {
-        return new Explorer(x, y, direccion);
+    private static Explorer createExplorer(int x, int y, Cardinal cardinal) {
+        return new Explorer(x, y, cardinal);
     }
 
     private static void assertPosition(Explorer explorer, int expectedX, int expectedY) {
