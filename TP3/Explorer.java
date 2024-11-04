@@ -3,13 +3,13 @@ package Explorer;
 public class Explorer {
     private int x;
     private int y;
-    private Direccion direccion;
+    private Cardinal cardinal;
     private EstadoEscotilla estadoEscotilla;
 
-    public Explorer(int x, int y, Direccion direccion) {
+    public Explorer(int x, int y, Cardinal cardinal) {
         this.x = x;
         this.y = y;
-        this.direccion = direccion;
+        this.cardinal = cardinal;
         this.estadoEscotilla = new EscotillasCerradas(this);
     }
 
@@ -22,23 +22,23 @@ public class Explorer {
     }
 
     public String getDireccion() {
-        return direccion.getNombre();
+        return cardinal.getNombre();
     }
 
     public void moverAdelante() {
-        direccion.moverAdelante(this);
+        cardinal.moverAdelante(this);
     }
 
     public void moverAtras() {
-        direccion.moverAtras(this);
+        cardinal.moverAtras(this);
     }
 
     public void rotarIzquierda() {
-        direccion = direccion.rotarIzquierda();
+        cardinal = cardinal.rotarIzquierda();
     }
 
     public void rotarDerecha() {
-        direccion = direccion.rotarDerecha();
+        cardinal = cardinal.rotarDerecha();
     }
 
     public void actualizarPosicion(int x, int y) {
