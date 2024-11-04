@@ -1,6 +1,6 @@
 package Explorer;
 
-public class Sur extends Direccion {
+public class Sur extends Cardinal {
     @Override
     public void moverAdelante(Explorer explorer) {
         explorer.actualizarPosicion(explorer.getX(), explorer.getY() - 1);
@@ -12,12 +12,12 @@ public class Sur extends Direccion {
     }
 
     @Override
-    public Direccion rotarIzquierda() {
+    public Cardinal rotarIzquierda() {
         return new Este();
     }
 
     @Override
-    public Direccion rotarDerecha() {
+    public Cardinal rotarDerecha() {
         return new Oeste();
     }
 
