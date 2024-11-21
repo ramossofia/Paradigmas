@@ -1,0 +1,26 @@
+import java.util.List;
+import java.util.ArrayList;
+
+public class Deck {
+    private List<Card> cards;
+    private int currentIndex;
+
+    public Deck(List<Integer> cardValues) {
+        cards = new ArrayList<>();
+        for (int value : cardValues) {
+            cards.add(new Card(value));
+        }
+        currentIndex = 0;
+    }
+
+    public boolean isEmpty() {
+        return currentIndex >= cards.size();
+    }
+
+    public Card revealCard() {
+        if (isEmpty()) {
+            throw new IllegalStateException("No cards left in the deck.");
+        }
+        return cards.get(currentIndex++);
+    }
+}
