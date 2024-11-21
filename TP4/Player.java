@@ -1,42 +1,46 @@
 public class Player {
-    private final String name;
+    private String name;
     private int tokens;
-    private int score;
+    private boolean hasPlayedThisTurn = false; // Flag to track if the player has played this turn
 
     public Player(String name, int initialTokens) {
         this.name = name;
         this.tokens = initialTokens;
-        this.score = 0;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getTokens() {
         return tokens;
     }
 
-    public int getScore() {
-        return score;
+    public void setTokens(int tokens) {
+        this.tokens = tokens;
     }
 
-    public void addScore(int value) {
-        score += value;
+    public boolean hasPlayedThisTurn() {
+        return hasPlayedThisTurn;
     }
 
-    public void takeTokens(int collectedTokens) {
-        tokens += collectedTokens;
+    public void resetTurn() {
+        hasPlayedThisTurn = false;  // Reset at the start of each turn
     }
 
-    public void payToken() {
+    public void decrementTokens() {
         if (tokens <= 0) {
-            throw new IllegalStateException("Not enough tokens to pay!");
+            throw new IllegalStateException(name + " has no tokens left.");
         }
-        tokens--;
+        tokens--;  // Decrease token count
     }
 
-    public PlayerAction chooseTakeAction() {
-        return new Take(this);
+    public void setHasPlayedThisTurn(boolean played) {
+        this.hasPlayedThisTurn = played;
     }
 
-    public PlayerAction choosePayAction() {
-        return new Pay(this);
+    public void takeCard(Card card, int tokens) {
+        this.tokens += tokens;
+        // Additional logic for taking a card can be added here
     }
 }
