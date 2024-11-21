@@ -1,27 +1,28 @@
 public class Card {
-    private final int value;
-    private int tokens;
+    private int value;
+    private int tokens = 0;
 
     public Card(int value) {
         this.value = value;
-        this.tokens = 0;
     }
 
     public int getValue() {
         return value;
     }
 
-    public int getTokens() {
-        return tokens;
-    }
-
     public void addToken() {
         tokens++;
     }
 
-    public int clearTokens() {
-        int clearedTokens = tokens;
+    public int getTokens() {
+        return tokens;
+    }
+
+    public void resetTokens() {
         tokens = 0;
-        return clearedTokens;
+    }
+
+    public boolean isConsecutive(Card other) {
+        return this.value == other.value + 1;
     }
 }
