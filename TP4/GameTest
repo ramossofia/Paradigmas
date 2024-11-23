@@ -50,5 +50,102 @@ public class GameTests {
         assertEquals(-16, points); // 5 tokens - 3 - 8 - 10 points
     }
 
+    @Test
+    public void testTakeCardAddsTokensToPlayer() {
+        Player player = new Player("TestPlayer", 5);
+        Card card = new Card(10, 2); // Card with 2 tokens
+        player.takeCard(card, card.getTokens());
+        assertEquals(7, player.getTokens()); // 5 tokens + 2 from the card
+        assertEquals(1, player.getCards().size());
+    }
+
+
+    @Test
+    public void testPlayerCannotPlaceTokenWithoutTokens() {
+        Player player = new Player("TestPlayer", 0);
+        try {
+            player.decrementTokens();
+            fail("Expected IllegalStateException");
+        } catch (IllegalStateException e) {
+            assertEquals("TestPlayer has no tokens left.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testSeriesPointsWithGaps() {
+        Player player = new Player("TestPlayer", 5);
+        player.addCard(new Card(10, 0));
+        player.addCard(new Card(12, 0));
+        int points = player.calculatePoints();
+        assertEquals(-17, points); // 5 tokens - 10 - 12 points (no series)
+    }
+
+    @Test
+    public void testTokensAddedWhenCardTaken() {
+        Player player = new Player("TestPlayer", 3);
+        Card card = new Card(15, 4); // Card with 4 tokens
+        player.takeCard(card, card.getTokens());
+        assertEquals(7, player.getTokens()); // 3 + 4 tokens
+    }
+
+    @Test
+    public void testTurnRotation() {
+        Player player1 = new Player("Alice", 3);
+        Player player2 = new Player("Bob", 3);
+        List<Player> players = Arrays.asList(player1, player2);
+        Turn turn = new Turn(players);
+
+        assertEquals(player1, turn.getCurrentPlayer());
+        turn.advanceToNext();
+        assertEquals(player2, turn.getCurrentPlayer());
+        turn.advanceToNext();
+        assertEquals(player1, turn.getCurrentPlayer());
+    }
+
+    @Test
+    public void testGameEndsWhenDeckIsEmpty() {
+        Player player = new Player("TestPlayer", 3);
+        List<Integer> cardValues = Arrays.asList(5, 10); // Two cards in deck
+        Deck deck = new Deck(cardValues);
+
+        deck.revealCard(); // Reveal first card
+        deck.revealCard(); // Reveal second card
+        assertEquals(true, deck.isEmpty());
+    }
+
+    @Test
+    public void testPlayerCannotTakeCardOutOfTurn() {
+        Player player1 = new Player("Alice", 3);
+        Player player2 = new Player("Bob", 3);
+        List<Player> players = Arrays.asList(player1, player2);
+        List<Integer> cards = Arrays.asList(10);
+
+        Game game = new Game();
+        game.startGame(players, 3, cards);
+
+        Card card = new Card(10, 0);
+        try {
+            game.executeAction(new TakeCard(player2, card)); // Bob tries to play out of turn
+            fail("Expected IllegalStateException");
+        } catch (IllegalStateException e) {
+            assertEquals("It's not Bob's turn.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testPlayerForcedToTakeCardWhenOutOfTokens() {
+        Player player = new Player("TestPlayer", 0);
+        Card card = new Card(25, 0); // Card with no tokens
+        player.takeCard(card, card.getTokens());
+        assertEquals(25, player.calculatePoints()); // Only points from the card
+    }
+
+    @Test
+    public void testPlayerWithNoTokensAndNoCardsHasZeroPoints() {
+        Player player = new Player("TestPlayer", 0); // Sin fichas
+        int points = player.calculatePoints();
+        assertEquals(0, points); // Sin cartas ni fichas, el puntaje debe ser 0
+    }
 
 }
+
