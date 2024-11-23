@@ -30,4 +30,25 @@ public class GameTests {
             assertEquals("It's not Alice's turn.", e.getMessage());
         }
     }
+    @Test
+    public void testCalculatePointsWithSeries() {
+        Player player = new Player("TestPlayer", 5);
+        player.addCard(new Card(5, 0));
+        player.addCard(new Card(6, 0));
+        player.addCard(new Card(7, 0));
+        int points = player.calculatePoints();
+        assertEquals(0, points); // 5 tokens - 5 points (smallest card in series)
+    }
+
+    @Test
+    public void testCalculatePointsWithoutSeries() {
+        Player player = new Player("TestPlayer", 5);
+        player.addCard(new Card(3, 0));
+        player.addCard(new Card(8, 0));
+        player.addCard(new Card(10, 0));
+        int points = player.calculatePoints();
+        assertEquals(-16, points); // 5 tokens - 3 - 8 - 10 points
+    }
+
+
 }
