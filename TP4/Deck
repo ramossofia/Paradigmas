@@ -8,7 +8,7 @@ public class Deck {
     public Deck(List<Integer> cardValues) {
         cards = new ArrayList<>();
         for (int value : cardValues) {
-            cards.add(new Card(value));
+            cards.add(new Card(value, 0)); // Provide both value and tokens
         }
         currentIndex = 0;
     }
