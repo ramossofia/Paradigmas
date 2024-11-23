@@ -50,7 +50,6 @@ public class Player {
 
     public void takeCard(Card card, int tokens) {
         this.tokens += tokens;
-        // Additional logic for taking a card can be added here
     }
 
     public int calculatePoints() {
@@ -72,5 +71,8 @@ public class Player {
             }
         }
         return points;
+    }
+    public List<Card> getCards() {
+        return cards;
     }
 }
