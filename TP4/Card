@@ -1,17 +1,14 @@
 public class Card {
     private int value;
-    private int tokens = 0;
+    private int tokens;
 
-    public Card(int value) {
+    public Card(int value, int tokens) {
         this.value = value;
+        this.tokens = tokens;
     }
 
     public int getValue() {
         return value;
-    }
-
-    public void addToken() {
-        tokens++;
     }
 
     public int getTokens() {
@@ -19,10 +16,6 @@ public class Card {
     }
 
     public void resetTokens() {
-        tokens = 0;
-    }
-
-    public boolean isConsecutive(Card other) {
-        return this.value == other.value + 1;
+        this.tokens = 0;
     }
 }
