@@ -1,4 +1,11 @@
-public interface Action {
-    Player getPlayer();
-    void execute(Player player, Game game);
+public abstract class Action {
+    private Player player;
+
+    public Action(Player player) {
+        this.player = player;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
 }
