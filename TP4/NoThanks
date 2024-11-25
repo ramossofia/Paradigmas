@@ -1,0 +1,96 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class NoThanks {
+    private List<Player> players;
+    private List<Card> deck;
+    private int currentPlayerIndex;
+
+    public void startGame(List<Player> players, int initialTokens, List<Integer> cardValues) {
+        this.players = players;
+        this.deck = cardValues.stream().map(value -> new Card(value, 0)).collect(Collectors.toList());
+        this.currentPlayerIndex = 0;
+        for (Player player : players) {
+            player.setTokens(initialTokens);
+        }
+    }
+
+    public List<Card> getDeck() {
+        return deck;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void executeAction(Action action) {
+        Player currentPlayer = players.get(currentPlayerIndex);
+
+        if (!currentPlayer.equals(action.getPlayer())) {
+            throw new IllegalStateException("It's not " + action.getPlayer().getName() + "'s turn.");
+        }
+
+        // Verificar si el jugador no tiene fichas, y forzarlo a tomar la carta
+        if (currentPlayer.getTokens() == 0) {
+            // Tomar la carta del centro (si hay alguna)
+            if (!deck.isEmpty()) {
+                Card card = deck.remove(0);
+                currentPlayer.takeCard(card, card.getTokens());
+            }
+            advanceToNextPlayer();  // Pasamos al siguiente jugador
+            return;  // Salimos de la función ya que no se necesita hacer más en este turno
+        }
+
+        if (action instanceof PlaceToken) {
+            if (currentPlayer.getTokens() == 0) {
+                throw new IllegalStateException(currentPlayer.getName() + " has no tokens left.");
+            }
+            currentPlayer.decrementTokens();
+            // Agregar tokens a la carta en el centro (si es necesario)
+            if (!deck.isEmpty()) {
+                Card currentCard = deck.get(0);
+                currentCard.addTokens(1); // Aumentar tokens en la carta actual
+            }
+        } else if (action instanceof TakeCard) {
+            Card card = deck.remove(0);
+            currentPlayer.takeCard(card, card.getTokens());
+        }
+
+        advanceToNextPlayer();
+    }
+
+
+    private void advanceToNextPlayer() {
+        players.get(currentPlayerIndex).resetTurn();
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        players.get(currentPlayerIndex).setHasPlayedThisTurn(false); // Reset del nuevo turno
+    }
+
+    public void checkAndForceTakeCard() {
+        Player currentPlayer = players.get(currentPlayerIndex); // No need for a getter
+        if (currentPlayer.getTokens() == 0) {
+            if (deck.isEmpty()) {
+                throw new IllegalStateException("No cards left in the deck.");
+            }
+            Card card = deck.remove(0);
+            currentPlayer.takeCard(card, card.getTokens());
+            advanceToNextPlayer();
+        }
+    }
+
+
+
+    public void endGame() {
+        System.out.println("Game over!");
+        for (Player player : players) {
+            System.out.println(player.getName() + " has " + player.calculatePoints() + " points.");
+        }
+    }
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+
+}
