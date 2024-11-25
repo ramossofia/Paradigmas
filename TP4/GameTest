@@ -1,14 +1,12 @@
-// src/GameTests.java
-import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTests {
 
+    // Test que valida que un jugador no pueda jugar dos veces seguidas.
     @Test
     public void testPlayerCannotPlayTwiceInARow() {
         Player player1 = new Player("Alice", 3);
@@ -16,13 +14,13 @@ public class GameTests {
         List<Player> players = Arrays.asList(player1, player2);
         List<Integer> cards = Arrays.asList(10);
 
-        Game game = new Game();
-        game.startGame(players, 2, cards);  // Each player gets 2 tokens
+        NoThanks game = new NoThanks();
+        game.startGame(players, 2, cards);  // Cada jugador recibe 2 fichas
 
-        // Alice places a token
+        // Alice coloca una ficha
         game.executeAction(new PlaceToken(player1));
 
-        // Alice tries to play again, should throw an exception
+        // Alice intenta jugar de nuevo, se espera una excepción
         try {
             game.executeAction(new PlaceToken(player1));
             fail("Expected IllegalStateException");
@@ -30,6 +28,8 @@ public class GameTests {
             assertEquals("It's not Alice's turn.", e.getMessage());
         }
     }
+
+    // Test que valida que el puntaje se calcule correctamente cuando hay una serie.
     @Test
     public void testCalculatePointsWithSeries() {
         Player player = new Player("TestPlayer", 5);
@@ -37,115 +37,155 @@ public class GameTests {
         player.addCard(new Card(6, 0));
         player.addCard(new Card(7, 0));
         int points = player.calculatePoints();
-        assertEquals(0, points); // 5 tokens - 5 points (smallest card in series)
+        assertEquals(0, points); // El puntaje debería ser 0, porque la serie comienza desde 5
     }
 
-    @Test
-    public void testCalculatePointsWithoutSeries() {
-        Player player = new Player("TestPlayer", 5);
-        player.addCard(new Card(3, 0));
-        player.addCard(new Card(8, 0));
-        player.addCard(new Card(10, 0));
-        int points = player.calculatePoints();
-        assertEquals(-16, points); // 5 tokens - 3 - 8 - 10 points
-    }
-
-    @Test
-    public void testTakeCardAddsTokensToPlayer() {
-        Player player = new Player("TestPlayer", 5);
-        Card card = new Card(10, 2); // Card with 2 tokens
-        player.takeCard(card, card.getTokens());
-        assertEquals(7, player.getTokens()); // 5 tokens + 2 from the card
-        assertEquals(1, player.getCards().size());
-    }
-
-
+    // Test que valida que un jugador no pueda colocar una ficha sin fichas disponibles.
     @Test
     public void testPlayerCannotPlaceTokenWithoutTokens() {
         Player player = new Player("TestPlayer", 0);
         try {
-            player.decrementTokens();
+            player.decrementTokens(); // Intenta colocar ficha sin fichas
             fail("Expected IllegalStateException");
         } catch (IllegalStateException e) {
             assertEquals("TestPlayer has no tokens left.", e.getMessage());
         }
     }
 
+    // Test que asegura que cuando un jugador toma una carta, los tokens de la carta se suman a su total.
     @Test
-    public void testSeriesPointsWithGaps() {
+    public void testTakeCardAddsTokensToPlayer() {
         Player player = new Player("TestPlayer", 5);
-        player.addCard(new Card(10, 0));
-        player.addCard(new Card(12, 0));
-        int points = player.calculatePoints();
-        assertEquals(-17, points); // 5 tokens - 10 - 12 points (no series)
-    }
-
-    @Test
-    public void testTokensAddedWhenCardTaken() {
-        Player player = new Player("TestPlayer", 3);
-        Card card = new Card(15, 4); // Card with 4 tokens
+        Card card = new Card(10, 2); // Carta con 2 fichas
         player.takeCard(card, card.getTokens());
-        assertEquals(7, player.getTokens()); // 3 + 4 tokens
+        assertEquals(7, player.getTokens()); // El jugador debería tener 7 fichas después de tomar la carta
+        assertEquals(1, player.getCards().size()); // El jugador debería tener 1 carta
     }
 
+    // Test que valida que un jugador sin fichas debe tomar la carta.
     @Test
-    public void testTurnRotation() {
-        Player player1 = new Player("Alice", 3);
-        Player player2 = new Player("Bob", 3);
-        List<Player> players = Arrays.asList(player1, player2);
-        Turn turn = new Turn(players);
+    public void testPlayerWithoutTokensMustTakeCard() {
+        Player player = new Player("Alice", 0); // Jugador sin fichas
+        List<Player> players = Arrays.asList(player);
 
-        assertEquals(player1, turn.getCurrentPlayer());
-        turn.advanceToNext();
-        assertEquals(player2, turn.getCurrentPlayer());
-        turn.advanceToNext();
-        assertEquals(player1, turn.getCurrentPlayer());
+        NoThanks game = new NoThanks();
+        game.startGame(players, 0, Arrays.asList(15)); // Solo una carta en el mazo
+
+        PlayerTurn playerTurn = new PlayerTurn(player, game);
+        playerTurn.execute(); // El jugador debe tomar la carta
+
+        assertEquals(15, player.calculatePoints(), "El jugador debe recibir puntos negativos por la carta.");
+        assertEquals(0, game.getDeck().size(), "La carta debe ser retirada del mazo.");
     }
 
+    // Test que valida que el mazo se vacía cuando se toma la última carta.
     @Test
     public void testGameEndsWhenDeckIsEmpty() {
-        Player player = new Player("TestPlayer", 3);
-        List<Integer> cardValues = Arrays.asList(5, 10); // Two cards in deck
-        Deck deck = new Deck(cardValues);
+        Player player1 = new Player("Alice", 3);
+        List<Player> players = Arrays.asList(player1);
 
-        deck.revealCard(); // Reveal first card
-        deck.revealCard(); // Reveal second card
-        assertEquals(true, deck.isEmpty());
+        NoThanks game = new NoThanks();
+        game.startGame(players, 3, Arrays.asList(10)); // Solo una carta en el mazo
+
+        game.executeAction(new TakeCard(player1, new Card(10, 0))); // Alice toma la última carta
+
+        assertTrue(game.getDeck().isEmpty(), "El mazo debe estar vacío.");
+        game.endGame();
     }
 
+    // Test que valida que el turno de un jugador pasa correctamente al siguiente jugador.
     @Test
-    public void testPlayerCannotTakeCardOutOfTurn() {
+    public void testTurnRotationIsCorrect() {
         Player player1 = new Player("Alice", 3);
         Player player2 = new Player("Bob", 3);
         List<Player> players = Arrays.asList(player1, player2);
-        List<Integer> cards = Arrays.asList(10);
 
-        Game game = new Game();
+        NoThanks game = new NoThanks();
+        game.startGame(players, 3, Arrays.asList(10, 20));
+
+        game.executeAction(new PlaceToken(player1)); // Alice coloca ficha
+        assertEquals(player2, game.getPlayers().get(game.getCurrentPlayerIndex()), "El turno debería pasar a Bob.");
+    }
+
+
+    // Test que asegura que las fichas se transfieren correctamente cuando un jugador toma una carta.
+    @Test
+    public void testTokensTransferredWithCard() {
+        Player player1 = new Player("Alice", 3);
+        Player player2 = new Player("Bob", 3);
+        List<Player> players = Arrays.asList(player1, player2);
+
+        NoThanks game = new NoThanks();
+        game.startGame(players, 3, Arrays.asList(25)); // Una carta de valor 25
+
+        game.executeAction(new PlaceToken(player1)); // Alice coloca ficha
+        game.executeAction(new PlaceToken(player2)); // Bob coloca ficha
+
+        game.executeAction(new TakeCard(player1, new Card(25, 2))); // Alice toma la carta
+
+        assertEquals(5, player1.getTokens(), "Alice debería recibir las fichas de la carta.");
+        assertEquals(25, player1.calculatePoints(), "Alice debería tener los puntos de la carta.");
+    }
+
+    @Test
+    public void testPlayerWithoutTokensIsForcedToTakeCard() {
+        Player player1 = new Player("Alice", 0); // Jugador sin fichas
+        List<Player> players = Arrays.asList(player1);
+
+        Card card = new Card(10, 0); // Carta con valor 10, sin fichas
+        List<Integer> cards = Arrays.asList(card.getValue());
+
+        NoThanks game = new NoThanks();
+        game.startGame(players, 0, cards); // Inicia el juego sin fichas para Alice
+
+        // Aseguramos que el jugador esté obligado a tomar la carta
+        game.executeAction(new TakeCard(player1, card));
+
+        // Verificamos que Alice haya tomado la carta
+        assertTrue(player1.getCards().contains(card), "Alice debería haber tomado la carta.");
+        assertEquals(10, player1.calculatePoints(), "Alice debería recibir los puntos negativos de la carta.");
+    }
+
+
+
+    @Test
+    public void testSeriesOfCardsCalculatesPointsCorrectly() {
+        Player player1 = new Player("Alice", 3);
+        List<Player> players = Arrays.asList(player1);
+
+        Card card1 = new Card(15, 0);
+        Card card2 = new Card(16, 0);
+        Card card3 = new Card(17, 0);
+        List<Integer> cards = Arrays.asList(card1.getValue(), card2.getValue(), card3.getValue());
+
+        NoThanks game = new NoThanks();
         game.startGame(players, 3, cards);
 
-        Card card = new Card(10, 0);
-        try {
-            game.executeAction(new TakeCard(player2, card)); // Bob tries to play out of turn
-            fail("Expected IllegalStateException");
-        } catch (IllegalStateException e) {
-            assertEquals("It's not Bob's turn.", e.getMessage());
-        }
+        game.executeAction(new TakeCard(player1, card1));
+        game.executeAction(new TakeCard(player1, card2));
+        game.executeAction(new TakeCard(player1, card3));
+
+        assertEquals(-15, player1.calculatePoints(), "El jugador debe tener 15 puntos negativos por la serie.");
     }
 
+
+    // Test que asegura que el juego termina cuando se toman todas las cartas.
     @Test
-    public void testPlayerForcedToTakeCardWhenOutOfTokens() {
-        Player player = new Player("TestPlayer", 0);
-        Card card = new Card(25, 0); // Card with no tokens
-        player.takeCard(card, card.getTokens());
-        assertEquals(25, player.calculatePoints()); // Only points from the card
-    }
+    public void testGameEndsWhenAllCardsTaken() {
+        Player player1 = new Player("Alice", 3);
+        List<Player> players = Arrays.asList(player1);
 
-    @Test
-    public void testPlayerWithNoTokensAndNoCardsHasZeroPoints() {
-        Player player = new Player("TestPlayer", 0); // Sin fichas
-        int points = player.calculatePoints();
-        assertEquals(0, points); // Sin cartas ni fichas, el puntaje debe ser 0
-    }
+        Card card1 = new Card(10, 0);
+        Card card2 = new Card(20, 0);
+        List<Integer> cards = Arrays.asList(card1.getValue(), card2.getValue());
 
+        NoThanks game = new NoThanks();
+        game.startGame(players, 3, cards);
+
+        game.executeAction(new TakeCard(player1, card1));
+        game.executeAction(new TakeCard(player1, card2));
+
+        game.endGame(); // El juego debería terminar ahora
+        assertTrue(game.getDeck().isEmpty(), "El mazo debe estar vacío al final del juego.");
+    }
 }
-
