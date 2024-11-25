@@ -15,7 +15,8 @@ public class Card {
         return tokens;
     }
 
-    public void resetTokens() {
-        this.tokens = 0;
+    public void addTokens(int tokens) {
+        this.tokens += tokens;
     }
+
 }
