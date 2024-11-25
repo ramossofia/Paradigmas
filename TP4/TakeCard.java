@@ -1,20 +1,12 @@
-public class TakeCard implements Action {
-    private Player player;
+public class TakeCard extends Action {
     private Card card;
 
     public TakeCard(Player player, Card card) {
-        this.player = player;
+        super(player);
         this.card = card;
     }
 
-    @Override
-    public Player getPlayer() {
-        return player;
-    }
-
-    @Override
-    public void execute(Player player, Game game) {
-        player.takeCard(card, card.getTokens());
-        card.resetTokens();
+    public Card getCard() {
+        return card;
     }
 }
