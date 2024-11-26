@@ -178,6 +178,7 @@ public class GameTests {
         game.startGame(players, 3, cards);
 
         game.executeAction(new TakeCard(player1, card1));
+        game.advanceToNextPlayer();
         game.executeAction(new TakeCard(player2, card2));
 
         game.endGame();
@@ -220,8 +221,12 @@ public class GameTests {
 
         game.executeAction(new TakeCard(player1, card1));
         game.advanceToNextPlayer();
+        game.advanceToNextPlayer(); // Skip player2's turn
+        game.advanceToNextPlayer(); // Skip player3's turn
         game.executeAction(new TakeCard(player1, card2));
         game.advanceToNextPlayer();
+        game.advanceToNextPlayer(); // Skip player2's turn
+        game.advanceToNextPlayer(); // Skip player3's turn
         game.executeAction(new TakeCard(player1, card3));
 
         assertEquals(-15, player1.calculatePoints(), "El jugador debe tener 15 puntos negativos por la serie.");
@@ -244,6 +249,7 @@ public class GameTests {
         game.advanceToNextPlayer();
         game.executeAction(new PlaceToken(player2));
         game.advanceToNextPlayer();
+        game.advanceToNextPlayer(); // Skip player3's turn
         game.executeAction(new TakeCard(player1, card));
 
         assertEquals(5, player1.getTokens(), "Emilio debería recibir las fichas de la carta.");
