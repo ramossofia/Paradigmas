@@ -50,26 +50,23 @@ public class Player {
             cardValues.add(card.getValue());
         }
 
-        // Ordenar las cartas
         Collections.sort(cardValues);
 
         int totalPoints = 0;
-        Integer seriesStart = null; // Valor inicial de la serie
+        Integer seriesStart = null; 
 
         for (int i = 0; i < cardValues.size(); i++) {
             if (seriesStart == null) {
-                // Comenzar una nueva serie
                 seriesStart = cardValues.get(i);
             }
 
-            // Si no es consecutiva o es la última carta, sumar los puntos de la serie
             if (i == cardValues.size() - 1 || cardValues.get(i) + 1 != cardValues.get(i + 1)) {
-                totalPoints += seriesStart; // Sumar el valor más bajo de la serie
-                seriesStart = null; // Reiniciar la serie
+                totalPoints += seriesStart; 
+                seriesStart = null;
             }
         }
 
-        return -totalPoints -points; // Combinar puntos negativos de cartas y positivos de fichas
+        return -totalPoints -points; 
     }
 
 
@@ -78,8 +75,8 @@ public class Player {
     }
 
     public void takeCard(Card card, int tokens) {
-        this.tokens += tokens; // Sumar los tokens de la carta
-        this.cards.add(card);  // Agregar la carta a la lista de cartas del jugador
+        this.tokens += tokens;
+        this.cards.add(card);  
     }
 
 
