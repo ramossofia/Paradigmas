@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Player {
     private String name;
@@ -44,30 +45,30 @@ public class Player {
 
     public int calculatePoints() {
         int points = -tokens;
-        List<Integer> cardValues = new ArrayList<>();
-
-        for (Card card : cards) {
-            cardValues.add(card.getValue());
-        }
-
-        Collections.sort(cardValues);
+        List<Integer> cardValues = cards.stream()
+                .map(Card::getValue)
+                .sorted()
+                .collect(Collectors.toList());
 
         int totalPoints = 0;
-        Integer seriesStart = null; 
+        Integer seriesStart = null;
 
         for (int i = 0; i < cardValues.size(); i++) {
             if (seriesStart == null) {
                 seriesStart = cardValues.get(i);
             }
 
+
             if (i == cardValues.size() - 1 || cardValues.get(i) + 1 != cardValues.get(i + 1)) {
-                totalPoints += seriesStart; 
+                totalPoints += seriesStart; // Add the series start to the total points
                 seriesStart = null;
             }
         }
 
-        return -totalPoints -points; 
+        return -totalPoints - points;
     }
+
+
 
 
     public List<Card> getCards() {
@@ -75,8 +76,8 @@ public class Player {
     }
 
     public void takeCard(Card card, int tokens) {
-        this.tokens += tokens;
-        this.cards.add(card);  
+        this.tokens += tokens; // Sumar los tokens de la carta
+        this.cards.add(card);  // Agregar la carta a la lista de cartas del jugador
     }
 
 
