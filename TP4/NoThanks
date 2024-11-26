@@ -69,18 +69,13 @@ public class NoThanks {
     }
 
     public void checkAndForceTakeCard() {
-        Player currentPlayer = players.get(currentPlayerIndex); // No need for a getter
+        Player currentPlayer = players.get(currentPlayerIndex);
         if (currentPlayer.getTokens() == 0) {
-            if (deck.isEmpty()) {
-                throw new IllegalStateException("No cards left in the deck.");
-            }
             Card card = deck.remove(0);
             currentPlayer.takeCard(card, card.getTokens());
             advanceToNextPlayer();
         }
     }
-
-
 
     public void endGame() {
         System.out.println("Game over!");
