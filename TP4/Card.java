@@ -15,8 +15,7 @@ public class Card {
         return tokens;
     }
 
-    public void addTokens(int tokens) {
-        this.tokens += tokens;
+    public void addToken() {
+        this.tokens++;
     }
-
 }
