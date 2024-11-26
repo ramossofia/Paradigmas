@@ -32,15 +32,14 @@ public class NoThanks {
             throw new IllegalStateException("It's not " + action.getPlayer().getName() + "'s turn.");
         }
 
-        // Verificar si el jugador no tiene fichas, y forzarlo a tomar la carta
         if (currentPlayer.getTokens() == 0) {
             // Tomar la carta del centro (si hay alguna)
             if (!deck.isEmpty()) {
                 Card card = deck.remove(0);
                 currentPlayer.takeCard(card, card.getTokens());
             }
-            advanceToNextPlayer();  // Pasamos al siguiente jugador
-            return;  // Salimos de la función ya que no se necesita hacer más en este turno
+            advanceToNextPlayer();
+            return;  
         }
 
         if (action instanceof PlaceToken) {
@@ -48,10 +47,9 @@ public class NoThanks {
                 throw new IllegalStateException(currentPlayer.getName() + " has no tokens left.");
             }
             currentPlayer.decrementTokens();
-            // Agregar tokens a la carta en el centro (si es necesario)
             if (!deck.isEmpty()) {
                 Card currentCard = deck.get(0);
-                currentCard.addTokens(1); // Aumentar tokens en la carta actual
+                currentCard.addTokens(1); 
             }
         } else if (action instanceof TakeCard) {
             Card card = deck.remove(0);
@@ -65,7 +63,7 @@ public class NoThanks {
     private void advanceToNextPlayer() {
         players.get(currentPlayerIndex).resetTurn();
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        players.get(currentPlayerIndex).setHasPlayedThisTurn(false); // Reset del nuevo turno
+        players.get(currentPlayerIndex).setHasPlayedThisTurn(false); 
     }
 
     public void checkAndForceTakeCard() {
