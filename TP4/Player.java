@@ -43,43 +43,34 @@ public class Player {
     }
 
     public int calculatePoints() {
-        int points = tokens;  // Start with the player's tokens
+        int points = -tokens;
         List<Integer> cardValues = new ArrayList<>();
 
-        // Add the values of the cards to the list
         for (Card card : cards) {
             cardValues.add(card.getValue());
         }
 
-        // Sort the cards
+        // Ordenar las cartas
         Collections.sort(cardValues);
 
-        int seriesStart = -1;  // The first card in a potential series
-        boolean inSeries = false;  // Flag to check if we're in a series
+        int totalPoints = 0;
+        Integer seriesStart = null; // Valor inicial de la serie
 
         for (int i = 0; i < cardValues.size(); i++) {
-            // Start a new series
-            if (seriesStart == -1) {
+            if (seriesStart == null) {
+                // Comenzar una nueva serie
                 seriesStart = cardValues.get(i);
-                inSeries = true;
             }
 
-            // Check if the current card is part of a consecutive sequence
+            // Si no es consecutiva o es la última carta, sumar los puntos de la serie
             if (i == cardValues.size() - 1 || cardValues.get(i) + 1 != cardValues.get(i + 1)) {
-                if (inSeries) {
-                    points -= seriesStart;  // Subtract the smallest card value in the series
-                } else {
-                    points -= cardValues.get(i);  // No series, subtract the card's value
-                }
-                seriesStart = -1;  // Reset the series start
-                inSeries = false;  // End the series
+                totalPoints += seriesStart; // Sumar el valor más bajo de la serie
+                seriesStart = null; // Reiniciar la serie
             }
         }
 
-        return -points;  // Points are negative in this game
+        return -totalPoints -points; // Combinar puntos negativos de cartas y positivos de fichas
     }
-
-
 
 
     public List<Card> getCards() {
