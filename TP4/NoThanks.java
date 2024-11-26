@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
+// File: NoThanks.java
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,9 +8,20 @@ public class NoThanks {
     private int currentPlayerIndex;
 
     public void startGame(List<Player> players, int initialTokens, List<Integer> cardValues) {
+        if (players.size() < 3 || players.size() > 7) {
+            throw new IllegalArgumentException("The number of players must be between 3 and 7.");
+        }
+
+        for (int value : cardValues) {
+            if (value < 3 || value > 35) {
+                throw new IllegalArgumentException("Card values must be between 3 and 35.");
+            }
+        }
+
         this.players = players;
         this.deck = cardValues.stream().map(value -> new Card(value, 0)).collect(Collectors.toList());
         this.currentPlayerIndex = 0;
+
         for (Player player : players) {
             player.setTokens(initialTokens);
         }
@@ -25,6 +35,21 @@ public class NoThanks {
         return players;
     }
 
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+    public void advanceToNextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+    }
+
+    public void takeCard(Player player) {
+        if (!deck.isEmpty()) {
+            Card card = deck.remove(0);
+            player.takeCard(card, card.getTokens());
+        }
+    }
+
     public void executeAction(Action action) {
         Player currentPlayer = players.get(currentPlayerIndex);
 
@@ -32,46 +57,19 @@ public class NoThanks {
             throw new IllegalStateException("It's not " + action.getPlayer().getName() + "'s turn.");
         }
 
-        if (currentPlayer.getTokens() == 0) {
-            // Tomar la carta del centro (si hay alguna)
-            if (!deck.isEmpty()) {
-                Card card = deck.remove(0);
-                currentPlayer.takeCard(card, card.getTokens());
-            }
-            advanceToNextPlayer();
-            return;  
-        }
-
-        if (action instanceof PlaceToken) {
-            if (currentPlayer.getTokens() == 0) {
-                throw new IllegalStateException(currentPlayer.getName() + " has no tokens left.");
-            }
+        if (action instanceof TakeCard) {
+            takeCard(currentPlayer);
+        } else if (action instanceof PlaceToken) {
             currentPlayer.decrementTokens();
-            if (!deck.isEmpty()) {
-                Card currentCard = deck.get(0);
-                currentCard.addTokens(1); 
-            }
-        } else if (action instanceof TakeCard) {
-            Card card = deck.remove(0);
-            currentPlayer.takeCard(card, card.getTokens());
+            deck.get(0).addToken();
+            advanceToNextPlayer();
         }
-
-        advanceToNextPlayer();
-    }
-
-
-    private void advanceToNextPlayer() {
-        players.get(currentPlayerIndex).resetTurn();
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        players.get(currentPlayerIndex).setHasPlayedThisTurn(false); 
     }
 
     public void checkAndForceTakeCard() {
         Player currentPlayer = players.get(currentPlayerIndex);
         if (currentPlayer.getTokens() == 0) {
-            Card card = deck.remove(0);
-            currentPlayer.takeCard(card, card.getTokens());
-            advanceToNextPlayer();
+            takeCard(currentPlayer);
         }
     }
 
@@ -81,9 +79,4 @@ public class NoThanks {
             System.out.println(player.getName() + " has " + player.calculatePoints() + " points.");
         }
     }
-    public int getCurrentPlayerIndex() {
-        return currentPlayerIndex;
-    }
-
-
 }
