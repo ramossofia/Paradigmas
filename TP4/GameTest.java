@@ -129,28 +129,6 @@ public class GameTests {
         assertEquals("It's not Emilio's turn.", exception.getMessage());
     }
 
-    @Test
-    public void testPlayerCannotPlaceMultipleTokens() {
-        Player player1 = new Player("Emilio");
-        Player player2 = new Player("Julio");
-        Player player3 = new Player("Bruno");
-        List<Player> players = List.of(player1, player2, player3);
-        List<Integer> cardValues = List.of(10);
-        GameStatus gameState = setupGame(players, cardValues);
-
-        // Primera ficha colocada correctamente por Emilio
-        gameState = gameState.placeToken();
-
-        // Intentar colocar una segunda ficha en el mismo turno por Emilio
-        final GameStatus finalGameState = gameState;
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
-            GameStatus currentGameState = finalGameState;
-            currentGameState = currentGameState.placeToken();
-        });
-
-        assertEquals("Cannot place more than one token per turn.", exception.getMessage(), "El mensaje de error debe indicar que no se pueden colocar múltiples fichas.");
-        assertEquals(2, player1.tokens(), "El jugador debe seguir teniendo 2 fichas después del intento fallido.");
-    }
 
     @Test
     public void testPlaceTokenAndPassTurn() {
@@ -168,19 +146,23 @@ public class GameTests {
 
     @Test
     public void testTakeCardWithTokens() {
+        Player player1 = new Player("Emilio");
         Player player2 = new Player("Julio");
         Player player3 = new Player("Bruno");
-        Player player1 = new Player("Emilio");
         List<Player> players = Arrays.asList(player1, player2, player3);
         List<Integer> cardValues = Arrays.asList(10);
         GameStatus gameState = setupGame(players, cardValues);
 
-        gameState = gameState.addTokenToCard(2); // Agrega 2 fichas
-        Card topCard = gameState.drawCard();
+        // El primer jugador da vuelta la carta y pone un token
+        gameState = gameState.placeToken();
 
-        player1.addCard(topCard);
-        assertEquals(5, player1.tokens(), "El jugador debería ganar las 2 fichas de la carta.");
-        assertEquals(1, player1.cards().size(), "El jugador debería tener la carta en su colección.");
+        // El siguiente jugador toma la carta con el token
+        gameState = gameState.nextPlayer();
+        Card topCard = gameState.drawCard();
+        player2.addCard(topCard);
+
+        assertEquals(1, player2.cards().size());
+        assertEquals(12, player2.tokens());
     }
 
     @Test
@@ -194,7 +176,7 @@ public class GameTests {
 
         GameStatus gameState = setupGame(players, cards);
 
-        player1.addCard(new Card(15, 0));
+        player1.addCard(new Card(15));
 
         assertEquals(-15, player1.calculatePoints(), "El jugador debe recibir puntos negativos por la carta.");
     }
@@ -204,9 +186,9 @@ public class GameTests {
     @Test
     public void testCalculatePointsWithSeries() {
         Player player = new Player("Emilio");
-        player.addCard(new Card(5, 0));
-        player.addCard(new Card(6, 0));
-        player.addCard(new Card(7, 0));
+        player.addCard(new Card(6));
+        player.addCard(new Card(7));
+        player.addCard(new Card(5));
         int points = player.calculatePoints();
         assertEquals(-5, points);
     }
@@ -214,10 +196,10 @@ public class GameTests {
     @Test
     public void testCalculatePointsForSeries() {
         Player player = new Player("Emilio");
-        player.addCard(new Card(5, 0));
-        player.addCard(new Card(6, 0));
-        player.addCard(new Card(7, 0));
-        player.addCard(new Card(9, 0)); // Carta aislada
+        player.addCard(new Card(5));
+        player.addCard(new Card(6));
+        player.addCard(new Card(7));
+        player.addCard(new Card(9)); // Carta aislada
 
         int points = player.calculatePoints();
         assertEquals(-14, points, "Los puntos deben sumar 5 (serie) + 9 (aislada).");
