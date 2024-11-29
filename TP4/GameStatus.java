@@ -8,7 +8,7 @@ public abstract class GameStatus {
 
     public GameStatus(List<Player> players, List<Integer> cardValues) {
         this.players = players;
-        this.deck = cardValues.stream().map(value -> new Card(value, 0)).collect(Collectors.toList());
+        this.deck = cardValues.stream().map(value -> new Card(value)).collect(Collectors.toList());
         this.currentPlayerIndex = 0;
 
         // Calcular y asignar fichas iniciales en función del número de jugadores
@@ -76,4 +76,5 @@ public abstract class GameStatus {
     public int getInitialTokens() {
         return calculateInitialTokens(players.size());
     }
+
 }
