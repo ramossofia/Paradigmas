@@ -1,5 +1,5 @@
 public class Card {
-    private int value;
+    private final int value;
     private int tokens;
 
     public Card(int value, int tokens) {
@@ -15,7 +15,7 @@ public class Card {
         return tokens;
     }
 
-    public void addToken() {
-        this.tokens++;
+    public void addTokens(int tokens) {
+        this.tokens += tokens;
     }
 }
