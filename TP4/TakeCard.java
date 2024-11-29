@@ -1,12 +1,9 @@
 public class TakeCard extends Action {
-    private Card card;
-
-    public TakeCard(Player player, Card card) {
-        super(player);
-        this.card = card;
-    }
-
-    public Card getCard() {
-        return card;
+    @Override
+    public void execute(GameInProgress game, Player player) {
+        Card card = game.drawCard();
+        player.addCard(card);
+        player.addTokens(card.getTokens());
+        game.nextPlayer(); // Pasa el turno al siguiente jugador
     }
 }
