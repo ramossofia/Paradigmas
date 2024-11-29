@@ -1,9 +1,11 @@
 import java.util.List;
 
 public class GameInProgress extends GameStatus {
+    private int tokens; // Add this field
 
     public GameInProgress(List<Player> players, List<Integer> cardValues) {
         super(players, cardValues);
+        this.tokens = 0; // Initialize tokens
 
         // Eliminar las primeras 9 cartas, asumiendo que el mazo tiene al menos 9 cartas
         if (deck.size() > 9) {
@@ -35,6 +37,7 @@ public class GameInProgress extends GameStatus {
             throw new IllegalStateException("Cannot place more than one token per turn.");
         }
         currentPlayer.placeToken();
+        deck.get(0).addTokens(1); // Asegúrate de que se está sumando un token a la carta
         return nextPlayer(); // Pasa el turno al siguiente jugador
     }
 
@@ -58,5 +61,9 @@ public class GameInProgress extends GameStatus {
     public GameStatus executeAction(Action action) {
         action.execute(this, players.get(currentPlayerIndex));
         return this;
+    }
+
+    public void addTokens(int tokens) {
+        this.tokens += tokens;
     }
 }
