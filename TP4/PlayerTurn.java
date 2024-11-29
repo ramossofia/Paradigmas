@@ -1,18 +1,11 @@
-
 public class PlayerTurn {
-    private Player player;
-    private NoThanks game;
+    private final GameInProgress game;
 
-    public PlayerTurn(Player player, NoThanks game) {
-        this.player = player;
+    public PlayerTurn(GameInProgress game) {
         this.game = game;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void execute() {
-        game.checkAndForceTakeCard();
+    public void playAction(Action action) {
+        game.executeAction(action);
     }
 }
