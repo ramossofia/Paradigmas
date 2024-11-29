@@ -63,9 +63,11 @@ public class Player {
     }
 
     public void placeToken() {
-        if (tokens > 0) {
+        if (tokens > 0 && !placedToken) {
             tokens--;
             placedToken = true;
+        } else if (placedToken) {
+            throw new IllegalStateException("Cannot place more than one token per turn.");
         } else {
             throw new IllegalStateException("No tokens available to place.");
         }
