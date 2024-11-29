@@ -1,91 +1,81 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Player {
     private String name;
     private int tokens;
-    private boolean hasPlayedThisTurn = false;
-    private List<Card> cards = new ArrayList<>();
+    private List<Card> cards;
+    private boolean placedToken;
 
-    public Player(String name, int initialTokens) {
+    public Player(String name) {
         this.name = name;
-        this.tokens = initialTokens;
-    }
-
-    public void addCard(Card card) {
-        this.cards.add(card);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getTokens() {
-        return tokens;
+        this.cards = new ArrayList<>();
+        this.placedToken = false;
     }
 
     public void setTokens(int tokens) {
         this.tokens = tokens;
     }
 
-    public boolean hasPlayedThisTurn() {
-        return hasPlayedThisTurn;
+    public int tokens() {
+        return tokens;
     }
 
-    public void resetTurn() {
-        hasPlayedThisTurn = false;
+    public void addCard(Card card) {
+        cards.add(card);
+        tokens += card.getTokens();
     }
 
-
-    public void setHasPlayedThisTurn(boolean played) {
-        this.hasPlayedThisTurn = played;
-    }
-
-    public int calculatePoints() {
-        int points = -tokens;
-        List<Integer> cardValues = cards.stream()
-                .map(Card::getValue)
-                .sorted()
-                .collect(Collectors.toList());
-
-        int totalPoints = 0;
-        Integer seriesStart = null;
-
-        for (int i = 0; i < cardValues.size(); i++) {
-            if (seriesStart == null) {
-                seriesStart = cardValues.get(i);
-            }
-
-
-            if (i == cardValues.size() - 1 || cardValues.get(i) + 1 != cardValues.get(i + 1)) {
-                totalPoints += seriesStart; // Add the series start to the total points
-                seriesStart = null;
-            }
-        }
-
-        return -totalPoints - points;
-    }
-
-
-
-
-    public List<Card> getCards() {
+    public List<Card> cards() {
         return cards;
     }
 
-    public void takeCard(Card card, int tokens) {
-        this.tokens += tokens; // Sumar los tokens de la carta
-        this.cards.add(card);  // Agregar la carta a la lista de cartas del jugador
-    }
-
-
-    public void decrementTokens() {
-        if (tokens <= 0) {
-            throw new IllegalStateException(name + " has no tokens left.");
+    public int calculatePoints() {
+        if (cards.isEmpty()) {
+            return 0;
         }
-        tokens--;
+
+        Collections.sort(cards, (c1, c2) -> Integer.compare(c1.getValue(), c2.getValue()));
+        int totalPoints = 0;
+        int seriesStart = 0;
+
+        while (seriesStart < cards.size()) {
+            int seriesEnd = seriesStart;
+            while (seriesEnd + 1 < cards.size() && cards.get(seriesEnd + 1).getValue() == cards.get(seriesEnd).getValue() + 1) {
+                seriesEnd++;
+            }
+
+            if (seriesEnd > seriesStart) {
+                totalPoints += cards.get(seriesStart).getValue();
+            } else {
+                totalPoints += cards.get(seriesStart).getValue();
+            }
+
+            seriesStart = seriesEnd + 1;
+        }
+
+        return -totalPoints;
     }
 
+    public void addTokens(int tokens) {
+        this.tokens += tokens;
+    }
+
+    public void placeToken() {
+        if (tokens > 0) {
+            tokens--;
+            placedToken = true;
+        } else {
+            throw new IllegalStateException("No tokens available to place.");
+        }
+    }
+
+    public boolean hasPlacedToken() {
+        return placedToken;
+    }
+
+    public void resetPlacedToken() {
+        placedToken = false;
+    }
 }
