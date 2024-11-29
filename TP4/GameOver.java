@@ -1,23 +1,35 @@
+import java.util.List;
+import java.util.ArrayList;
+
 public class GameOver extends GameStatus {
-    public GameOver(NoThanks game) {
-        super(game);
+
+    public GameOver(List<Player> players, List<Card> deck, int currentPlayerIndex) {
+        super(players, new ArrayList<>()); // El mazo está vacío en GameOver
+        this.currentPlayerIndex = currentPlayerIndex;
     }
 
     @Override
-    public void start() {
-        throw new IllegalStateException("Game is already over.");
+    public GameStatus nextPlayer() {
+        throw new IllegalStateException("El juego ha terminado.");
     }
 
     @Override
-    public void nextTurn() {
-        throw new IllegalStateException("Game is already over.");
+    public Card drawCard() {
+        throw new IllegalStateException("No se pueden robar cartas, el juego ha terminado.");
     }
 
     @Override
-    public void end() {
-        System.out.println("Game over!");
-        for (Player player : getGame().getPlayers()) {
-            System.out.println(player.getName() + " has " + player.calculatePoints() + " points.");
-        }
+    public GameStatus placeToken() {
+        throw new IllegalStateException("No se pueden colocar fichas, el juego ha terminado.");
+    }
+
+    @Override
+    public GameStatus addTokenToCard(int tokens) {
+        throw new IllegalStateException("No se pueden agregar fichas, el juego ha terminado.");
+    }
+
+    @Override
+    public GameStatus updateDeck(List<Card> deck) {
+        throw new IllegalStateException("No se puede actualizar el mazo, el juego ha terminado.");
     }
 }
