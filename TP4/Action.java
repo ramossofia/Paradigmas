@@ -1,3 +1,3 @@
 public abstract class Action {
-    public abstract void execute(GameInProgress game, Player player);
+    public abstract GameStatus execute(GameInProgress game, Player player);
 }
