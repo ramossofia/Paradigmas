@@ -1,19 +1,10 @@
-public class PlaceToken extends Action {
+public class PlaceToken implements Action {
 
     @Override
-    public GameStatus execute(GameInProgress game, Player player) {
-        // Si el jugador ya colocó un token, simplemente retornamos el estado actual.
-        if (player.hasPlacedToken()) {
-            return game;
-        }
-
-        // Actualizar el jugador con un token colocado.
-        Player updatedPlayer = player.placeToken();
-
-        // Agregar un token a la carta superior del mazo.
-        Deck updatedDeck = game.getDeck().addTokensToTopCard(1);
-
-        // Crear un nuevo estado del juego con el jugador y mazo actualizados, y avanzar al siguiente jugador.
-        return game.withUpdatedPlayer(updatedPlayer).withUpdatedDeck(updatedDeck).nextPlayer();
+    public GameStatus execute(GameStatus gameState) {
+        GameInProgress game = (GameInProgress) gameState;
+        Player currentPlayer = game.getCurrentPlayer();
+        currentPlayer.addTokens(-1);
+        return game.withUpdatedPlayer(currentPlayer).nextPlayer();
     }
 }
