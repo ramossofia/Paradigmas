@@ -1,35 +1,53 @@
 import java.util.List;
-import java.util.ArrayList;
 
 public class GameOver extends GameStatus {
 
-    public GameOver(List<Player> players, List<Card> deck, int currentPlayerIndex) {
-        super(players, new ArrayList<>()); // El mazo está vacío en GameOver
-        this.currentPlayerIndex = currentPlayerIndex;
+    /**
+     * Constructs a GameOver instance with the final state of players and the deck.
+     *
+     * @param players The list of players in the game.
+     * @param deck    The final deck state.
+     */
+    public GameOver(List<Player> players, Deck deck) {
+        super(List.copyOf(players), deck, -1); // -1 indicates no current player
     }
 
+    /**
+     * The game is over, so moving to the next player has no effect.
+     *
+     * @return The current GameOver instance.
+     */
     @Override
     public GameStatus nextPlayer() {
-        throw new IllegalStateException("El juego ha terminado.");
+        return this;
+    }
+
+    /**
+     * The game is over, so executing actions has no effect.
+     *
+     * @param action The action to execute (ignored).
+     * @return The current GameOver instance.
+     */
+    @Override
+    public GameStatus executeAction(Action action) {
+        return this;
+    }
+
+    /**
+     * The game is already over, so no further checks are necessary.
+     *
+     * @return The current GameOver instance.
+     */
+    @Override
+    public GameStatus checkGameOver() {
+        return this;
     }
 
     @Override
-    public Card drawCard() {
-        throw new IllegalStateException("No se pueden robar cartas, el juego ha terminado.");
-    }
-
-    @Override
-    public GameStatus placeToken() {
-        throw new IllegalStateException("No se pueden colocar fichas, el juego ha terminado.");
-    }
-
-    @Override
-    public GameStatus addTokenToCard(int tokens) {
-        throw new IllegalStateException("No se pueden agregar fichas, el juego ha terminado.");
-    }
-
-    @Override
-    public GameStatus updateDeck(List<Card> deck) {
-        throw new IllegalStateException("No se puede actualizar el mazo, el juego ha terminado.");
+    public String toString() {
+        return "GameOver{" +
+                "players=" + getPlayers() +
+                ", deck=" + getDeck() +
+                '}';
     }
 }
