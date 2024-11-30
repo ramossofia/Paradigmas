@@ -1,69 +1,96 @@
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class GameInProgress extends GameStatus {
-    private int tokens; // Add this field
 
-    public GameInProgress(List<Player> players, List<Integer> cardValues) {
-        super(players, cardValues);
-        this.tokens = 0; // Initialize tokens
+    /**
+     * Constructs a new game in progress with the specified players and deck, starting with the first player.
+     *
+     * @param players List of players in the game.
+     * @param deck    The deck of cards for the game.
+     */
+    public GameInProgress(List<Player> players, Deck deck) {
+        super(List.copyOf(players), deck, 0); // Ensure players are immutable
+    }
 
-        // Eliminar las primeras 9 cartas, asumiendo que el mazo tiene al menos 9 cartas
-        if (deck.size() > 9) {
-            deck = deck.subList(9, deck.size());
-        }
+    /**
+     * Constructs a new game in progress with the specified players, deck, and current player index.
+     *
+     * @param players            List of players in the game.
+     * @param deck               The deck of cards for the game.
+     * @param currentPlayerIndex The index of the current player.
+     */
+    public GameInProgress(List<Player> players, Deck deck, int currentPlayerIndex) {
+        super(List.copyOf(players), deck, currentPlayerIndex); // Ensure players are immutable
     }
 
     @Override
     public GameStatus nextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-        players.get(currentPlayerIndex).resetPlacedToken();
-        return checkGameOver(); // Verifica si el juego debe terminar después del turno
+        int newCurrentPlayerIndex = (getCurrentPlayerIndex() + 1) % getPlayers().size();
+        return new GameInProgress(getPlayers(), getDeck(), newCurrentPlayerIndex).checkGameOver();
     }
 
     @Override
-    public Card drawCard() {
-        if (deck.isEmpty()) {
-            throw new IllegalStateException("El mazo está vacío.");
-        }
-        Card card = deck.remove(0);
-        checkGameOver(); // Verifica si el juego debe terminar
-        return card;
-    }
-
-    @Override
-    public GameStatus placeToken() {
-        Player currentPlayer = players.get(currentPlayerIndex);
-        if (currentPlayer.hasPlacedToken()) {
-            throw new IllegalStateException("Cannot place more than one token per turn.");
-        }
-        currentPlayer.placeToken();
-        deck.get(0).addTokens(1); // Asegúrate de que se está sumando un token a la carta
-        return nextPlayer(); // Pasa el turno al siguiente jugador
-    }
-
-    @Override
-    public GameStatus addTokenToCard(int tokens) {
-        if (deck.isEmpty()) {
-            throw new IllegalStateException("No hay cartas para agregar fichas.");
-        }
-        deck.get(0).addTokens(tokens);
-        return this;
-    }
-
-    @Override
-    protected GameStatus checkGameOver() {
-        if (deck.isEmpty()) {
-            return new GameOver(players, deck, currentPlayerIndex);
-        }
-        return this;
-    }
-
     public GameStatus executeAction(Action action) {
-        action.execute(this, players.get(currentPlayerIndex));
+        Player currentPlayer = getPlayers().get(getCurrentPlayerIndex());
+        GameStatus newState = action.execute(this, currentPlayer);
+        return newState.checkGameOver();
+    }
+
+    /**
+     * Returns a new instance of the game with an updated player list, replacing the current player with the updated one.
+     *
+     * @param updatedPlayer The updated player to replace the current one.
+     * @return A new GameInProgress instance with the updated player.
+     */
+    public GameInProgress withUpdatedPlayer(Player updatedPlayer) {
+        List<Player> updatedPlayers = IntStream.range(0, getPlayers().size())
+                .mapToObj(index -> index == getCurrentPlayerIndex() ? updatedPlayer : getPlayers().get(index))
+                .collect(Collectors.toUnmodifiableList());
+        return new GameInProgress(updatedPlayers, getDeck(), getCurrentPlayerIndex());
+    }
+
+    /**
+     * Returns a new instance of the game with an updated deck.
+     *
+     * @param updatedDeck The updated deck to use in the game.
+     * @return A new GameInProgress instance with the updated deck.
+     */
+    public GameInProgress withUpdatedDeck(Deck updatedDeck) {
+        return new GameInProgress(getPlayers(), updatedDeck, getCurrentPlayerIndex());
+    }
+
+    @Override
+    public GameStatus checkGameOver() {
+        if (getDeck().isEmpty()) {
+            return new GameOver(getPlayers(), getDeck());
+        }
         return this;
     }
 
-    public void addTokens(int tokens) {
-        this.tokens += tokens;
+    /**
+     * Calculates the initial number of tokens based on the number of players.
+     *
+     * @param playerCount The number of players in the game.
+     * @return The initial number of tokens for each player.
+     * @throws IllegalArgumentException If the player count is outside the valid range.
+     */
+    public int calculateInitialTokens(int playerCount) {
+        return switch (playerCount) {
+            case 3, 4, 5 -> 11;
+            case 6 -> 9;
+            case 7 -> 7;
+            default -> throw new IllegalArgumentException("Invalid number of players: " + playerCount);
+        };
+    }
+
+    @Override
+    public String toString() {
+        return "GameInProgress{" +
+                "players=" + getPlayers() +
+                ", deck=" + getDeck() +
+                ", currentPlayerIndex=" + getCurrentPlayerIndex() +
+                '}';
     }
 }
