@@ -1,18 +1,17 @@
+// src/Player.java
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class Player {
-    private final String name;
-    private final int tokens;
-    private final List<Integer> cards;
-    private final boolean placedToken;
+    private String name;
+    private int tokens;
+    private List<Integer> cards;
 
-    public Player(String name, int tokens, List<Integer> cards, boolean placedToken) {
+    public Player(String name) {
         this.name = name;
-        this.tokens = tokens;
-        this.cards = List.copyOf(cards);
-        this.placedToken = placedToken;
+        this.tokens = 0;
+        this.cards = new ArrayList<>();
     }
 
     public String getName() {
@@ -23,77 +22,43 @@ public class Player {
         return tokens;
     }
 
+    public void setTokens(int tokens) {
+        this.tokens = tokens;
+    }
+
+    public void addTokens(int tokens) {
+        this.tokens += tokens;
+    }
+
     public List<Integer> getCards() {
         return cards;
     }
 
-    public boolean hasPlacedToken() {
-        return placedToken;
-    }
-
-    public Player placeToken() {
-        // Devuelve el jugador actual si no tiene tokens o ya colocó un token.
-        if (tokens <= 0 || placedToken) {
-            return this;
-        }
-        return new Player(name, tokens - 1, cards, true);
-    }
-
     public Player addCard(int card) {
-        // Devuelve una nueva instancia con la carta añadida.
-        List<Integer> newCards = new ArrayList<>(cards);
-        newCards.add(card);
-        return new Player(name, tokens, newCards, placedToken);
-    }
-
-    public Player addTokens(int tokens) {
-        // Devuelve una nueva instancia con los tokens añadidos.
-        return new Player(name, this.tokens + tokens, cards, placedToken);
+        this.cards.add(card);
+        return this;
     }
 
     public int calculateScore() {
+        // Ordenar las cartas del jugador
         List<Integer> sortedCards = new ArrayList<>(cards);
         Collections.sort(sortedCards);
 
-        int negativePoints = 0;
-        int seriesPoints = 0;
-
-        // Procesamos las cartas para identificar secuencias
-        boolean inSeries = false; // Bandera para verificar si estamos en una secuencia
-        int seriesStart = sortedCards.get(0); // El comienzo de la secuencia
+        int score = tokens; // Cada token es un punto positivo
+        int seriesStart = -1;
 
         for (int i = 0; i < sortedCards.size(); i++) {
-            // Si no estamos en una secuencia, sumamos la carta aislada a los puntos negativos
-            if (i == 0 || sortedCards.get(i) != sortedCards.get(i - 1) + 1) {
-                if (inSeries) {
-                    // Si antes había una secuencia, sumamos sus puntos
-                    seriesPoints += sortedCards.get(i - 1);
-                }
-                negativePoints += sortedCards.get(i); // Es carta aislada
-                inSeries = false; // No estamos en secuencia
-            } else {
-                if (!inSeries) {
-                    // Iniciamos una nueva secuencia
-                    seriesStart = sortedCards.get(i - 1);
-                    inSeries = true;
-                }
-                seriesPoints += sortedCards.get(i); // Sumamos la carta a la secuencia
+            if (seriesStart == -1) {
+                seriesStart = sortedCards.get(i);
+            }
+
+            // Si la carta actual no es consecutiva con la anterior, o es la última carta
+            if (i == sortedCards.size() - 1 || sortedCards.get(i) + 1 != sortedCards.get(i + 1)) {
+                score -= seriesStart; // Restar el valor de la carta más pequeña de la serie
+                seriesStart = -1; // Reiniciar la serie
             }
         }
 
-        // Si hemos terminado con una secuencia, la sumamos también
-        if (inSeries) {
-            seriesPoints += sortedCards.get(sortedCards.size() - 1);
-        }
-
-        // La puntuación final es la diferencia entre los puntos negativos y de la secuencia
-        return -(negativePoints - seriesPoints) + tokens;
-    }
-
-
-
-    @Override
-    public String toString() {
-        return name + " tiene " + calculateScore() + " puntos.";
+        return score;
     }
 }
