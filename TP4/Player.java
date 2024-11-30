@@ -3,81 +3,97 @@ import java.util.Collections;
 import java.util.List;
 
 public class Player {
-    private String name;
-    private int tokens;
-    private List<Card> cards;
-    private boolean placedToken;
+    private final String name;
+    private final int tokens;
+    private final List<Integer> cards;
+    private final boolean placedToken;
 
-    public Player(String name) {
+    public Player(String name, int tokens, List<Integer> cards, boolean placedToken) {
         this.name = name;
-        this.cards = new ArrayList<>();
-        this.placedToken = false;
-    }
-
-    public void setTokens(int tokens) {
         this.tokens = tokens;
+        this.cards = List.copyOf(cards);
+        this.placedToken = placedToken;
     }
 
-    public int tokens() {
+    public String getName() {
+        return name;
+    }
+
+    public int getTokens() {
         return tokens;
     }
 
-    public void addCard(Card card) {
-        cards.add(card);
-        tokens += card.getTokens();
-    }
-
-    public List<Card> cards() {
+    public List<Integer> getCards() {
         return cards;
-    }
-
-    public int calculatePoints() {
-        if (cards.isEmpty()) {
-            return 0;
-        }
-
-        Collections.sort(cards, (c1, c2) -> Integer.compare(c1.getValue(), c2.getValue()));
-        int totalPoints = 0;
-        int seriesStart = 0;
-
-        while (seriesStart < cards.size()) {
-            int seriesEnd = seriesStart;
-            while (seriesEnd + 1 < cards.size() && cards.get(seriesEnd + 1).getValue() == cards.get(seriesEnd).getValue() + 1) {
-                seriesEnd++;
-            }
-
-            if (seriesEnd > seriesStart) {
-                totalPoints += cards.get(seriesStart).getValue();
-            } else {
-                totalPoints += cards.get(seriesStart).getValue();
-            }
-
-            seriesStart = seriesEnd + 1;
-        }
-
-        return -totalPoints;
-    }
-
-    public void addTokens(int tokens) {
-        this.tokens += tokens;
-    }
-
-    public void placeToken() {
-        if (tokens > 0 && !placedToken) {
-            tokens--;
-            placedToken = true;
-        } else if (placedToken) {
-            throw new IllegalStateException("Cannot place more than one token per turn.");
-        } else {
-            throw new IllegalStateException("No tokens available to place.");
-        }
     }
 
     public boolean hasPlacedToken() {
         return placedToken;
     }
 
-    public void resetPlacedToken() {
-        placedToken = false;
+    public Player placeToken() {
+        // Devuelve el jugador actual si no tiene tokens o ya colocó un token.
+        if (tokens <= 0 || placedToken) {
+            return this;
+        }
+        return new Player(name, tokens - 1, cards, true);
+    }
+
+    public Player addCard(int card) {
+        // Devuelve una nueva instancia con la carta añadida.
+        List<Integer> newCards = new ArrayList<>(cards);
+        newCards.add(card);
+        return new Player(name, tokens, newCards, placedToken);
+    }
+
+    public Player addTokens(int tokens) {
+        // Devuelve una nueva instancia con los tokens añadidos.
+        return new Player(name, this.tokens + tokens, cards, placedToken);
+    }
+
+    public int calculateScore() {
+        List<Integer> sortedCards = new ArrayList<>(cards);
+        Collections.sort(sortedCards);
+
+        int negativePoints = 0;
+        int seriesPoints = 0;
+
+        // Procesamos las cartas para identificar secuencias
+        boolean inSeries = false; // Bandera para verificar si estamos en una secuencia
+        int seriesStart = sortedCards.get(0); // El comienzo de la secuencia
+
+        for (int i = 0; i < sortedCards.size(); i++) {
+            // Si no estamos en una secuencia, sumamos la carta aislada a los puntos negativos
+            if (i == 0 || sortedCards.get(i) != sortedCards.get(i - 1) + 1) {
+                if (inSeries) {
+                    // Si antes había una secuencia, sumamos sus puntos
+                    seriesPoints += sortedCards.get(i - 1);
+                }
+                negativePoints += sortedCards.get(i); // Es carta aislada
+                inSeries = false; // No estamos en secuencia
+            } else {
+                if (!inSeries) {
+                    // Iniciamos una nueva secuencia
+                    seriesStart = sortedCards.get(i - 1);
+                    inSeries = true;
+                }
+                seriesPoints += sortedCards.get(i); // Sumamos la carta a la secuencia
+            }
+        }
+
+        // Si hemos terminado con una secuencia, la sumamos también
+        if (inSeries) {
+            seriesPoints += sortedCards.get(sortedCards.size() - 1);
+        }
+
+        // La puntuación final es la diferencia entre los puntos negativos y de la secuencia
+        return -(negativePoints - seriesPoints) + tokens;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return name + " tiene " + calculateScore() + " puntos.";
     }
 }
