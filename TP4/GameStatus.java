@@ -1,80 +1,93 @@
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * Represents the abstract status of a game, providing the base structure for different game states.
+ */
 public abstract class GameStatus {
-    protected List<Player> players;
-    protected List<Card> deck;
-    protected int currentPlayerIndex;
 
-    public GameStatus(List<Player> players, List<Integer> cardValues) {
-        this.players = players;
-        this.deck = cardValues.stream().map(value -> new Card(value)).collect(Collectors.toList());
-        this.currentPlayerIndex = 0;
+    // Immutable list of players in the game.
+    protected final List<Player> players;
 
-        // Calcular y asignar fichas iniciales en función del número de jugadores
-        int initialTokens = calculateInitialTokens(players.size());
-        for (Player player : players) {
-            player.setTokens(initialTokens);
-        }
+    // Immutable deck of cards representing the current game state.
+    protected final Deck deck;
+
+    // Index of the current player (0-based). -1 indicates no active player.
+    protected final int currentPlayerIndex;
+
+    /**
+     * Constructs a GameStatus with the default current player index (0).
+     *
+     * @param players The list of players in the game.
+     * @param deck    The deck of cards.
+     */
+    public GameStatus(List<Player> players, Deck deck) {
+        this(players, deck, 0);
     }
 
-    // Método para calcular el número de fichas iniciales dependiendo del número de jugadores
-    private int calculateInitialTokens(int numberOfPlayers) {
-        if (numberOfPlayers >= 3 && numberOfPlayers <= 5) {
-            return 11;  // 3 a 5 jugadores
-        } else if (numberOfPlayers == 6) {
-            return 8;  // 6 jugadores
-        } else if (numberOfPlayers == 7) {
-            return 7;  // 7 jugadores
-        } else {
-            throw new IllegalArgumentException("Número de jugadores no soportado");
-        }
+    /**
+     * Constructs a GameStatus with the specified current player index.
+     *
+     * @param players            The list of players in the game.
+     * @param deck               The deck of cards.
+     * @param currentPlayerIndex The index of the current player.
+     */
+    public GameStatus(List<Player> players, Deck deck, int currentPlayerIndex) {
+        this.players = List.copyOf(players); // Ensures immutability of the player list
+        this.deck = deck; // Assuming Deck is immutable
+        this.currentPlayerIndex = currentPlayerIndex;
     }
 
-    public List<Player> players() {
+    /**
+     * Gets the immutable list of players.
+     *
+     * @return The list of players.
+     */
+    public List<Player> getPlayers() {
         return players;
     }
 
-    public List<Card> deck() {
+    /**
+     * Gets the current state of the deck.
+     *
+     * @return The deck.
+     */
+    public Deck getDeck() {
         return deck;
     }
 
-    public int currentPlayerIndex() {
+    /**
+     * Gets the index of the current player.
+     *
+     * @return The current player index.
+     */
+    public int getCurrentPlayerIndex() {
         return currentPlayerIndex;
     }
 
-    // Verifica si el mazo está vacío, en cuyo caso cambia el estado a GameOver
-    protected GameStatus checkGameOver() {
-        if (deck.isEmpty()) {
-            return new GameOver(players, deck, currentPlayerIndex);
-        }
-        return this;
-    }
-
+    /**
+     * Advances to the next player in the game.
+     *
+     * @return A new GameStatus with the updated current player.
+     */
     public abstract GameStatus nextPlayer();
 
-    public abstract Card drawCard();
+    /**
+     * Executes a game action, modifying the game state accordingly.
+     *
+     * @param action The action to execute.
+     * @return A new GameStatus reflecting the result of the action.
+     */
+    public abstract GameStatus executeAction(Action action);
 
-    public abstract GameStatus placeToken();
-
-    public abstract GameStatus addTokenToCard(int tokens);
-
-    public GameStatus updateDeck(List<Card> newDeck) {
-        if (newDeck.isEmpty()) {
-            return new GameOver(players, deck, currentPlayerIndex);
+    /**
+     * Checks if the game is over and transitions to the appropriate state.
+     *
+     * @return A new GameStatus representing the next state of the game.
+     */
+    protected GameStatus checkGameOver() {
+        if (deck.isEmpty()) {
+            return new GameOver(players, deck);
         }
-        this.deck = newDeck;
         return this;
     }
-
-    public GameStatus updatePlayers(List<Player> newPlayers) {
-        this.players = newPlayers;
-        return this;
-    }
-
-    // Este método ahora se puede llamar para obtener los tokens iniciales en los tests
-    public int getInitialTokens() {
-        return calculateInitialTokens(players.size());
-    }
-
 }
