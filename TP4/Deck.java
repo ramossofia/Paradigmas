@@ -83,4 +83,12 @@ public class Deck {
                 "cards=" + cards +
                 '}';
     }
+
+
+    public Optional<Card> peekTopCard() {
+        if (cards.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(cards.get(0));
+    }
 }
