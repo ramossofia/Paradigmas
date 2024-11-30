@@ -1,3 +1,4 @@
-public abstract class Action {
-    public abstract GameStatus execute(GameInProgress game, Player player);
+// src/Action.java
+public interface Action {
+    GameStatus execute(GameStatus gameState);
 }
