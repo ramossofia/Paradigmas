@@ -1,73 +1,33 @@
-// src/GameInProgress.java
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+// src/TakeCard.java
+public class TakeCard implements Action {
 
-public class GameInProgress extends GameStatus {
+    @Override
+    public GameStatus execute(GameStatus gameState) {
+        GameInProgress game = (GameInProgress) gameState;
+        Player player = game.getCurrentPlayer();
 
-    public GameInProgress(List<Player> players, Deck deck) {
-        super(initializePlayers(players), deck, 0);
-    }
-
-    public GameInProgress(List<Player> players, Deck deck, int currentPlayerIndex) {
-        super(initializePlayers(players), deck, currentPlayerIndex);
-    }
-
-    private static List<Player> initializePlayers(List<Player> players) {
-        int initialTokens = calculateInitialTokens(players.size());
-        players.forEach(player -> player.setTokens(initialTokens));
-        return players;
-    }
-
-    public static int calculateInitialTokens(int numberOfPlayers) {
-        if (numberOfPlayers <= 5) {
-            return 11;
-        } else if (numberOfPlayers == 6) {
-            return 9;
-        } else {
-            return 7;
+        // If the deck is empty, check if the game should end
+        if (game.getDeck().isEmpty()) {
+            return game.checkGameOver();
         }
-    }
 
-    @Override
-    public GameStatus nextPlayer() {
-        int newCurrentPlayerIndex = (getCurrentPlayerIndex() + 1) % getPlayers().size();
-        return new GameInProgress(getPlayers(), getDeck(), newCurrentPlayerIndex).checkGameOver();
-    }
-
-    @Override
-    public GameStatus executeAction(Action action) {
-        GameStatus newState = action.execute(this);
-        return newState.checkGameOver();
-    }
-
-    public GameInProgress withUpdatedPlayer(Player updatedPlayer) {
-        List<Player> updatedPlayers = IntStream.range(0, getPlayers().size())
-                .mapToObj(index -> index == getCurrentPlayerIndex() ? updatedPlayer : getPlayers().get(index))
-                .collect(Collectors.toList());
-        return new GameInProgress(updatedPlayers, getDeck(), getCurrentPlayerIndex());
-    }
-
-    public GameInProgress withUpdatedDeck(Deck updatedDeck) {
-        return new GameInProgress(getPlayers(), updatedDeck, getCurrentPlayerIndex());
-    }
-
-    @Override
-    public GameStatus checkGameOver() {
-        if (getDeck().isEmpty()) {
-            return new GameOver(getPlayers(), getDeck());
+        // Draw the top card from the deck
+        Card drawnCard = game.getDeck().drawCard().orElse(null);
+        if (drawnCard == null) {
+            return game; // If no card to draw, return the same state
         }
-        return this;
+
+        // Update the player with the card and tokens
+        player.addCard(drawnCard.getValue());
+        player.addTokens(drawnCard.getTokens());
+
+        // Remove the top card from the deck
+        Deck updatedDeck = game.getDeck().removeTopCard();
+
+        // Return the updated state
+        return game.withUpdatedPlayer(player)
+                .withUpdatedDeck(updatedDeck)
+                .nextPlayer()
+                .checkGameOver();
     }
-
-    @Override
-    public String toString() {
-        return "GameInProgress{" +
-                "players=" + getPlayers() +
-                ", deck=" + getDeck() +
-                ", currentPlayerIndex=" + getCurrentPlayerIndex() +
-                '}';
-    }
-
-
 }
