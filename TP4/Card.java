@@ -1,22 +1,25 @@
 public class Card {
-    private int value;
-    private int tokens;
+    private final int value;
+    private final int tokens;
 
-    public Card(int value) {
+    public Card(int value, int tokens) {
         this.value = value;
-        this.tokens = 0; // Inicializa los tokens de la carta en 0
+        this.tokens = tokens;
     }
 
+    public int getValue() {
+        return value;
+    }
 
     public int getTokens() {
         return tokens;
     }
 
-    public void addTokens(int tokens) {
-        this.tokens += tokens;
+    public Card addTokens(int tokens) {
+        return new Card(this.value, this.tokens + tokens);
     }
 
-    public int getValue() {
-        return value;
+    public Card resetTokens() {
+        return new Card(this.value, 0);
     }
 }
