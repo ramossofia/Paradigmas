@@ -1,3 +1,4 @@
+
 public class Card {
     private final int value;
     private int tokens; // Remove final keyword
@@ -15,9 +16,10 @@ public class Card {
         return tokens;
     }
 
-    public Card addTokens(int tokens) {
-        return new Card(this.value, this.tokens + tokens);
+    public void addTokens(int tokens) {
+        this.tokens += tokens;
     }
+
 
     public Card resetTokens() {
         return new Card(this.value, 0);
