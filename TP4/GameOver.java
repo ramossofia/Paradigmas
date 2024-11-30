@@ -1,43 +1,53 @@
-// src/GameOver.java
 import java.util.List;
 
 public class GameOver extends GameStatus {
 
+    /**
+     * Constructs a GameOver instance with the final state of players and the deck.
+     *
+     * @param players The list of players in the game.
+     * @param deck    The final deck state.
+     */
     public GameOver(List<Player> players, Deck deck) {
-        super(players, deck);
+        super(List.copyOf(players), deck, -1); // -1 indicates no current player
     }
 
+    /**
+     * The game is over, so moving to the next player has no effect.
+     *
+     * @return The current GameOver instance.
+     */
     @Override
     public GameStatus nextPlayer() {
-        // No hacer nada, el juego ha terminado
         return this;
     }
 
+    /**
+     * The game is over, so executing actions has no effect.
+     *
+     * @param action The action to execute (ignored).
+     * @return The current GameOver instance.
+     */
     @Override
     public GameStatus executeAction(Action action) {
-        // No hacer nada, el juego ha terminado
         return this;
     }
 
-    public int calculateInitialTokens(int playerCount) {
-        // No hacer nada, el juego ha terminado
-        return 0;
+    /**
+     * The game is already over, so no further checks are necessary.
+     *
+     * @return The current GameOver instance.
+     */
+    @Override
+    public GameStatus checkGameOver() {
+        return this;
     }
 
     @Override
-    public List<Player> getPlayers() {
-        // No hacer nada, el juego ha terminado
-        return super.getPlayers();
-    }
-
-    public Deck getDeck() {
-        // No hacer nada, el juego ha terminado
-        return super.getDeck();
-    }
-
-    @Override
-    public int getCurrentPlayerIndex() {
-        // No hacer nada, el juego ha terminado
-        return super.getCurrentPlayerIndex();
+    public String toString() {
+        return "GameOver{" +
+                "players=" + getPlayers() +
+                ", deck=" + getDeck() +
+                '}';
     }
 }
