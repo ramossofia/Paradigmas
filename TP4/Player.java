@@ -61,4 +61,11 @@ public class Player {
 
         return score;
     }
+    public void removeToken() {
+        if (tokens > 0) {
+            tokens--;
+        } else {
+            throw new IllegalStateException("No tokens to remove.");
+        }
+    }
 }
