@@ -1,14 +1,14 @@
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Represents an immutable deck of cards.
  * All operations return a new Deck instance, adhering to functional programming principles.
  */
 public class Deck {
-    private final List<Card> cards;
+    private List<Card> cards;
 
     /**
      * Constructs a new Deck from a list of card values.
@@ -54,14 +54,14 @@ public class Deck {
      * @return A new Deck instance with the updated top card.
      * @throws IllegalStateException If the deck is empty.
      */
-    public Deck addTokensToTopCard(int tokens) {
+
+
+
+    public void addTokensToTopCard(int tokens) {
         if (cards.isEmpty()) {
             throw new IllegalStateException("The deck is empty.");
         }
-        List<Card> updatedCards = IntStream.range(0, cards.size())
-                .mapToObj(index -> index == 0 ? cards.get(0).addTokens(tokens) : cards.get(index))
-                .collect(Collectors.toUnmodifiableList());
-        return new Deck(updatedCards, true);
+        cards.get(0).addTokens(1);
     }
 
     /**
@@ -85,10 +85,6 @@ public class Deck {
     }
 
 
-    public Optional<Card> peekTopCard() {
-        if (cards.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(cards.get(0));
-    }
+
+
 }
