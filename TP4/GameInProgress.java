@@ -69,7 +69,5 @@ public class GameInProgress extends GameStatus {
                 '}';
     }
 
-    public Card getCurrentCard() {
-        return deck.peekTopCard().orElse(null);
-    }
+
 }
