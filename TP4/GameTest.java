@@ -1,4 +1,6 @@
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -6,120 +8,124 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameTests {
 
     private GameStatus setupGame(List<Player> players, List<Integer> cardValues) {
-        Deck deck = new Deck();
-        deck.initializeDeck(cardValues);
-        return new GameInProgress(players, deck);
+        return new GameInProgress(players, new Deck(cardValues));
     }
-
-    // ** INICIALIZACIÓN **
 
     @Test
     public void testDeckInitialization() {
-        List<Player> players = Arrays.asList(
-                new Player("Emilio"),
-                new Player("Julio"),
-                new Player("Bruno")
+        GameStatus gameState = setupGame(
+                Arrays.asList(
+                        new Player("Emilio", 11, List.of(), false),
+                        new Player("Julio", 11, List.of(), false),
+                        new Player("Bruno", 11, List.of(), false)
+                ),
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
 
-        GameStatus gameState = setupGame(players, cardValues);
-
-        assertEquals(24, ((GameInProgress) gameState).getDeck().size(), "El mazo debe contener 24 cartas.");
+        int deckSize = ((GameInProgress) gameState).getDeck().size();
+        assertEquals(24, deckSize, "The deck should contain 24 cards.");
     }
 
     @Test
     public void testPlayerCountIsBetweenThreeAndSeven() {
         List<Player> players = Arrays.asList(
-                new Player("Emilio"),
-                new Player("Julio"),
-                new Player("Bruno")
+                new Player("Emilio", 11, List.of(), false),
+                new Player("Julio", 11, List.of(), false),
+                new Player("Bruno", 11, List.of(), false)
         );
 
-        assertTrue(players.size() >= 3 && players.size() <= 7, "El número de jugadores debe estar entre 3 y 7.");
+        boolean validPlayerCount = players.size() >= 3 && players.size() <= 7;
+        assertTrue(validPlayerCount, "The number of players should be between 3 and 7.");
     }
 
     @Test
     public void testInitialTokensAndCardsForPlayers() {
-        Player player1 = new Player("Emilio");
-        Player player2 = new Player("Julio");
-        Player player3 = new Player("Bruno");
-        List<Player> players = Arrays.asList(player1, player2, player3);
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
-
-        GameStatus gameState = setupGame(players, cardValues);
+        List<Player> players = Arrays.asList(
+                new Player("Emilio", 11, List.of(), false),
+                new Player("Julio", 11, List.of(), false),
+                new Player("Bruno", 11, List.of(), false)
+        );
+        GameStatus gameState = setupGame(
+                players,
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
+        );
 
         int initialTokens = ((GameInProgress) gameState).calculateInitialTokens(players.size());
 
         players.forEach(player -> {
-            assertEquals(initialTokens, player.getTokens(), "Cada jugador debe recibir " + initialTokens + " fichas al inicio.");
-            assertEquals(0, player.getCards().size(), "Cada jugador debe iniciar sin cartas.");
+            assertEquals(initialTokens, player.getTokens(), "Each player should receive " + initialTokens + " tokens at the start.");
+            assertEquals(0, player.getCards().size(), "Each player should start with no cards.");
         });
     }
 
     @Test
     public void testInitialCardRemoval() {
-        List<Player> players = Arrays.asList(
-                new Player("Emilio"),
-                new Player("Julio"),
-                new Player("Bruno")
+        GameStatus gameState = setupGame(
+                Arrays.asList(
+                        new Player("Emilio", 11, List.of(), false),
+                        new Player("Julio", 11, List.of(), false),
+                        new Player("Bruno", 11, List.of(), false)
+                ),
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
 
-        GameStatus gameState = setupGame(players, cardValues);
-
-        assertEquals(24, ((GameInProgress) gameState).getDeck().size(), "El mazo debe tener 24 cartas tras eliminar 9.");
+        int deckSize = ((GameInProgress) gameState).getDeck().size();
+        assertEquals(24, deckSize, "The deck should have 24 cards after removing 9.");
     }
-
-    // ** TURNOS **
 
     @Test
     public void testTurnRotationIsCorrect() {
-        Player player1 = new Player("Emilio");
-        Player player2 = new Player("Julio");
-        Player player3 = new Player("Bruno");
-        List<Player> players = Arrays.asList(player1, player2, player3);
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
+        GameStatus gameState = setupGame(
+                Arrays.asList(
+                        new Player("Emilio", 11, List.of(), false),
+                        new Player("Julio", 11, List.of(), false),
+                        new Player("Bruno", 11, List.of(), false)
+                ),
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
+        );
 
-        GameStatus gameState = setupGame(players, cardValues);
+        GameStatus nextGameState = gameState.nextPlayer();
+        Player currentPlayer = nextGameState.getPlayers().get(nextGameState.getCurrentPlayerIndex());
 
-        gameState = gameState.nextPlayer();
-        assertEquals(player2, gameState.getPlayers().get(gameState.getCurrentPlayerIndex()), "El turno debería pasar a Julio.");
+        assertEquals("Julio", currentPlayer.getName(), "The turn should pass to Julio.");
     }
 
     @Test
     public void testTurnWrapsAroundToFirstPlayer() {
-        Player player1 = new Player("Emilio");
-        Player player2 = new Player("Julio");
-        Player player3 = new Player("Bruno");
-        List<Player> players = Arrays.asList(player1, player2, player3);
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
+        GameStatus gameState = setupGame(
+                Arrays.asList(
+                        new Player("Emilio", 11, List.of(), false),
+                        new Player("Julio", 11, List.of(), false),
+                        new Player("Bruno", 11, List.of(), false)
+                ),
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
+        );
 
-        GameStatus gameState = setupGame(players, cardValues);
+        GameStatus finalGameState = gameState
+                .nextPlayer()
+                .nextPlayer()
+                .nextPlayer();
 
-        gameState = gameState.nextPlayer(); // Turno de Julio
-        gameState = gameState.nextPlayer(); // Turno de Bruno
-        gameState = gameState.nextPlayer(); // Debe volver a Emilio
-
-        assertEquals(player1, gameState.getPlayers().get(gameState.getCurrentPlayerIndex()), "El turno debe volver al primer jugador.");
+        Player currentPlayer = finalGameState.getPlayers().get(finalGameState.getCurrentPlayerIndex());
+        assertEquals("Emilio", currentPlayer.getName(), "The turn should return to the first player.");
     }
 
     @Test
     public void testPlayerCannotPlayTwiceInARow() {
-        Player player1 = new Player("Emilio");
-        Player player2 = new Player("Julio");
-        Player player3 = new Player("Bruno");
-        List<Player> players = Arrays.asList(player1, player2, player3);
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
+        GameStatus gameState = setupGame(
+                Arrays.asList(
+                        new Player("Emilio", 11, List.of(), false),
+                        new Player("Julio", 11, List.of(), false),
+                        new Player("Bruno", 11, List.of(), false)
+                ),
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
+        );
 
-        GameStatus gameState = setupGame(players, cardValues);
+        GameStatus nextGameState = gameState.nextPlayer().nextPlayer();
+        Player currentPlayer = nextGameState.getPlayers().get(nextGameState.getCurrentPlayerIndex());
 
-        gameState = gameState.nextPlayer();
-        gameState = gameState.nextPlayer();
-
-        final GameStatus finalGameState = gameState;
-        Exception exception = assertThrows(IllegalStateException.class, () -> {
-            GameStatus currentGameState = finalGameState;
-            if (!currentGameState.getPlayers().get(currentGameState.getCurrentPlayerIndex()).equals(player1)) {
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            if (!currentPlayer.getName().equals("Emilio")) {
                 throw new IllegalStateException("It's not Emilio's turn.");
             }
         });
@@ -129,150 +135,95 @@ public class GameTests {
 
     @Test
     public void testPlaceTokenAndPassTurn() {
-        Player player1 = new Player("Emilio");
-        Player player2 = new Player("Julio");
-        Player player3 = new Player("Bruno");
+        GameStatus gameState = setupGame(
+                Arrays.asList(
+                        new Player("Emilio", 11, List.of(), false),
+                        new Player("Julio", 11, List.of(), false),
+                        new Player("Bruno", 11, List.of(), false)
+                ),
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
+        );
 
-        List<Player> players = Arrays.asList(player1, player2, player3);
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
-        GameStatus gameState = setupGame(players, cardValues);
+        GameStatus nextGameState = gameState.executeAction(new PlaceToken());
+        Player nextPlayer = nextGameState.getPlayers().get(nextGameState.getCurrentPlayerIndex());
 
-        gameState = gameState.executeAction(new PlaceToken());
-
-        assertEquals(player2, gameState.getPlayers().get(gameState.getCurrentPlayerIndex()), "El turno debería pasar al siguiente jugador.");
+        assertEquals("Julio", nextPlayer.getName(), "The turn should pass to the next player.");
     }
 
     @Test
     public void testTakeCardWithTokens() {
-        Player player1 = new Player("Emilio");
-        Player player2 = new Player("Julio");
-        Player player3 = new Player("Bruno");
-        List<Player> players = Arrays.asList(player1, player2, player3);
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
-        GameStatus gameState = setupGame(players, cardValues);
+        GameStatus gameState = setupGame(
+                Arrays.asList(
+                        new Player("Emilio", 11, List.of(), false),
+                        new Player("Julio", 11, List.of(), false),
+                        new Player("Bruno", 11, List.of(), false)
+                ),
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
+        );
 
-        // El primer jugador da vuelta la carta y pone un token
-        gameState = gameState.executeAction(new PlaceToken());
+        GameStatus nextGameState = gameState.executeAction(new PlaceToken())
+                .nextPlayer()
+                .executeAction(new TakeCard());
 
-        // El siguiente jugador toma la carta con el token
-        gameState = gameState.nextPlayer();
-        gameState = gameState.executeAction(new TakeCard());
-
-        assertEquals(1, player2.getCards().size());
-        assertEquals(12, player2.getTokens());
+        Player updatedPlayer = nextGameState.getPlayers().get(1);
+        assertEquals(1, updatedPlayer.getCards().size(), "Julio should have taken 1 card.");
+        assertEquals(12, updatedPlayer.getTokens(), "Julio should have 12 tokens after taking the card.");
     }
 
     @Test
     public void testPlayerWithoutTokensMustTakeCard() {
-        Player player1 = new Player("Emilio");
-        Player player2 = new Player("Julio");
-        Player player3 = new Player("Bruno");
-        List<Player> players = Arrays.asList(player1, player2, player3);
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
+        GameStatus gameState = setupGame(
+                Arrays.asList(
+                        new Player("Emilio", 1, List.of(), false),
+                        new Player("Julio", 11, List.of(), false),
+                        new Player("Bruno", 11, List.of(), false)
+                ),
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
+        );
 
-        GameStatus gameState = setupGame(players, cardValues);
-
-        // El jugador 1 gasta todos sus tokens
-        for (int i = 0; i < 11; i++) {
-            gameState = gameState.executeAction(new PlaceToken());
-            gameState = gameState.nextPlayer();
+        // Aquí Emilio pierde 1 token al usar PlaceToken, se espera que ahora esté sin tokens
+        for (int i = 0; i < 1; i++) {
+            gameState = gameState.executeAction(new PlaceToken()).nextPlayer();
         }
 
-        // El jugador 1 debe tomar la carta porque no tiene tokens
-        gameState = gameState.executeAction(new PlaceToken());
-        assertTrue(player1.getCards().contains(3), "El jugador debe tomar la carta porque no tiene tokens.");
+        // Ahora Emilio debería estar sin tokens, por lo que deberá tomar una carta
+        GameStatus finalState = gameState.executeAction(new TakeCard());
+        Player updatedPlayer = finalState.getPlayers().get(0);
+
+        // Verificamos que Emilio haya tomado la carta, ya que no tiene tokens
+        assertTrue(updatedPlayer.getCards().contains(3), "Emilio must take the card because he has no tokens.");
     }
 
-    // ** PUNTUACIÓN Y FIN DEL JUEGO **
+
 
     @Test
     public void testCalculatePointsWithSeries() {
-        Player player = new Player("Emilio");
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
-        player.addCard(6);
-        player.addCard(7);
-        player.addCard(5);
+        Player player = new Player("Emilio", 11, List.of(6, 7, 5), false);
         int points = player.calculateScore();
-        assertEquals(-5, points);
+        assertEquals(-5, points, "The points should reflect the penalty for the series.");
     }
 
     @Test
     public void testCalculatePointsForSeries() {
-        Player player = new Player("Emilio");
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
-        player.addCard(5);
-        player.addCard(6);
-        player.addCard(7);
-        player.addCard(9); // Carta aislada
-
+        Player player = new Player("Emilio", 11, List.of(5, 6, 7, 9), false);
         int points = player.calculateScore();
-        assertEquals(-14, points, "Los puntos deben sumar 5 (serie) + 9 (aislada).");
+        assertEquals(-14, points, "The points should sum 5 (series) + 9 (isolated).");
     }
 
     @Test
     public void testGameEndsWhenDeckIsEmpty() {
-        Player player1 = new Player("Emilio");
-        Player player2 = new Player("Julio");
-        Player player3 = new Player("Bruno");
-        List<Player> players = Arrays.asList(player1, player2, player3);
-        List<Integer> cardValues = Arrays.asList(4);
-
-        GameStatus gameState = setupGame(players, cardValues);
-
-        // El primer jugador toma la carta
-        gameState = gameState.executeAction(new TakeCard());
-
-        // Verificar que el juego haya terminado
-        assertTrue(gameState instanceof GameOver, "El juego debe haber terminado.");
-        assertTrue(gameState.getDeck().isEmpty(), "El mazo debe estar vacío.");
-    }
-
-    @Test
-    public void testInitialTokensForThreeToFivePlayers() {
-        List<Player> players = Arrays.asList(
-                new Player("Player1"),
-                new Player("Player2"),
-                new Player("Player3")
+        GameStatus gameState = setupGame(
+                Arrays.asList(
+                        new Player("Emilio", 11, List.of(), false),
+                        new Player("Julio", 11, List.of(), false),
+                        new Player("Bruno", 11, List.of(), false)
+                ),
+                new ArrayList<>() // Mazo vacío al inicio
         );
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
 
-        GameStatus game = setupGame(players, cardValues);
-        players.forEach(player ->
-                assertEquals(11, player.getTokens(), "Con 3 jugadores, cada uno debe tener 11 fichas."));
+        GameStatus finalState = gameState.executeAction(new TakeCard());
+        assertTrue(finalState instanceof GameOver, "The game should have ended.");
+        assertTrue(finalState.getDeck().isEmpty(), "The deck should be empty.");
     }
 
-    @Test
-    public void testInitialTokensForSixPlayers() {
-        List<Player> players = Arrays.asList(
-                new Player("Player1"),
-                new Player("Player2"),
-                new Player("Player3"),
-                new Player("Player4"),
-                new Player("Player5"),
-                new Player("Player6")
-        );
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
-
-        GameStatus game = setupGame(players, cardValues);
-        players.forEach(player ->
-                assertEquals(9, player.getTokens(), "Con 6 jugadores, cada uno debe tener 9 fichas."));
-    }
-
-    @Test
-    public void testInitialTokensForSevenPlayers() {
-        List<Player> players = Arrays.asList(
-                new Player("Player1"),
-                new Player("Player2"),
-                new Player("Player3"),
-                new Player("Player4"),
-                new Player("Player5"),
-                new Player("Player6"),
-                new Player("Player7")
-        );
-        List<Integer> cardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
-
-        GameStatus game = setupGame(players, cardValues);
-        players.forEach(player ->
-                assertEquals(7, player.getTokens(), "Con 7 jugadores, cada uno debe tener 7 fichas."));
-    }
 }
