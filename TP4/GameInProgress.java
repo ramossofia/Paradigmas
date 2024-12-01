@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GameInProgress extends GameStatus {
     private List<Card> tableCards;
@@ -23,11 +22,14 @@ public class GameInProgress extends GameStatus {
     }
 
     public static int calculateInitialTokens(int numberOfPlayers) {
-        Map<Integer, Integer> tokensMap = Map.of(
-                6, 9,
-                7, 7
-        );
-        return tokensMap.getOrDefault(numberOfPlayers, 11);
+        switch (numberOfPlayers) {
+            case 6:
+                return 9;
+            case 7:
+                return 7;
+            default:
+                return 11;
+        }
     }
 
     @Override
