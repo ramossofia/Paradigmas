@@ -1,3 +1,4 @@
+// src/GameTests.java
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -84,8 +85,8 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        GameStatus nextGameState = gameState.nextPlayer();
-        Player currentPlayer = nextGameState.getPlayers().get(nextGameState.getCurrentPlayerIndex());
+        gameState.nextPlayer();
+        Player currentPlayer = gameState.getPlayers().get(gameState.getCurrentPlayerIndex());
 
         assertEquals("Julio", currentPlayer.getName(), "The turn should pass to Julio.");
     }
@@ -101,12 +102,11 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        GameStatus finalGameState = gameState
-                .nextPlayer()
-                .nextPlayer()
-                .nextPlayer();
+        gameState.nextPlayer();
+        gameState.nextPlayer();
+        gameState.nextPlayer();
 
-        Player currentPlayer = finalGameState.getPlayers().get(finalGameState.getCurrentPlayerIndex());
+        Player currentPlayer = gameState.getPlayers().get(gameState.getCurrentPlayerIndex());
         assertEquals("Emilio", currentPlayer.getName(), "The turn should return to the first player.");
     }
 
@@ -121,8 +121,9 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        GameStatus nextGameState = gameState.nextPlayer().nextPlayer();
-        Player currentPlayer = nextGameState.getPlayers().get(nextGameState.getCurrentPlayerIndex());
+        gameState.nextPlayer();
+        gameState.nextPlayer();
+        Player currentPlayer = gameState.getPlayers().get(gameState.getCurrentPlayerIndex());
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
             if (!currentPlayer.getName().equals("Emilio")) {
@@ -144,12 +145,12 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        GameStatus nextGameState = gameState.executeAction(new PlaceToken());
-        Player nextPlayer = nextGameState.getPlayers().get(nextGameState.getCurrentPlayerIndex());
+        gameState = gameState.executeAction(new PlaceToken());
+        gameState.nextPlayer();
+        Player nextPlayer = gameState.getPlayers().get(gameState.getCurrentPlayerIndex());
 
         assertEquals("Julio", nextPlayer.getName(), "The turn should pass to the next player.");
     }
-
 
     @Test
     public void testPlayerWithoutTokensMustTakeCard() {
@@ -162,15 +163,14 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        // Aquí Emilio pierde 1 token al usar PlaceToken, se espera que ahora esté sin tokens
         for (int i = 0; i < 12; i++) {
-            gameState = gameState.executeAction(new PlaceToken()).nextPlayer();
+            gameState = gameState.executeAction(new PlaceToken());
+            gameState.nextPlayer();
         }
-        // Ahora Emilio debería estar sin tokens, por lo que deberá tomar una carta
-        GameStatus finalState = gameState.executeAction(new TakeCard());
-        Player updatedPlayer = finalState.getPlayers().get(0);
 
-        // Verificamos que Emilio haya tomado la carta, ya que no tiene tokens
+        gameState = gameState.executeAction(new TakeCard());
+        Player updatedPlayer = gameState.getPlayers().get(0);
+
         assertTrue(updatedPlayer.getCards().contains(3), "Emilio must take the card because he has no tokens.");
     }
 
@@ -198,13 +198,14 @@ public class GameTests {
                         new Player("Julio"),
                         new Player("Bruno")
                 ),
-                new ArrayList<>() // Mazo vacío al inicio
+                new ArrayList<>() // Empty deck at the start
         );
 
         GameStatus finalState = gameState.executeAction(new TakeCard());
         assertTrue(finalState instanceof GameOver, "The game should have ended.");
         assertTrue(finalState.getDeck().isEmpty(), "The deck should be empty.");
     }
+
     @Test
     public void testPlayerPlacesTokenAndNextPlayerTakesCard() {
         GameStatus gameState = setupGame(
@@ -216,21 +217,14 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        // El primer jugador coloca un token
-        gameState = gameState.executeAction(new PlaceToken()).nextPlayer();
+        gameState = gameState.executeAction(new PlaceToken());
+        gameState.nextPlayer();
 
-        // El segundo jugador toma la carta
         gameState = gameState.executeAction(new TakeCard());
 
-        gameState = gameState.executeAction(new PlaceToken());
-
-        // Verificar que el segundo jugador tenga 12 tokens y la carta que tomó
         Player secondPlayer = gameState.getPlayers().get(1);
 
-
-        assertEquals(11, secondPlayer.getTokens(), "El segundo jugador debe tener 12 tokens.");
-        assertTrue(secondPlayer.getCards().contains(3), "El segundo jugador debe tener la carta que tomó.");
+        assertEquals(11, secondPlayer.getTokens(), "The second player should have 11 tokens.");
+        assertTrue(secondPlayer.getCards().contains(3), "The second player should have the card they took.");
     }
-
-
 }
