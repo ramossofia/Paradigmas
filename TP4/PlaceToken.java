@@ -1,21 +1,22 @@
-
 public class PlaceToken extends Action {
 
     @Override
     public GameStatus execute(GameStatus gameState) {
         GameInProgress game = (GameInProgress) gameState;
         Player currentPlayer = game.getCurrentPlayer();
-        Deck deck = game.getDeck();
 
+        // Check if the player has no tokens left, and force them to take a card
         if (currentPlayer.getTokens() <= 0) {
-            throw new IllegalStateException("Player has no tokens to place.");
+            // Execute TakeCard action if the player has no tokens left
+            return game.executeAction(new TakeCard());
         }
 
-        deck.addTokensToTopCard(1);
+        if (game.hasCardsOnTable()) {
+            game.addTokensToLastTableCard(1); // Add a token to the last card on the table
+        }
 
-        currentPlayer.removeToken();
-
-        game.nextPlayer();
+        currentPlayer.removeTokens(1); // Remove one token from the player
+        game.nextPlayer(); // Move to the next player
 
         return game;
     }
