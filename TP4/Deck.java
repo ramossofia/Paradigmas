@@ -1,3 +1,4 @@
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class Deck {
         if (cards.isEmpty()) {
             throw new IllegalStateException("The deck is empty.");
         }
-        cards.get(0).addTokens(1);
+        cards.get(0).addTokens(tokens);
     }
 
     public boolean isEmpty() {
