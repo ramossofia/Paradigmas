@@ -1,3 +1,4 @@
+
 public class PlaceToken extends Action {
 
     @Override
@@ -13,6 +14,8 @@ public class PlaceToken extends Action {
         deck.addTokensToTopCard(1);
 
         currentPlayer.removeToken();
+
+        game.nextPlayer();
 
         return game;
     }
