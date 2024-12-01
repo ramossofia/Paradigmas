@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Player {
     private final String name;
@@ -57,21 +58,21 @@ public class Player {
                 .collect(Collectors.toList());
         Collections.sort(cardValues);
 
-        int score = tokens;
-        int seriesStart = -1;
+        int[] score = {tokens};
+        int[] seriesStart = {-1};
 
-        for (int i = 0; i < cardValues.size(); i++) {
-            if (seriesStart == -1) {
-                seriesStart = cardValues.get(i);
+        IntStream.range(0, cardValues.size()).forEach(i -> {
+            if (seriesStart[0] == -1) {
+                seriesStart[0] = cardValues.get(i);
             }
 
             if (i == cardValues.size() - 1 || cardValues.get(i) + 1 != cardValues.get(i + 1)) {
-                score -= seriesStart;
-                seriesStart = -1;
+                score[0] -= seriesStart[0];
+                seriesStart[0] = -1;
             }
-        }
+        });
 
-        return score;
+        return score[0];
     }
 
 }
