@@ -15,7 +15,7 @@ public class GameTests {
     }
 
     @Test
-    public void testDeckInitialization() {
+    public void test01DeckInitialization() {
         List<Player> players = createPlayers("Emilio", "Julio", "Bruno");
         List<Integer> invalidCardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23);
 
@@ -25,7 +25,7 @@ public class GameTests {
     }
 
     @Test
-    public void testPlayerCountIsBetweenThreeAndSeven() {
+    public void test02PlayerCountIsBetweenThreeAndSeven() {
         List<Player> players = createPlayers("Emilio", "Julio");
         List<Card> cards = createCards(getCardValues());
 
@@ -35,7 +35,7 @@ public class GameTests {
     }
 
     @Test
-    public void testInitialTokensAndCardsFor3Players() {
+    public void test03InitialTokensAndCardsFor3Players() {
         List<Player> players = createPlayers("Emilio", "Julio", "Bruno");
         GameStatus gameState = setupGame(players, getCardValues());
 
@@ -44,7 +44,7 @@ public class GameTests {
     }
 
     @Test
-    public void testInitialTokensAndCardsFor7Players() {
+    public void test04InitialTokensAndCardsFor7Players() {
         List<Player> players = createPlayers("Emilio", "Julio", "Bruno", "Mariela", "Marcelo", "Kun", "Diego");
         GameStatus gameState = setupGame(players, getCardValues());
 
@@ -53,7 +53,7 @@ public class GameTests {
     }
 
     @Test
-    public void testInitialTokensAndCardsFor6Players() {
+    public void test05InitialTokensAndCardsFor6Players() {
         List<Player> players = createPlayers("Emilio", "Julio", "Bruno", "Mariela", "Marcelo", "Kun");
         GameStatus gameState = setupGame(players, getCardValues());
 
@@ -62,24 +62,24 @@ public class GameTests {
     }
 
     @Test
-    public void testTurnRotationIsCorrect() {
-        GameStatus gameState = setupGameWithCardsAndPlayers(getCardValues(), "Emilio", "Julio", "Bruno");
+    public void test06TurnRotationIsCorrect() {
+        GameStatus gameState = initializeGame();
 
         gameState = gameState.executeAction(new PlaceToken());
         assertCurrentPlayer(gameState, "Julio");
     }
 
     @Test
-    public void testTurnWrapsAroundToFirstPlayer() {
-        GameStatus gameState = setupGameWithCardsAndPlayers(getCardValues(), "Emilio", "Julio", "Bruno");
+    public void test07TurnWrapsAroundToFirstPlayer() {
+        GameStatus gameState = initializeGame();
 
         gameState = executeActions(gameState, new TakeCard(), new PlaceToken(), new PlaceToken(), new PlaceToken());
         assertCurrentPlayer(gameState, "Emilio");
     }
 
     @Test
-    public void testPlayerCannotPlayTwiceInARow() {
-        GameStatus gameState = setupGameWithCardsAndPlayers(getCardValues(), "Emilio", "Julio", "Bruno");
+    public void test08PlayerCannotPlayTwiceInARow() {
+        GameStatus gameState = initializeGame();
 
         gameState = executeActions(gameState, new TakeCard(), new PlaceToken(), new PlaceToken());
 
@@ -95,51 +95,51 @@ public class GameTests {
     }
 
     @Test
-    public void testPlaceTokenAndPassTurn() {
-        GameStatus gameState = setupGameWithCardsAndPlayers(getCardValues(), "Emilio", "Julio", "Bruno");
+    public void test09PlaceTokenAndPassTurn() {
+        GameStatus gameState = initializeGame();
 
         gameState = executeActions(gameState, new TakeCard(), new PlaceToken());
         assertCurrentPlayer(gameState, "Julio");
     }
 
     @Test
-    public void testCalculatePointsWithSeries() {
-        GameStatus gameState = setupGameWithCardsAndPlayers(getCardValues(), "Emilio", "Julio", "Bruno");
+    public void test10CalculatePointsWithSeries() {
+        GameStatus gameState = initializeGame();
 
         gameState = executeActions(gameState, new TakeCard(), new TakeCard(), new TakeCard());
 
         Player firstPlayer = gameState.getPlayers().get(0);
         int points = firstPlayer.calculateScore();
 
-        assertEquals(-3 + 11, points, "The points should reflect the penalty for the series and the bonus.");
+        assertEquals(-3 + 11, points);
     }
 
     @Test
-    public void testGameEndsWhenDeckIsEmpty() {
-        GameStatus gameState = setupGameWithCardsAndPlayers(getCardValues(), "Emilio", "Julio", "Bruno");
+    public void test11GameEndsWhenDeckIsEmpty() {
+        GameStatus gameState = initializeGame();
 
         gameState = IntStream.range(0, 24)
                 .mapToObj(i -> new TakeCard())
                 .reduce(gameState, GameStatus::executeAction, (gs1, gs2) -> gs2);
 
-        assertTrue(gameState instanceof GameOver, "The game should have ended.");
-        assertTrue(gameState.getDeck().isEmpty(), "The deck should be empty.");
+        assertTrue(gameState instanceof GameOver);
+        assertTrue(gameState.getDeck().isEmpty());
     }
 
     @Test
-    public void testPlayerPlacesTokenAndNextPlayerTakesCard() {
-        GameStatus gameState = setupGameWithCardsAndPlayers(getCardValues(), "Emilio", "Julio", "Bruno");
+    public void test12PlayerPlacesTokenAndNextPlayerTakesCard() {
+        GameStatus gameState = initializeGame();
 
         gameState = executeActions(gameState, new TakeCard(), new PlaceCard(), new PlaceToken(), new TakeCard());
 
         Player secondPlayer = gameState.getPlayers().get(1);
 
-        assertEquals(12, secondPlayer.getTokens(), "Julio debería tener 12 tokens.");
+        assertEquals(12, secondPlayer.getTokens());
     }
 
     @Test
-    public void testPlayerStartsWithoutTokensMustTakeCard() {
-        GameStatus gameState = setupGameWithCardsAndPlayers(getCardValues(), "Emilio", "Julio", "Bruno");
+    public void test13PlayerStartsWithoutTokensMustTakeCard() {
+        GameStatus gameState = initializeGame();
 
         Player emilio = gameState.getPlayers().get(0);
         emilio.setTokens(0);
@@ -147,7 +147,17 @@ public class GameTests {
         gameState = gameState.executeAction(new PlaceToken());
 
         Player updatedPlayer = gameState.getPlayers().get(0);
-        assertEquals(1, updatedPlayer.getCards().size(), "El jugador debe haber tomado una carta.");
+        assertEquals(1, updatedPlayer.getCards().size());
+    }
+
+
+    private void assertInitialTokens(List<Player> players, int expectedTokens) {
+        players.forEach(player -> assertEquals(expectedTokens, player.getTokens()));
+    }
+
+    private void assertCurrentPlayer(GameStatus gameState, String expectedPlayerName) {
+        Player currentPlayer = gameState.getPlayers().get(gameState.getCurrentPlayerIndex());
+        assertEquals(expectedPlayerName, currentPlayer.getName());
     }
 
     private List<Player> createPlayers(String... playerNames) {
@@ -162,8 +172,10 @@ public class GameTests {
                 .collect(Collectors.toList());
     }
 
-    private GameStatus setupGameWithCardsAndPlayers(List<Integer> cardValues, String... playerNames) {
-        return setupGame(createPlayers(playerNames), cardValues);
+    private GameStatus initializeGame() {
+        List<Player> players = createPlayers("Emilio", "Julio", "Bruno");
+        GameStatus gameState = setupGame(players, getCardValues());
+        return gameState;
     }
 
     private static List<Integer> getCardValues() {
@@ -173,16 +185,5 @@ public class GameTests {
     private GameStatus executeActions(GameStatus gameState, Action... actions) {
         return Arrays.stream(actions)
                 .reduce(gameState, GameStatus::executeAction, (gs1, gs2) -> gs2);
-    }
-
-    private void assertInitialTokens(List<Player> players, int expectedTokens) {
-        players.forEach(player -> assertEquals(expectedTokens, player.getTokens(),
-                "Each player should receive " + expectedTokens + " tokens at the start."));
-    }
-
-    private void assertCurrentPlayer(GameStatus gameState, String expectedPlayerName) {
-        Player currentPlayer = gameState.getPlayers().get(gameState.getCurrentPlayerIndex());
-        assertEquals(expectedPlayerName, currentPlayer.getName(),
-                "The current player should be " + expectedPlayerName + ".");
     }
 }
