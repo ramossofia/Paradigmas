@@ -1,17 +1,21 @@
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
 
 public class GameInProgress extends GameStatus {
+    private List<Card> tableCards;
 
     public GameInProgress(List<Player> players, Deck deck) {
         super(initializePlayers(players), deck, 0);
+        if (players.size() < 3 || players.size() > 7) {
+            throw new IllegalArgumentException("The number of players should be between 3 and 7.");
+        }
+        if (deck.size() != 24) {
+            throw new IllegalArgumentException("The deck must contain exactly 24 cards.");
+        }
+        this.tableCards = new ArrayList<>();
     }
 
-    public GameInProgress(List<Player> players, Deck deck, int currentPlayerIndex) {
-        super(initializePlayers(players), deck, currentPlayerIndex);
-    }
 
     private static List<Player> initializePlayers(List<Player> players) {
         int initialTokens = calculateInitialTokens(players.size());
@@ -49,20 +53,9 @@ public class GameInProgress extends GameStatus {
         return newState.checkGameOver();
     }
 
-    public GameInProgress withUpdatedPlayer(Player updatedPlayer) {
-        List<Player> updatedPlayers = IntStream.range(0, getPlayers().size())
-                .mapToObj(index -> index == getCurrentPlayerIndex() ? updatedPlayer : getPlayers().get(index))
-                .collect(Collectors.toList());
-        return new GameInProgress(updatedPlayers, getDeck(), getCurrentPlayerIndex());
-    }
-
-    public GameInProgress withUpdatedDeck(Deck updatedDeck) {
-        return new GameInProgress(getPlayers(), updatedDeck, getCurrentPlayerIndex());
-    }
-
     @Override
     public GameStatus checkGameOver() {
-        if (getDeck().isEmpty()) {
+        if (getDeck().isEmpty() && tableCards.isEmpty()) {
             return new GameOver(getPlayers(), getDeck());
         }
         return this;
@@ -74,6 +67,29 @@ public class GameInProgress extends GameStatus {
                 "players=" + getPlayers() +
                 ", deck=" + getDeck() +
                 ", currentPlayerIndex=" + getCurrentPlayerIndex() +
+                ", tableCards=" + tableCards +
                 '}';
+    }
+
+    public boolean hasCardsOnTable() {
+        return !tableCards.isEmpty();
+    }
+
+    public Card takeCardFromTable() {
+        if (tableCards.isEmpty()) {
+            throw new IllegalStateException("No cards on the table.");
+        }
+        return tableCards.remove(0); // Elimina y retorna la carta
+    }
+
+    public void addCardToTable(Card card) {
+        tableCards.add(card);
+    }
+
+    public void addTokensToLastTableCard(int tokens) {
+        if (tableCards.isEmpty()) {
+            throw new IllegalStateException("No cards on the table to add tokens.");
+        }
+        tableCards.get(tableCards.size() - 1).addTokens(tokens);
     }
 }
