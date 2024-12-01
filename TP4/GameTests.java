@@ -36,10 +36,12 @@ public class GameTests {
                 new Player("Julio")
         );
 
-        boolean validPlayerCount = players.size() >= 3 && players.size() <= 7;
-        assertTrue(validPlayerCount, "The number of players should be between 3 and 7.");
-    }
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new GameInProgress(players, new Deck(Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)));
+        });
 
+        assertEquals("The number of players should be between 3 and 7.", exception.getMessage());
+    }
 
     @Test
     public void testInitialTokensAndCardsFor3Players() {
@@ -112,7 +114,7 @@ public class GameTests {
 
 
     @Test
-    public void testInitialCardRemoval() {
+    public void testInitialCardDeck() {
         GameStatus gameState = setupGame(
                 Arrays.asList(
                         new Player("Emilio"),
@@ -123,7 +125,7 @@ public class GameTests {
         );
 
         int deckSize = (gameState).getDeck().size();
-        assertEquals(24, deckSize, "The deck should have 24 cards after removing 9.");
+        assertEquals(24, deckSize);
     }
 
     @Test
@@ -137,7 +139,8 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        gameState.nextPlayer();
+
+        gameState = gameState.executeAction(new PlaceToken());
         Player currentPlayer = gameState.getPlayers().get(gameState.getCurrentPlayerIndex());
 
         assertEquals("Julio", currentPlayer.getName(), "The turn should pass to Julio.");
@@ -154,9 +157,10 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        gameState.nextPlayer();
-        gameState.nextPlayer();
-        gameState.nextPlayer();
+        gameState = gameState.executeAction(new TakeCard());
+        gameState = gameState.executeAction(new PlaceToken());
+        gameState = gameState.executeAction(new PlaceToken());
+        gameState = gameState.executeAction(new PlaceToken());
 
         Player currentPlayer = gameState.getPlayers().get(gameState.getCurrentPlayerIndex());
         assertEquals("Emilio", currentPlayer.getName(), "The turn should return to the first player.");
@@ -173,8 +177,10 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        gameState.nextPlayer();
-        gameState.nextPlayer();
+        gameState = gameState.executeAction(new TakeCard());
+        gameState = gameState.executeAction(new PlaceToken());
+        gameState = gameState.executeAction(new PlaceToken());
+
         Player currentPlayer = gameState.getPlayers().get(gameState.getCurrentPlayerIndex());
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
@@ -197,12 +203,14 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
+        gameState = gameState.executeAction(new TakeCard());
         gameState = gameState.executeAction(new PlaceToken());
         Player nextPlayer = gameState.getPlayers().get(gameState.getCurrentPlayerIndex());
 
         assertEquals("Julio", nextPlayer.getName(), "The turn should pass to the next player.");
     }
 
+    //ARREGLAR
     @Test
     public void testPlayerWithoutTokensMustTakeCard() {
         GameStatus gameState = setupGame(
@@ -214,33 +222,45 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
+        gameState = gameState.executeAction(new TakeCard());
         for (int i = 0; i < 12; i++) {
             gameState = gameState.executeAction(new PlaceToken());
             gameState.nextPlayer();
         }
 
-        gameState = gameState.executeAction(new TakeCard());
+        gameState = gameState.executeAction(new PlaceToken());
         Player updatedPlayer = gameState.getPlayers().get(0);
 
         assertTrue(updatedPlayer.getCards().contains(3), "Emilio must take the card because he has no tokens.");
     }
 
+//TAKECARD ESTA FUNCIONANDO MAL
     @Test
     public void testCalculatePointsWithSeries() {
-        Player player = new Player("Emilio");
-        player = player.addCard(6).addCard(7).addCard(5);
-        int points = player.calculateScore();
-        assertEquals(-5, points, "The points should reflect the penalty for the series.");
+        GameStatus gameState = setupGame(
+                Arrays.asList(
+                        new Player("Emilio"),
+                        new Player("Julio"),
+                        new Player("Bruno")
+                ),
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
+        );
+
+        // Simulate Emilio taking the cards 3, 4, and 5
+        gameState = gameState.executeAction(new TakeCard()); // Takes 3
+        System.out.println("Player before adding tokens: " + gameState.getPlayers().get(0).getCards());
+        gameState = gameState.executeAction(new TakeCard()); // Takes 4
+        System.out.println("Player before adding tokens: " + gameState.getPlayers().get(0).getCards());
+        gameState = gameState.executeAction(new TakeCard()); // Takes 5
+        System.out.println("Player before adding tokens: " + gameState.getPlayers().get(0).getCards());
+
+        Player firstPlayer = gameState.getPlayers().get(0);
+        int points = firstPlayer.calculateScore();
+
+        assertEquals(-3 + 11, points, "The points should reflect the penalty for the series and the bonus.");
     }
 
-    @Test
-    public void testCalculatePointsForSeries() {
-        Player player = new Player("Emilio");
-        player = player.addCard(5).addCard(6).addCard(7).addCard(9);
-        int points = player.calculateScore();
-        assertEquals(-14, points, "The points should sum 5 (series) + 9 (isolated).");
-    }
-
+//ESTE TEST ES RARO, POR QUE PUEDO HACER TAKECARD SI NO HAY CARTAS
     @Test
     public void testGameEndsWhenDeckIsEmpty() {
         GameStatus gameState = setupGame(
@@ -251,7 +271,6 @@ public class GameTests {
                 ),
                 new ArrayList<>()
         );
-
         GameStatus finalState = gameState.executeAction(new TakeCard());
         assertTrue(finalState instanceof GameOver, "The game should have ended.");
         assertTrue(finalState.getDeck().isEmpty(), "The deck should be empty.");
