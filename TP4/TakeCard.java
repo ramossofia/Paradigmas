@@ -11,15 +11,11 @@ public class TakeCard extends Action {
             player.addTokens(card.getTokens());
             card.removeTokens(card.getTokens());
         } else {
-            if (game.getDeck().isEmpty()) {
-                throw new IllegalStateException("The deck is empty. No card to take.");
-            }
             card = game.getDeck().drawCard()
-                    .orElseThrow(() -> new IllegalStateException("No card drawn from the deck."));
+                    .orElseThrow(() -> new IllegalStateException("The deck is empty. No card to take."));
             game.getDeck().removeCard(card);
         }
         player.addCard(card);
-
         return game;
     }
 }
