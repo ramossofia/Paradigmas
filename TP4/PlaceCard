@@ -9,7 +9,6 @@ public class PlaceCard extends Action {
             throw new IllegalStateException("Player has no cards to place.");
         }
 
-        // Get the last card the player took
         Card cardToPlace = player.getCards().get(player.getCards().size() - 1);
 
         player.removeCard(cardToPlace);
