@@ -1,4 +1,5 @@
 
+
 public class Card {
     private final int value;
     private int tokens; // Remove final keyword
