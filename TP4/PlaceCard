@@ -9,7 +9,8 @@ public class PlaceCard extends Action {
             throw new IllegalStateException("Player has no cards to place.");
         }
 
-        Card cardToPlace = player.getCards().get(player.getCards().size() - 1);
+        // Obtener la carta con el valor más bajo (ya que está ordenado por TreeSet)
+        Card cardToPlace = player.getCards().iterator().next(); // Obtener la carta de menor valor
 
         player.removeCard(cardToPlace);
         game.addCardToTable(cardToPlace);
