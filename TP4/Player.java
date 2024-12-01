@@ -1,20 +1,15 @@
-
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Player {
     private final String name;
     private int tokens;
-    private final List<Card> cards;
+    private final Set<Card> cards; // Usamos TreeSet para mantener las cartas ordenadas
 
     public Player(String name) {
         this.name = name;
         this.tokens = 0;
-        this.cards = new ArrayList<>();
+        this.cards = new TreeSet<>((c1, c2) -> Integer.compare(c1.getValue(), c2.getValue())); // Ordenar por valor
     }
 
     public String getName() {
@@ -29,8 +24,8 @@ public class Player {
         this.tokens = tokens;
     }
 
-    public List<Card> getCards() {
-        return new ArrayList<>(cards);
+    public Set<Card> getCards() {
+        return new TreeSet<>(cards); // Devolvemos una copia para evitar modificaciones externas
     }
 
     public void addCard(Card card) {
@@ -48,32 +43,18 @@ public class Player {
         this.tokens += amount;
     }
 
-
     public void removeCard(Card card) {
-        cards.remove(card);
+        if (!cards.remove(card)) {
+            throw new IllegalStateException("The card is not in the player's collection.");
+        }
     }
 
     public int calculateScore() {
-        List<Integer> cardValues = cards.stream()
-                .map(Card::getValue)
-                .collect(Collectors.toList());
-        Collections.sort(cardValues);
-
-        int[] score = {tokens};
-        int[] seriesStart = {-1};
-
-        IntStream.range(0, cardValues.size()).forEach(i -> {
-            if (seriesStart[0] == -1) {
-                seriesStart[0] = cardValues.get(i);
-            }
-
-            if (i == cardValues.size() - 1 || cardValues.get(i) + 1 != cardValues.get(i + 1)) {
-                score[0] -= seriesStart[0];
-                seriesStart[0] = -1;
-            }
-        });
-
-        return score[0];
+        int score = tokens;
+        if (!cards.isEmpty()) {
+            int minCardValue = cards.stream().mapToInt(Card::getValue).min().orElse(0);
+            score -= minCardValue;
+        }
+        return score;
     }
-
 }
