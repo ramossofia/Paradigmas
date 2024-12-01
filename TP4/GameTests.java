@@ -1,4 +1,3 @@
-// src/GameTests.java
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        int deckSize = ((GameInProgress) gameState).getDeck().size();
+        int deckSize = (gameState).getDeck().size();
         assertEquals(24, deckSize, "The deck should contain 24 cards.");
     }
 
@@ -46,7 +45,7 @@ public class GameTests {
                 new Player("Julio"),
                 new Player("Bruno")
         );
-        GameStatus gameState = setupGame(
+        setupGame(
                 players,
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
@@ -70,7 +69,7 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        int deckSize = ((GameInProgress) gameState).getDeck().size();
+        int deckSize = (gameState).getDeck().size();
         assertEquals(24, deckSize, "The deck should have 24 cards after removing 9.");
     }
 
@@ -198,7 +197,7 @@ public class GameTests {
                         new Player("Julio"),
                         new Player("Bruno")
                 ),
-                new ArrayList<>() // Empty deck at the start
+                new ArrayList<>()
         );
 
         GameStatus finalState = gameState.executeAction(new TakeCard());
