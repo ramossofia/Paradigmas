@@ -23,20 +23,11 @@ public class Card implements Comparable<Card> {
 
     // Method to add tokens to the card
     public void addTokens(int tokens) {
-        if (tokens < 0) {
-            throw new IllegalArgumentException("Cannot add negative tokens.");
-        }
         this.tokens += tokens;
     }
 
     // Method to remove tokens from the card
     public void removeTokens(int tokens) {
-        if (tokens < 0) {
-            throw new IllegalArgumentException("Cannot remove negative tokens.");
-        }
-        if (this.tokens < tokens) {
-            throw new IllegalStateException("Not enough tokens on the card to remove.");
-        }
         this.tokens -= tokens;
     }
 
