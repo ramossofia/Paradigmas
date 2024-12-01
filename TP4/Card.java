@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Card {
     private final int value;
     public int tokens;
@@ -19,14 +21,8 @@ public class Card {
         this.tokens += tokens;
     }
 
-
     public void removeTokens(int tokens) {
-        if (this.tokens >= tokens) {
-            this.tokens -= tokens;
-        } else {
-            throw new IllegalArgumentException("Not enough tokens to remove.");
-        }
-        System.out.println("Tokens on card after removing: " + this.tokens);
+        Objects.requireNonNull(tokens <= this.tokens, "Not enough tokens to remove.");
+        this.tokens -= tokens;
     }
-
 }
