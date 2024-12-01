@@ -51,9 +51,6 @@ public class GameInProgress extends GameStatus {
     }
 
     public Card takeCardFromTable() {
-        if (tableCards.isEmpty()) {
-            throw new IllegalStateException("No cards on the table.");
-        }
         return tableCards.remove(0);
     }
 
@@ -62,9 +59,6 @@ public class GameInProgress extends GameStatus {
     }
 
     public void addTokensToLastTableCard(int tokens) {
-        if (tableCards.isEmpty()) {
-            throw new IllegalStateException("No cards on the table to add tokens.");
-        }
         tableCards.get(tableCards.size() - 1).addTokens(tokens);
     }
 }
