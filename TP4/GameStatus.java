@@ -28,7 +28,7 @@ public abstract class GameStatus {
         return currentPlayerIndex;
     }
 
-    public abstract GameStatus nextPlayer();
+    public abstract void nextPlayer();
 
     public abstract GameStatus executeAction(Action action);
 
