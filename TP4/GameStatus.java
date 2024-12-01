@@ -44,9 +44,6 @@ public abstract class GameStatus {
     public abstract GameStatus executeAction(Action action);
 
     protected GameStatus checkGameOver() {
-        if (deck.isEmpty()) {
-            return new GameOver(players, deck);
-        }
-        return this;
+        return new GameOver(players, deck);
     }
 }
