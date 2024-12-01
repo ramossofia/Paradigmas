@@ -4,8 +4,8 @@ public class PlaceCard extends Action {
     public GameStatus execute(GameStatus gameState) {
         GameInProgress game = (GameInProgress) gameState;
         Player player = game.getCurrentPlayer();
-        
-        Card cardToPlace = player.getCards().iterator().next(); 
+
+        Card cardToPlace = player.getCards().iterator().next();
 
         player.removeCard(cardToPlace);
         game.addCardToTable(cardToPlace);
