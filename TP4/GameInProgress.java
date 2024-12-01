@@ -33,11 +33,9 @@ public class GameInProgress extends GameStatus {
     }
 
     public void setCurrentPlayerIndex(int currentPlayerIndex) {
-        if (currentPlayerIndex < 0 || currentPlayerIndex >= getPlayers().size()) {
-            throw new IllegalArgumentException("Invalid player index: " + currentPlayerIndex);
-        }
-        super.currentPlayerIndex = currentPlayerIndex;
-    }
+    int numberOfPlayers = getPlayers().size();
+    super.currentPlayerIndex = (currentPlayerIndex % numberOfPlayers + numberOfPlayers) % numberOfPlayers;
+}
 
     @Override
     public void nextPlayer() {
