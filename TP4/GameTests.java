@@ -82,7 +82,7 @@ public class GameTests {
         GameStatus gameState = executeActions(initialGameState, new TakeCard(), new PlaceToken(), new PlaceToken());
 
         assertThrows(IllegalStateException.class, () -> {
-            if (!gameState.getPlayers().get(gameState.getCurrentPlayerIndex()).getName().equals("Emilio")) {
+            if (!gameState.getCurrentPlayer().getName().equals("Emilio")) {
                 throw new IllegalStateException("It's not Emilio's turn.");
             }
         });
@@ -102,7 +102,7 @@ public class GameTests {
 
         gameState = gameState.executeAction(new TakeCard());
 
-        assertEquals(3, gameState.getPlayers().get(gameState.getCurrentPlayerIndex()).getCards().get(0).getValue(), "La carta tomada debe ser la 26.");
+        assertEquals(3, gameState.getCurrentPlayer().getCards().get(0).getValue(), "La carta tomada debe ser la 26.");
     }
 
     @Test
@@ -118,11 +118,11 @@ public class GameTests {
     public void test12PlayerStartsWithoutTokensMustTakeCard() {
         GameStatus gameState = setupGameWithPlayers(3);
 
-        gameState.getPlayers().get(0).setTokens(0);
+        gameState.getCurrentPlayer().setTokens(0);
 
         gameState = gameState.executeAction(new PlaceToken());
 
-        assertEquals(1, gameState.getPlayers().get(0).getCards().size());
+        assertEquals(1, gameState.getCurrentPlayer().getCards().size());
     }
 
     @Test
@@ -131,7 +131,7 @@ public class GameTests {
 
         gameState = executeActions(gameState, new TakeCard(), new TakeCard(), new TakeCard());
 
-        assertEquals(-3 + 11, gameState.getPlayers().get(0).calculateScore());
+        assertEquals(-3 + 11, gameState.getCurrentPlayer().calculateScore());
     }
 
     @Test
@@ -172,7 +172,7 @@ public class GameTests {
     }
 
     private void assertCurrentPlayer(GameStatus gameState, String expectedPlayerName) {
-        assertEquals(expectedPlayerName, gameState.getPlayers().get(gameState.getCurrentPlayerIndex()).getName());
+        assertEquals(expectedPlayerName, gameState.getCurrentPlayer().getName());
     }
 
     private List<Player> createPlayers(String... playerNames) {
