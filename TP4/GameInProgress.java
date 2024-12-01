@@ -2,12 +2,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
 public class GameInProgress extends GameStatus {
     private List<Card> tableCards;
 
     public GameInProgress(List<Player> players, Deck deck) {
-        super(initializePlayers(players), deck, 0);
+        super(players, deck);
         if (players.size() < 3 || players.size() > 7) {
             throw new IllegalArgumentException("The number of players should be between 3 and 7.");
         }
@@ -15,33 +14,20 @@ public class GameInProgress extends GameStatus {
             throw new IllegalArgumentException("The deck must contain exactly 24 cards.");
         }
         this.tableCards = new ArrayList<>();
+        initializePlayers(players);
     }
 
-
-    private static List<Player> initializePlayers(List<Player> players) {
+    private void initializePlayers(List<Player> players) {
         int initialTokens = calculateInitialTokens(players.size());
         players.forEach(player -> player.setTokens(initialTokens));
-        return players;
     }
 
     public static int calculateInitialTokens(int numberOfPlayers) {
         Map<Integer, Integer> tokensMap = Map.of(
-            6, 9,
-            7, 7
+                6, 9,
+                7, 7
         );
         return tokensMap.getOrDefault(numberOfPlayers, 11);
-    }
-
-    public void setCurrentPlayerIndex(int currentPlayerIndex) {
-    int numberOfPlayers = getPlayers().size();
-    super.currentPlayerIndex = (currentPlayerIndex % numberOfPlayers + numberOfPlayers) % numberOfPlayers;
-}
-
-    @Override
-    public void nextPlayer() {
-        int newCurrentPlayerIndex = (getCurrentPlayerIndex() + 1) % getPlayers().size();
-        setCurrentPlayerIndex(newCurrentPlayerIndex);
-        checkGameOver();
     }
 
     @Override
@@ -56,16 +42,6 @@ public class GameInProgress extends GameStatus {
             return new GameOver(getPlayers(), getDeck());
         }
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "GameInProgress{" +
-                "players=" + getPlayers() +
-                ", deck=" + getDeck() +
-                ", currentPlayerIndex=" + getCurrentPlayerIndex() +
-                ", tableCards=" + tableCards +
-                '}';
     }
 
     public boolean hasCardsOnTable() {
