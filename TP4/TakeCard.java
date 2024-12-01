@@ -1,3 +1,4 @@
+
 public class TakeCard extends Action {
 
     @Override
@@ -15,10 +16,14 @@ public class TakeCard extends Action {
         }
 
         player.addCard(drawnCard.getValue());
-        player.addTokens(drawnCard.getTokens());
-        Deck updatedDeck = game.getDeck().removeTopCard();
+        System.out.println("Player before adding tokens: " + player.getTokens());
 
-        game.withUpdatedPlayer(player).withUpdatedDeck(updatedDeck).nextPlayer();
+        player.addTokens(drawnCard.getTokens());
+
         return game.checkGameOver();
     }
 }
+
+
+
+
