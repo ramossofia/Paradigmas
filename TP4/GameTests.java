@@ -102,7 +102,7 @@ public class GameTests {
 
         gameState = gameState.executeAction(new TakeCard());
 
-        assertEquals(3, gameState.getCurrentPlayer().getCards().get(0).getValue(), "La carta tomada debe ser la 26.");
+        assertEquals(3, gameState.getCurrentPlayer().getCards().iterator().next().getValue(), "La carta tomada debe ser la 26.");
     }
 
     @Test
@@ -129,10 +129,19 @@ public class GameTests {
     public void test13CalculatePointsWithSeries() {
         GameStatus gameState = setupGameWithPlayers(3);
 
+        // Take cards (you might want to assert the actual cards in hand here for debugging)
         gameState = executeActions(gameState, new TakeCard(), new TakeCard(), new TakeCard());
 
-        assertEquals(-3 + 11, gameState.getCurrentPlayer().calculateScore());
+        // Print the player's cards for debugging
+        Player currentPlayer = gameState.getCurrentPlayer();
+        System.out.println("Current player's cards: " + currentPlayer.getCards().stream()
+                .map(card -> card.getValue())
+                .collect(Collectors.toList()));
+
+        // Assert the expected score
+        assertEquals(-3 + 11, currentPlayer.calculateScore());
     }
+
 
     @Test
     public void test14GameEndsWhenDeckIsEmpty() {
@@ -183,7 +192,7 @@ public class GameTests {
 
     private List<Card> createCards(List<Integer> cardValues) {
         return cardValues.stream()
-                .map(Card::new)
+                .map(value -> new Card(value, "Spades")) // Optional suit
                 .collect(Collectors.toList());
     }
 
