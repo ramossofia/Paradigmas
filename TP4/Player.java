@@ -1,71 +1,90 @@
-// src/Player.java
+
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class Player {
-    private String name;
-    private int tokens;
-    private List<Integer> cards;
+/**
+ * Represents an immutable deck of cards.
+ * All operations return a new Deck instance, adhering to functional programming principles.
+ */
+public class Deck {
+    private List<Card> cards;
 
-    public Player(String name) {
-        this.name = name;
-        this.tokens = 0;
-        this.cards = new ArrayList<>();
+    /**
+     * Constructs a new Deck from a list of card values.
+     *
+     * @param cardValues A list of integers representing the card values.
+     */
+    public Deck(List<Integer> cardValues) {
+        this.cards = cardValues.stream()
+                .map(value -> new Card(value, 0))
+                .collect(Collectors.toUnmodifiableList());
     }
 
-    public String getName() {
-        return name;
+    private Deck(List<Card> cards, boolean isPrebuilt) {
+        this.cards = List.copyOf(cards); // Ensure immutability
     }
 
-    public int getTokens() {
-        return tokens;
+    /**
+     * Draws the top card of the deck, if available.
+     *
+     * @return An Optional containing the top Card if the deck is not empty, or Optional.empty() otherwise.
+     */
+    public Optional<Card> drawCard() {
+        return cards.isEmpty() ? Optional.empty() : Optional.of(cards.get(0));
     }
 
-    public void setTokens(int tokens) {
-        this.tokens = tokens;
-    }
-
-    public void addTokens(int tokens) {
-        this.tokens += tokens;
-    }
-
-    public List<Integer> getCards() {
-        return cards;
-    }
-
-    public Player addCard(int card) {
-        this.cards.add(card);
-        return this;
-    }
-
-    public int calculateScore() {
-        // Ordenar las cartas del jugador
-        List<Integer> sortedCards = new ArrayList<>(cards);
-        Collections.sort(sortedCards);
-
-        int score = tokens; // Cada token es un punto positivo
-        int seriesStart = -1;
-
-        for (int i = 0; i < sortedCards.size(); i++) {
-            if (seriesStart == -1) {
-                seriesStart = sortedCards.get(i);
-            }
-
-            // Si la carta actual no es consecutiva con la anterior, o es la última carta
-            if (i == sortedCards.size() - 1 || sortedCards.get(i) + 1 != sortedCards.get(i + 1)) {
-                score -= seriesStart; // Restar el valor de la carta más pequeña de la serie
-                seriesStart = -1; // Reiniciar la serie
-            }
+    /**
+     * Removes the top card from the deck and returns a new Deck instance without it.
+     *
+     * @return A new Deck instance with the top card removed.
+     * @throws IllegalStateException If the deck is empty.
+     */
+    public Deck removeTopCard() {
+        if (cards.isEmpty()) {
+            throw new IllegalStateException("The deck is empty.");
         }
+        return new Deck(cards.subList(1, cards.size()), true);
+    }
 
-        return score;
-    }
-    public void removeToken() {
-        if (tokens > 0) {
-            tokens--;
-        } else {
-            throw new IllegalStateException("No tokens to remove.");
+    /**
+     * Adds tokens to the top card of the deck and returns a new Deck instance with the updated card.
+     *
+     * @param tokens The number of tokens to add to the top card.
+     * @return A new Deck instance with the updated top card.
+     * @throws IllegalStateException If the deck is empty.
+     */
+
+
+
+    public void addTokensToTopCard(int tokens) {
+        if (cards.isEmpty()) {
+            throw new IllegalStateException("The deck is empty.");
         }
+        cards.get(0).addTokens(1);
     }
+
+    /**
+     * Checks if the deck is empty.
+     *
+     * @return True if the deck is empty, false otherwise.
+     */
+    public boolean isEmpty() {
+        return cards.isEmpty();
+    }
+
+    public int size() {
+        return cards.size();
+    }
+
+    @Override
+    public String toString() {
+        return "Deck{" +
+                "cards=" + cards +
+                '}';
+    }
+
+
+
+
 }
