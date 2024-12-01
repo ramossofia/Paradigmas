@@ -1,15 +1,13 @@
-// src/GameOver.java
 import java.util.List;
 
 public class GameOver extends GameStatus {
 
     public GameOver(List<Player> players, Deck deck) {
-        super(List.copyOf(players), deck, -1); // -1 indicates no current player
+        super(List.copyOf(players), deck, -1);
     }
 
     @Override
     public void nextPlayer() {
-        // No action needed as the game is over
     }
 
     @Override
