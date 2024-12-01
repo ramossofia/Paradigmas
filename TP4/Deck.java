@@ -10,9 +10,12 @@ public class Deck {
     }
 
     public Optional<Card> drawCard() {
-        return cards.isEmpty() ? Optional.empty() : Optional.of(cards.get(0));
+        if (cards.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(cards.get(0));
+        }
     }
-
 
     public boolean isEmpty() {
         return cards.isEmpty();
