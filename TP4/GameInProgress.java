@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class GameInProgress extends GameStatus {
@@ -24,13 +25,11 @@ public class GameInProgress extends GameStatus {
     }
 
     public static int calculateInitialTokens(int numberOfPlayers) {
-        if (numberOfPlayers <= 5) {
-            return 11;
-        } else if (numberOfPlayers == 6) {
-            return 9;
-        } else {
-            return 7;
-        }
+        Map<Integer, Integer> tokensMap = Map.of(
+            6, 9,
+            7, 7
+        );
+        return tokensMap.getOrDefault(numberOfPlayers, 11);
     }
 
     public void setCurrentPlayerIndex(int currentPlayerIndex) {
@@ -79,7 +78,7 @@ public class GameInProgress extends GameStatus {
         if (tableCards.isEmpty()) {
             throw new IllegalStateException("No cards on the table.");
         }
-        return tableCards.remove(0); // Elimina y retorna la carta
+        return tableCards.remove(0);
     }
 
     public void addCardToTable(Card card) {
