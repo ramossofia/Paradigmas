@@ -1,4 +1,4 @@
-// src/GameInProgress.java
+// GameInProgress.java
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -29,10 +29,18 @@ public class GameInProgress extends GameStatus {
         }
     }
 
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        if (currentPlayerIndex < 0 || currentPlayerIndex >= getPlayers().size()) {
+            throw new IllegalArgumentException("Invalid player index: " + currentPlayerIndex);
+        }
+        super.currentPlayerIndex = currentPlayerIndex;
+    }
+
     @Override
-    public GameStatus nextPlayer() {
+    public void nextPlayer() {
         int newCurrentPlayerIndex = (getCurrentPlayerIndex() + 1) % getPlayers().size();
-        return new GameInProgress(getPlayers(), getDeck(), newCurrentPlayerIndex).checkGameOver();
+        setCurrentPlayerIndex(newCurrentPlayerIndex);
+        checkGameOver();
     }
 
     @Override
@@ -68,6 +76,4 @@ public class GameInProgress extends GameStatus {
                 ", currentPlayerIndex=" + getCurrentPlayerIndex() +
                 '}';
     }
-
-
 }
