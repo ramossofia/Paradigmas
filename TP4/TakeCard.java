@@ -1,5 +1,4 @@
-// src/TakeCard.java
-public class TakeCard implements Action {
+public class TakeCard extends Action {
 
     @Override
     public GameStatus execute(GameStatus gameState) {
