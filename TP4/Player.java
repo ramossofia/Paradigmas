@@ -9,7 +9,7 @@ public class Player {
     public Player(String name) {
         this.name = name;
         this.tokens = 0;
-        this.cards = new TreeSet<>((c1, c2) -> Integer.compare(c1.getValue(), c2.getValue())); // Ordenar por valor
+        this.cards = new TreeSet<>((c1, c2) -> Integer.compare(c1.getValue(), c2.getValue()));
     }
 
     public String getName() {
@@ -25,7 +25,7 @@ public class Player {
     }
 
     public Set<Card> getCards() {
-        return new TreeSet<>(cards); // Devolvemos una copia para evitar modificaciones externas
+        return new TreeSet<>(cards);
     }
 
     public void addCard(Card card) {
@@ -33,9 +33,6 @@ public class Player {
     }
 
     public void removeTokens(int amount) {
-        if (tokens < amount) {
-            throw new IllegalStateException("Insufficient tokens.");
-        }
         this.tokens -= amount;
     }
 
@@ -51,10 +48,8 @@ public class Player {
 
     public int calculateScore() {
         int score = tokens;
-        if (!cards.isEmpty()) {
-            int minCardValue = cards.stream().mapToInt(Card::getValue).min().orElse(0);
-            score -= minCardValue;
-        }
+        int minCardValue = cards.stream().mapToInt(Card::getValue).min().orElse(0);
+        score -= minCardValue;
         return score;
     }
 }
