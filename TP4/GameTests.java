@@ -1,3 +1,4 @@
+
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -26,20 +27,22 @@ public class GameTests {
         assertEquals(24, deckSize, "The deck should contain 24 cards.");
     }
 
+
+
     @Test
     public void testPlayerCountIsBetweenThreeAndSeven() {
         List<Player> players = Arrays.asList(
                 new Player("Emilio"),
-                new Player("Julio"),
-                new Player("Bruno")
+                new Player("Julio")
         );
 
         boolean validPlayerCount = players.size() >= 3 && players.size() <= 7;
         assertTrue(validPlayerCount, "The number of players should be between 3 and 7.");
     }
 
+
     @Test
-    public void testInitialTokensAndCardsForPlayers() {
+    public void testInitialTokensAndCardsFor3Players() {
         List<Player> players = Arrays.asList(
                 new Player("Emilio"),
                 new Player("Julio"),
@@ -57,6 +60,56 @@ public class GameTests {
             assertEquals(0, player.getCards().size(), "Each player should start with no cards.");
         });
     }
+
+    @Test
+    public void testInitialTokensAndCardsFor7Players() {
+        List<Player> players = Arrays.asList(
+                new Player("Emilio"),
+                new Player("Julio"),
+                new Player("Bruno"),
+                new Player("Mariela"),
+                new Player("Marcelo"),
+                new Player("Kun"),
+                new Player("Diego"));
+        setupGame(
+                players,
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
+        );
+
+        int initialTokens = GameInProgress.calculateInitialTokens(players.size());
+
+        players.forEach(player -> {
+            assertEquals(initialTokens, player.getTokens(), "Each player should receive " + initialTokens + " tokens at the start.");
+            assertEquals(0, player.getCards().size(), "Each player should start with no cards.");
+        });
+    }
+
+
+    @Test
+    public void testInitialTokensAndCardsFor6Players() {
+        List<Player> players = Arrays.asList(
+                new Player("Emilio"),
+                new Player("Julio"),
+                new Player("Bruno"),
+                new Player("Mariela"),
+                new Player("Marcelo"),
+                new Player("Kun")
+
+        );
+        setupGame(
+                players,
+                Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
+        );
+
+        int initialTokens = GameInProgress.calculateInitialTokens(players.size());
+
+        players.forEach(player -> {
+            assertEquals(initialTokens, player.getTokens(), "Each player should receive " + initialTokens + " tokens at the start.");
+            assertEquals(0, player.getCards().size(), "Each player should start with no cards.");
+        });
+    }
+
+
 
     @Test
     public void testInitialCardRemoval() {
@@ -145,7 +198,6 @@ public class GameTests {
         );
 
         gameState = gameState.executeAction(new PlaceToken());
-        gameState.nextPlayer();
         Player nextPlayer = gameState.getPlayers().get(gameState.getCurrentPlayerIndex());
 
         assertEquals("Julio", nextPlayer.getName(), "The turn should pass to the next player.");
@@ -216,14 +268,16 @@ public class GameTests {
                 Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26)
         );
 
-        gameState = gameState.executeAction(new PlaceToken());
-        gameState.nextPlayer();
 
+        gameState = gameState.executeAction(new TakeCard());
+        gameState = gameState.executeAction(new PlaceToken());
         gameState = gameState.executeAction(new TakeCard());
 
         Player secondPlayer = gameState.getPlayers().get(1);
 
-        assertEquals(11, secondPlayer.getTokens(), "The second player should have 11 tokens.");
-        assertTrue(secondPlayer.getCards().contains(3), "The second player should have the card they took.");
+        assertTrue(secondPlayer.getCards().contains(3));
+        assertEquals(12, secondPlayer.getTokens(), "The second player should have 12 tokens.");
+        ;
+
     }
 }
