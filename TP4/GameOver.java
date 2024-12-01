@@ -21,11 +21,4 @@ public class GameOver extends GameStatus {
         return this;
     }
 
-    @Override
-    public String toString() {
-        return "GameOver{" +
-                "players=" + getPlayers() +
-                ", deck=" + getDeck() +
-                '}';
-    }
 }
