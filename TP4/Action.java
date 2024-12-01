@@ -1,4 +1,3 @@
-
-public interface Action {
-    GameStatus execute(GameStatus gameState);
+public abstract class Action {
+    public abstract GameStatus execute(GameStatus gameState);
 }
