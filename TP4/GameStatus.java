@@ -1,14 +1,9 @@
-// GameStatus.java
 import java.util.List;
 
 public abstract class GameStatus {
     protected final List<Player> players;
     protected final Deck deck;
     protected int currentPlayerIndex;
-
-    public GameStatus(List<Player> players, Deck deck) {
-        this(players, deck, 0);
-    }
 
     public GameStatus(List<Player> players, Deck deck, int currentPlayerIndex) {
         this.players = List.copyOf(players);
