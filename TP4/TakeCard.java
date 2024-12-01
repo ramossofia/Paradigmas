@@ -22,7 +22,7 @@ public class TakeCard extends Action {
             Card card;
             if (game.hasCardsOnTable()) {
                 card = game.takeCardFromTable();
-                player.addTokens(card.getTokens()); // Transfiere los tokens al jugador
+                player.addTokens(card.getTokens());
                 card.removeTokens(card.getTokens());
             } else {
                 if (game.getDeck().isEmpty()) {
