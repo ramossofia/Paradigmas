@@ -10,17 +10,16 @@ public class GameOver extends GameStatus {
 
     @Override
     public void nextPlayer() {
-        // No-op in GameOver
     }
 
     @Override
     public GameStatus executeAction(Action action) {
-        return this; // No action can modify the game after it ends
+        return this;
     }
 
     @Override
     public GameStatus checkGameOver() {
-        return this; // Already in a "game over" state
+        return this;
     }
 
     private Player determineWinner(List<Player> players) {
