@@ -1,0 +1,22 @@
+import java.util.Objects;
+
+public class Turn {
+    private final Player player;
+    private Turn nextTurn;
+
+    public Turn(Player player) {
+        this.player = Objects.requireNonNull(player, "Player cannot be null");
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Turn getNextTurn() {
+        return nextTurn;
+    }
+
+    public void setNextTurn(Turn nextTurn) {
+        this.nextTurn = nextTurn;
+    }
+}
