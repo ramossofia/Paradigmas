@@ -2,11 +2,12 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class Player {
-    private String name;
+    private final String name;
     private int tokens;
-    private List<Integer> cards;
+    private final List<Card> cards;
 
     public Player(String name) {
         this.name = name;
@@ -26,32 +27,45 @@ public class Player {
         this.tokens = tokens;
     }
 
-    public void addTokens(int tokens) {
-        this.tokens += tokens;
+    public List<Card> getCards() {
+        return new ArrayList<>(cards);
     }
 
-    public List<Integer> getCards() {
-        return cards;
+    public void addCard(Card card) {
+        cards.add(card);
     }
 
-    public Player addCard(int card) {
-        this.cards.add(card);
-        return this;
+    public void removeTokens(int amount) {
+        if (tokens < amount) {
+            throw new IllegalStateException("Insufficient tokens.");
+        }
+        this.tokens -= amount;
+    }
+
+    public void addTokens(int amount) {
+        this.tokens += amount;
+    }
+
+
+    public void removeCard(Card card) {
+        cards.remove(card);
     }
 
     public int calculateScore() {
-        List<Integer> sortedCards = new ArrayList<>(cards);
-        Collections.sort(sortedCards);
+        List<Integer> cardValues = cards.stream()
+                .map(Card::getValue)
+                .collect(Collectors.toList());
+        Collections.sort(cardValues);
 
         int score = tokens;
         int seriesStart = -1;
 
-        for (int i = 0; i < sortedCards.size(); i++) {
+        for (int i = 0; i < cardValues.size(); i++) {
             if (seriesStart == -1) {
-                seriesStart = sortedCards.get(i);
+                seriesStart = cardValues.get(i);
             }
 
-            if (i == sortedCards.size() - 1 || sortedCards.get(i) + 1 != sortedCards.get(i + 1)) {
+            if (i == cardValues.size() - 1 || cardValues.get(i) + 1 != cardValues.get(i + 1)) {
                 score -= seriesStart;
                 seriesStart = -1;
             }
@@ -59,11 +73,5 @@ public class Player {
 
         return score;
     }
-    public void removeToken() {
-        if (tokens > 0) {
-            tokens--;
-        } else {
-            throw new IllegalStateException("No tokens to remove.");
-        }
-    }
+
 }
