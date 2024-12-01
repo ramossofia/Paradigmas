@@ -1,4 +1,3 @@
-// src/Player.java
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,11 +39,10 @@ public class Player {
     }
 
     public int calculateScore() {
-        // Ordenar las cartas del jugador
         List<Integer> sortedCards = new ArrayList<>(cards);
         Collections.sort(sortedCards);
 
-        int score = tokens; // Cada token es un punto positivo
+        int score = tokens;
         int seriesStart = -1;
 
         for (int i = 0; i < sortedCards.size(); i++) {
@@ -52,10 +50,9 @@ public class Player {
                 seriesStart = sortedCards.get(i);
             }
 
-            // Si la carta actual no es consecutiva con la anterior, o es la última carta
             if (i == sortedCards.size() - 1 || sortedCards.get(i) + 1 != sortedCards.get(i + 1)) {
-                score -= seriesStart; // Restar el valor de la carta más pequeña de la serie
-                seriesStart = -1; // Reiniciar la serie
+                score -= seriesStart;
+                seriesStart = -1;
             }
         }
 
