@@ -22,14 +22,7 @@ public class GameInProgress extends GameStatus {
     }
 
     public static int calculateInitialTokens(int numberOfPlayers) {
-        switch (numberOfPlayers) {
-            case 6:
-                return 9;
-            case 7:
-                return 7;
-            default:
-                return 11;
-        }
+        return numberOfPlayers == 6 ? 9 : numberOfPlayers == 7 ? 7 : 11;
     }
 
     @Override
