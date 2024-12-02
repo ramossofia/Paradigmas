@@ -62,7 +62,7 @@ public class GameTests {
     }
 
     @Test
-    public void test07TurnWrapsAroundToFirstPlayer() {
+    public void test06TurnWrapsAroundToFirstPlayer() {
         GameStatus gameState = setupGameWithPlayers(3);
 
         gameState = executeActions(gameState, new TakeCard(), new PlaceToken(), new PlaceToken(), new PlaceToken());
@@ -70,7 +70,7 @@ public class GameTests {
     }
 
     @Test
-    public void test09PlaceTokenAndPassTurn() {
+    public void test07PlaceTokenAndPassTurn() {
         GameStatus gameState = setupGameWithPlayers(3);
 
         gameState = executeActions(gameState, new TakeCard(), new PlaceToken());
@@ -78,7 +78,7 @@ public class GameTests {
     }
 
     @Test
-    public void test10TakeLastCardFromDeck() {
+    public void test08TakeLastCardFromDeck() {
         GameStatus gameState = setupGameWithPlayers(3);
 
         gameState = gameState.executeAction(new TakeCard());
@@ -87,7 +87,7 @@ public class GameTests {
     }
 
     @Test
-    public void test11PlayerPlacesTokenAndNextPlayerTakesCard() {
+    public void test09PlayerPlacesTokenAndNextPlayerTakesCard() {
         GameStatus gameState = setupGameWithPlayers(3);
 
         gameState = executeActions(gameState, new TakeCard(), new PlaceCard(), new PlaceToken(), new TakeCard());
@@ -96,7 +96,7 @@ public class GameTests {
     }
 
     @Test
-    public void test12PlayerStartsWithoutTokensMustTakeCard() {
+    public void test10PlayerStartsWithoutTokensMustTakeCard() {
         GameStatus gameState = setupGameWithPlayers(3);
 
         gameState.getCurrentPlayer().setTokens(0);
@@ -107,7 +107,7 @@ public class GameTests {
     }
 
     @Test
-    public void test13CalculatePointsWithSeries() {
+    public void test11CalculatePointsWithSeries() {
         GameStatus gameState = setupGameWithPlayers(3);
 
         gameState = executeActions(gameState, new TakeCard(), new TakeCard(), new TakeCard());
@@ -117,7 +117,7 @@ public class GameTests {
     }
 
     @Test
-    public void test14GameEndsWhenDeckIsEmpty() {
+    public void test12GameEndsWhenDeckIsEmpty() {
         GameStatus gameState = setupGameWithPlayers(3);
 
         gameState = IntStream.range(0, 24)
@@ -129,7 +129,7 @@ public class GameTests {
     }
 
     @Test
-    public void test15GameOverDeterminesWinner() {
+    public void test13GameOverDeterminesWinner() {
         GameStatus gameState = setupGameWithPlayers(3);
         gameState = IntStream.range(0, 24)
                 .mapToObj(i -> new TakeCard())
