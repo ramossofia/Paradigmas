@@ -10,18 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTests {
 
-    private static final List<Integer> CARD_VALUES = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
-
-    private GameStatus setupGame(List<Player> players, List<Integer> cardValues) {
-        List<Card> cards = createCards(cardValues);
-        return new GameInProgress(players, new Deck(cards));
-    }
-
-    private static void assertThrowsLike(Class<? extends Throwable> expectedType, String expectedMessage, Executable executable) {
-        Throwable exception = assertThrows(expectedType, executable);
-        assertEquals(expectedMessage, exception.getMessage());
-    }
-
     @Test
     public void test01PlayerCountIsBetweenThreeAndSeven() {
         List<Player> players = createPlayers("Emilio", "Julio");
@@ -137,6 +125,18 @@ public class GameTests {
 
         Player winner = ((GameOver) gameState).getWinner();
         assertEquals("Julio", winner.getName());
+    }
+
+    private GameStatus setupGame(List<Player> players, List<Integer> cardValues) {
+        List<Card> cards = createCards(cardValues);
+        return new GameInProgress(players, new Deck(cards));
+    }
+
+    private static final List<Integer> CARD_VALUES = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26);
+
+    private static void assertThrowsLike(Class<? extends Throwable> expectedType, String expectedMessage, Executable executable) {
+        Throwable exception = assertThrows(expectedType, executable);
+        assertEquals(expectedMessage, exception.getMessage());
     }
 
     private GameStatus setupGameWithPlayers(int numberOfPlayers) {
