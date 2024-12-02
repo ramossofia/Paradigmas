@@ -9,16 +9,7 @@ public class GameOver extends GameStatus {
     }
 
     @Override
-    public void nextPlayer() {
-    }
-
-    @Override
     public GameStatus executeAction(Action action) {
-        return this;
-    }
-
-    @Override
-    public GameStatus checkGameOver() {
         return this;
     }
 
