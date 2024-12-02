@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.stream.IntStream;
 
 public abstract class GameStatus {
     protected final List<Player> players;
@@ -13,15 +14,16 @@ public abstract class GameStatus {
 
     private void initializeTurns(List<Player> players) {
         Turn firstTurn = new Turn(players.get(0));
-        Turn current = firstTurn;
+        final Turn[] current = {firstTurn};
 
-        for (int i = 1; i < players.size(); i++) {
-            Turn next = new Turn(players.get(i));
-            current.setNextTurn(next);
-            current = next;
-        }
-        // Circular turn logic
-        current.setNextTurn(firstTurn);
+        IntStream.range(1, players.size())
+                .mapToObj(i -> new Turn(players.get(i)))
+                .forEach(next -> {
+                    current[0].setNextTurn(next);
+                    current[0] = next;
+                });
+
+        current[0].setNextTurn(firstTurn);
         this.currentTurn = firstTurn;
     }
 
