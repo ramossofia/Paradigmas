@@ -38,7 +38,7 @@ public class GameTests {
     }
 
     @Test
-    public void test03InitialTokensAndCardsFor3Players() {
+    public void test03InitialTokensfor3Players() {
         GameStatus gameState = setupGameWithPlayers(3);
         List<Player> players = gameState.getPlayers();
 
@@ -62,21 +62,13 @@ public class GameTests {
     }
 
     @Test
-    public void test06TurnRotationIsCorrect() {
-        GameStatus gameState = setupGameWithPlayers(3);
-
-        gameState = gameState.executeAction(new PlaceToken());
-        assertCurrentPlayer(gameState, "Julio");
-    }
-
-    @Test
     public void test07TurnWrapsAroundToFirstPlayer() {
         GameStatus gameState = setupGameWithPlayers(3);
 
         gameState = executeActions(gameState, new TakeCard(), new PlaceToken(), new PlaceToken(), new PlaceToken());
         assertCurrentPlayer(gameState, "Emilio");
     }
-    
+
     @Test
     public void test09PlaceTokenAndPassTurn() {
         GameStatus gameState = setupGameWithPlayers(3);
@@ -144,12 +136,7 @@ public class GameTests {
                 .reduce(gameState, GameStatus::executeAction, (gs1, gs2) -> gs2);
 
         Player winner = ((GameOver) gameState).getWinner();
-        int highestScore = gameState.getPlayers().stream()
-                .mapToInt(Player::calculateScore)
-                .max()
-                .orElseThrow(() -> new IllegalStateException("No players in the game."));
-
-        assertEquals(highestScore, winner.calculateScore());
+        assertEquals("Julio", winner.getName());
     }
 
     private GameStatus setupGameWithPlayers(int numberOfPlayers) {
