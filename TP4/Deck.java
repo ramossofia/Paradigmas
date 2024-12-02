@@ -25,15 +25,7 @@ public class Deck {
         return cards.size();
     }
 
-    @Override
-    public String toString() {
-        return "Deck{" +
-                "cards=" + cards +
-                '}';
-    }
     public void removeCard(Card card) {
         cards.remove(card);
     }
-
-
 }
