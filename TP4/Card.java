@@ -1,20 +1,14 @@
 public class Card implements Comparable<Card> {
     private final int value;
-    private final String suit; // Optional for differentiation
     private int tokens; // Tokens associated with the card
 
     public Card(int value, String suit) {
         this.value = value;
-        this.suit = suit;
         this.tokens = 0; // Initial tokens set to 0
     }
 
     public int getValue() {
         return value;
-    }
-
-    public String getSuit() {
-        return suit;
     }
 
     public int getTokens() {
@@ -41,16 +35,11 @@ public class Card implements Comparable<Card> {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Card card = (Card) obj;
-        return value == card.value && suit.equals(card.suit);
+        return value == card.value;
     }
 
     @Override
     public int hashCode() {
-        return value * 31 + suit.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return value + " of " + suit;
+        return Integer.hashCode(value);
     }
 }
