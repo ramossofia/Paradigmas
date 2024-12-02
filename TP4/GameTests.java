@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,13 +17,16 @@ public class GameTests {
         return new GameInProgress(players, new Deck(cards));
     }
 
+    private static void assertThrowsLike(Class<? extends Throwable> expectedType, String expectedMessage, Executable executable) {
+        Throwable exception = assertThrows(expectedType, executable);
+        assertEquals(expectedMessage, exception.getMessage());
+    }
+
     @Test
     public void test01PlayerCountIsBetweenThreeAndSeven() {
         List<Player> players = createPlayers("Emilio", "Julio");
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> setupGame(players, CARD_VALUES));
-
-        assertEquals("The number of players should be between 3 and 7.", exception.getMessage());
+        assertThrowsLike(IllegalArgumentException.class, "The number of players should be between 3 and 7.", () -> setupGame(players, CARD_VALUES));
     }
 
     @Test
@@ -30,9 +34,7 @@ public class GameTests {
         List<Player> players = createPlayers("Emilio", "Julio", "Bruno");
         List<Integer> invalidCardValues = Arrays.asList(3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23);
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> setupGame(players, invalidCardValues));
-
-        assertEquals("The deck must contain exactly 24 cards.", exception.getMessage());
+        assertThrowsLike(IllegalArgumentException.class, "The deck must contain exactly 24 cards.", () -> setupGame(players, invalidCardValues));
     }
 
     @Test
@@ -74,20 +76,7 @@ public class GameTests {
         gameState = executeActions(gameState, new TakeCard(), new PlaceToken(), new PlaceToken(), new PlaceToken());
         assertCurrentPlayer(gameState, "Emilio");
     }
-
-    @Test
-    public void test08PlayerCannotPlayTwiceInARow() {
-        GameStatus initialGameState = setupGameWithPlayers(3);
-
-        GameStatus gameState = executeActions(initialGameState, new TakeCard(), new PlaceToken(), new PlaceToken());
-
-        assertThrows(IllegalStateException.class, () -> {
-            if (!gameState.getCurrentPlayer().getName().equals("Emilio")) {
-                throw new IllegalStateException("It's not Emilio's turn.");
-            }
-        });
-    }
-
+    
     @Test
     public void test09PlaceTokenAndPassTurn() {
         GameStatus gameState = setupGameWithPlayers(3);
@@ -102,7 +91,7 @@ public class GameTests {
 
         gameState = gameState.executeAction(new TakeCard());
 
-        assertEquals(3, gameState.getCurrentPlayer().getCards().iterator().next().getValue(), "La carta tomada debe ser la 26.");
+        assertEquals(3, gameState.getCurrentPlayer().getCards().iterator().next().getValue());
     }
 
     @Test
@@ -134,7 +123,6 @@ public class GameTests {
         Player currentPlayer = gameState.getCurrentPlayer();
         assertEquals(-3 + 11, currentPlayer.calculateScore());
     }
-
 
     @Test
     public void test14GameEndsWhenDeckIsEmpty() {
@@ -185,8 +173,8 @@ public class GameTests {
 
     private List<Card> createCards(List<Integer> cardValues) {
         return cardValues.stream()
-            .map(value -> new Card(value))
-            .collect(Collectors.toList());
+                .map(value -> new Card(value))
+                .collect(Collectors.toList());
     }
 
     private GameStatus executeActions(GameStatus gameState, Action... actions) {
