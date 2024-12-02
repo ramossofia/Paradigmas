@@ -129,16 +129,9 @@ public class GameTests {
     public void test13CalculatePointsWithSeries() {
         GameStatus gameState = setupGameWithPlayers(3);
 
-        // Take cards (you might want to assert the actual cards in hand here for debugging)
         gameState = executeActions(gameState, new TakeCard(), new TakeCard(), new TakeCard());
 
-        // Print the player's cards for debugging
         Player currentPlayer = gameState.getCurrentPlayer();
-        System.out.println("Current player's cards: " + currentPlayer.getCards().stream()
-                .map(card -> card.getValue())
-                .collect(Collectors.toList()));
-
-        // Assert the expected score
         assertEquals(-3 + 11, currentPlayer.calculateScore());
     }
 
@@ -192,8 +185,8 @@ public class GameTests {
 
     private List<Card> createCards(List<Integer> cardValues) {
         return cardValues.stream()
-                .map(value -> new Card(value, "Spades")) // Optional suit
-                .collect(Collectors.toList());
+            .map(value -> new Card(value))
+            .collect(Collectors.toList());
     }
 
     private GameStatus executeActions(GameStatus gameState, Action... actions) {
