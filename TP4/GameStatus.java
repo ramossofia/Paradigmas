@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -13,18 +14,17 @@ public abstract class GameStatus {
     }
 
     private void initializeTurns(List<Player> players) {
-        Turn firstTurn = new Turn(players.get(0));
-        final Turn[] current = {firstTurn};
+        LinkedList<Turn> turns = new LinkedList<>();
+        players.forEach(player -> turns.add(new Turn(player)));
 
-        IntStream.range(1, players.size())
-                .mapToObj(i -> new Turn(players.get(i)))
-                .forEach(next -> {
-                    current[0].setNextTurn(next);
-                    current[0] = next;
+        IntStream.range(0, turns.size())
+                .forEach(i -> {
+                    Turn current = turns.get(i);
+                    Turn next = turns.get((i + 1) % turns.size());
+                    current.setNextTurn(next);
                 });
 
-        current[0].setNextTurn(firstTurn);
-        this.currentTurn = firstTurn;
+        this.currentTurn = turns.getFirst();
     }
 
     public List<Player> getPlayers() {
