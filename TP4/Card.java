@@ -38,8 +38,4 @@ public class Card implements Comparable<Card> {
         return value == card.value;
     }
 
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(value);
-    }
 }
