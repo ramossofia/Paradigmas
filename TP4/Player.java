@@ -4,7 +4,7 @@ import java.util.TreeSet;
 public class Player {
     private final String name;
     private int tokens;
-    private final Set<Card> cards; // Usamos TreeSet para mantener las cartas ordenadas
+    private final Set<Card> cards;
 
     public Player(String name) {
         this.name = name;
